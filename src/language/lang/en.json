@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "title": "Family Recipes",
+    "description": "A personal collection of family recipes — search, sort, and scale portions.",
+    "keywords": ["recipes", "cooking", "family recipes"]
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "recipes": {
+    "title": "Recipes",
+    "description": "A personal collection of family recipes — search, sort, and mobile-friendly.",
+    "count": "{count} recipes",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by name, ingredient, tag…",
+    "noResults": "No recipes match your filters.",
+    "toggleColumns": "Columns",
+    "backToList": "Back to recipes",
+    "openRecipe": "Open recipe",
+    "viewSource": "View source",
+    "filters": {
+      "all": "All",
+      "category": "Category",
+      "difficulty": "Difficulty",
+      "cuisine": "Cuisine",
+      "clearAll": "Clear filters"
+    },
+    "columns": {
+      "image": "Image",
+      "name": "Name",
+      "category": "Category",
+      "cuisine": "Cuisine",
+      "time": "Time",
+      "difficulty": "Difficulty",
+      "tags": "Tags",
+      "servings": "Servings"
+    },
+    "categories": {
+      "main": "Main",
+      "side": "Side",
+      "sauce": "Sauce",
+      "dessert": "Dessert",
+      "soup": "Soup",
+      "salad": "Salad",
+      "dough": "Dough",
+      "drinky": "Drinks"
+    },
+    "difficulties": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "unknown": "—"
+    },
+    "detail": {
+      "description": "Description",
+      "ingredients": "Ingredients",
+      "portions": "Portions",
+      "steps": "Steps",
+      "equipment": "Equipment",
+      "relatedRecipesTitle": "Related recipes",
+      "notes": "Notes",
+      "source": "Source",
+      "references": "References",
+      "tags": "Tags",
+      "servings": "Servings",
+      "reset": "Reset",
+      "prepTime": "Prep",
+      "cookTime": "Cook",
+      "totalTime": "Total time",
+      "ovenTemperature": "Oven",
+      "difficulty": "Difficulty",
+      "category": "Category",
+      "cuisine": "Cuisine",
+      "owner": "Author",
+      "noImage": "No image",
+      "ingredientsEmpty": "No ingredients listed.",
+      "stepsEmpty": "No steps listed."
+    }
+  }
+}

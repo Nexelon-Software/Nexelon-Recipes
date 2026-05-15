@@ -1,0 +1,83 @@
+{
+  "metadata": {
+    "title": "Rodinné recepty",
+    "description": "Osobná zbierka rodinných receptov — vyhľadávanie, triedenie a prispôsobenie porcií.",
+    "keywords": ["recepty", "varenie", "rodinné recepty"]
+  },
+  "theme": {
+    "toggle": "Prepnúť tému",
+    "light": "Svetlá",
+    "dark": "Tmavá",
+    "system": "Systémová"
+  },
+  "recipes": {
+    "title": "Recepty",
+    "description": "Osobná zbierka rodinných receptov — vyhľadávanie, triedenie, prispôsobené pre mobil.",
+    "count": "{count} receptov",
+    "searchLabel": "Hľadať",
+    "searchPlaceholder": "Hľadaj podľa názvu, ingrediencie, štítku…",
+    "noResults": "Žiadne recepty nezodpovedajú filtrom.",
+    "toggleColumns": "Stĺpce",
+    "backToList": "Späť na recepty",
+    "openRecipe": "Otvoriť recept",
+    "viewSource": "Zobraziť zdroj",
+    "filters": {
+      "all": "Všetko",
+      "category": "Kategória",
+      "difficulty": "Náročnosť",
+      "cuisine": "Kuchyňa",
+      "clearAll": "Zrušiť filtre"
+    },
+    "columns": {
+      "image": "Obrázok",
+      "name": "Názov",
+      "category": "Kategória",
+      "cuisine": "Kuchyňa",
+      "time": "Čas",
+      "difficulty": "Náročnosť",
+      "tags": "Štítky",
+      "servings": "Porcie"
+    },
+    "categories": {
+      "main": "Hlavné",
+      "side": "Príloha",
+      "sauce": "Omáčka",
+      "dessert": "Dezert",
+      "soup": "Polievka",
+      "salad": "Šalát",
+      "dough": "Cesto",
+      "drinky": "Drinky"
+    },
+    "difficulties": {
+      "easy": "Ľahké",
+      "medium": "Stredné",
+      "hard": "Náročné",
+      "unknown": "—"
+    },
+    "detail": {
+      "description": "Popis",
+      "ingredients": "Ingrediencie",
+      "portions": "Porcie",
+      "steps": "Postup",
+      "equipment": "Vybavenie",
+      "relatedRecipesTitle": "Súvisiace recepty",
+      "notes": "Poznámky",
+      "source": "Zdroj",
+      "references": "Odkazy",
+      "tags": "Štítky",
+      "servings": "Porcie",
+      "reset": "Resetovať",
+      "prepTime": "Príprava",
+      "cookTime": "Varenie",
+      "totalTime": "Celkový čas",
+      "ovenTemperature": "Rúra",
+      "difficulty": "Náročnosť",
+      "category": "Kategória",
+      "cuisine": "Kuchyňa",
+      "owner": "Autor",
+      "noImage": "Bez obrázka",
+      "ingredientsEmpty": "Žiadne ingrediencie.",
+      "stepsEmpty": "Žiadny postup."
+    }
+  }
+}
