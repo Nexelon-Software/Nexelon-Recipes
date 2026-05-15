@@ -1,0 +1,68 @@
+---
+description: Conventional commit message format for this repository
+alwaysApply: true
+---
+
+# Commit Message Convention
+
+Whenever the user asks for a commit message (or you propose one before
+running `git commit`), output **exactly one fenced code block** so it
+can be copied as-is. Do not add explanations around it. Do not split
+the subject and body into separate code blocks.
+
+## Format
+
+```
+<type>(<scope>): <subject>
+
+<paragraph explaining the why>
+
+- <concrete change 1>
+- <concrete change 2>
+- <concrete change 3>
+```
+
+## Rules
+
+- **type** (required): one of `feat`, `fix`, `chore`, `refactor`,
+  `perf`, `docs`, `test`, `build`, `ci`, `style`, `revert`.
+- **scope** (required when there is a clear feature/area): lowercase,
+  kebab-case, derived from the top-level feature folder or domain
+  (e.g. `calculations`, `materials`, `auth`, `db`, `api`).
+- **subject**: imperative mood ("add", "fix", "preserve" — not "added"
+  or "fixes"), no trailing period, max ~72 chars.
+- **body**: short paragraph explaining the *why* / root cause, then a
+  bullet list of the concrete changes made (one bullet per logical
+  edit, not per file). Wrap lines at ~72 chars.
+- Reference symbols, files, or functions in backticks.
+- Do **not** mention tooling artifacts (Cursor, agents, etc.).
+- Do **not** include emojis unless the user has already used them.
+
+## Example (good)
+
+```
+fix(calculations): preserve filtered select value when source rows change
+
+Removing the row that produced the filter was wiping the chosen value
+on the other side because two reactive effects cleared the form state
+and the dropdown was rebuilt without the selection.
+
+- Drop the auto-clear `useEffect`s for `labor_task_id` / `material_id`
+- Strip tab-switch clearing from both Tabs `onValueChange` handlers
+- Append the current selection to `workSelectList` /
+  `materialsForRowCombobox` when missing from the filtered order
+- Loosen `filteredSelectBlocked` flags so rows with a value stay
+  interactive
+```
+
+## Example (bad — do NOT do this)
+
+```
+Fixed bug in calculation form.
+```
+
+```
+feat: stuff
+* changes things
+* more changes
+```
