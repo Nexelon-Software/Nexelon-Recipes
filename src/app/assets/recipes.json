@@ -4242,6 +4242,105 @@
       "references": [],
       "notes": null,
       "imageUrl": null
+    },
+    {
+      "id": "mango-sticky-rice",
+      "name": "Mango sticky rice",
+      "owner": "Samo",
+      "description": "Khao niao mamuang – sladko-slaná lepkavá ryža v ryžovari s kokosovou zálievkou; pri podávaní sa poleje zahustenou kokosovou zálievkou a podáva so zrelým mangom.",
+      "category": "dessert",
+      "tags": ["mango", "ryža", "kokos", "thajské", "lepkavá ryža", "dezert", "ryžovar"],
+      "relatedRecipes": [],
+      "cuisine": "thajská",
+      "servings": null,
+      "prepTimeMinutes": 25,
+      "cookTimeMinutes": 45,
+      "totalTimeMinutes": 70,
+      "difficulty": "medium",
+      "ovenTemperatureCelsius": null,
+      "equipment": ["ryžovar", "hrniec", "miska"],
+      "ingredients": [
+        {
+          "name": "Thajská lepkavá ryža",
+          "quantity": 150,
+          "unit": "g",
+          "notes": "glutinous rice; ideálne „Thai sticky rice“"
+        },
+        {
+          "name": "Voda",
+          "quantity": null,
+          "unit": null,
+          "notes": "na preplachovanie a namáčanie"
+        },
+        {
+          "name": "Voda",
+          "quantity": 180,
+          "unit": "ml",
+          "notes": "na varenie v ryžovari; orientačne – ryža má byť mäkká, nie kašovitá"
+        },
+        {
+          "name": "Kokosové mlieko",
+          "quantity": 250,
+          "unit": "ml",
+          "notes": "plnotučné, nie „kokosový nápoj“ – na zálievku ryže"
+        },
+        {
+          "name": "Cukor",
+          "quantity": 35,
+          "unit": "g",
+          "notes": "35–50 g podľa chuti; v Thajsku často palmový, môže byť aj kryštálový"
+        },
+        {
+          "name": "Soľ",
+          "quantity": 0.25,
+          "unit": "ČL",
+          "notes": "1/4–1/2 ČL; soľ vyváži sladkosť"
+        },
+        {
+          "name": "Kokosové mlieko",
+          "quantity": 120,
+          "unit": "ml",
+          "notes": "na zahustenú zálievku pri podávaní"
+        },
+        {
+          "name": "Soľ",
+          "quantity": null,
+          "unit": "štipka",
+          "notes": "do omáčky"
+        },
+        {
+          "name": "Škrob",
+          "quantity": 1,
+          "unit": "ČL",
+          "notes": "tapiokový alebo kukuričný"
+        },
+        {
+          "name": "Voda",
+          "quantity": 1,
+          "unit": "PL",
+          "notes": "na rozmiešanie škrobu"
+        },
+        {
+          "name": "Mango",
+          "quantity": 1,
+          "unit": "ks",
+          "notes": "1–2 ks; zrelé, na podávanie – nakrájané na plátky alebo kocky"
+        }
+      ],
+      "steps": [
+        "Ryžu dať do misy a prepláchnuť 5–6× studenou vodou, kým voda nie je takmer číra.",
+        "Zaliať čistou vodou a nechať namáčať 4–6 hodín (ideálne), prípadne aspoň 2 hodiny. Potom dobre scediť.",
+        "Scedenú ryžu vložiť do hrnca ryžovaru, pridať 180 ml vody a spustiť bežný program na ryžu. Po dovarení nechať 10 minút odpočívať na „Warm“.",
+        "Kým sa ryža varí: v hrnci jemne zohriať 250 ml kokosového mlieka s cukrom a soľou. Miešať len do rozpustenia cukru – nevariť prudko (kokos sa môže rozdeliť). Odstaviť.",
+        "Horúcu uvarenú ryžu presunúť do misy. Naliať na ňu celú kokosovú zmes. Jemne premiešať, prikryť a nechať 15–20 minút, aby ryža kokos vsala.",
+        "Ochutnať: má byť sladko-slaná, krémová a lepkavá.",
+        "Pripraviť zálievku na podávanie: zohriať 120 ml kokosového mlieka so štipkou soli. Keď je horúce (nie prudko vriace), vliať škrob rozmiešaný v 1 PL vody. Miešať 1–2 minúty, kým mierne zhustne (ako riedky puding). Odstaviť – touto zálievkou sa pri servírovaní poleje hotová ryža.",
+        "Na tanier dať porciu ryže a nakrájané zrelé mango (plátky alebo kocky). Polejť zahustenou kokosovou zálievkou a hneď podávať."
+      ],
+      "sourceUrl": null,
+      "references": [],
+      "notes": "Čas v recepte nezahŕňa namáčanie ryže (4–6 hodín). Kokosové mlieko musí byť plnotučné (konzerva alebo kartón na varenie), nie ľahký kokosový nápoj.",
+      "imageUrl": null
     }
   ]
 }
