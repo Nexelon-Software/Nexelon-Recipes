@@ -1056,7 +1056,7 @@
     },
     {
       "id": "islske-cestoviny",
-      "name": "Išlské cestoviny",
+      "name": "Cestoviny so šunkou a kukuricou",
       "owner": "Samo",
       "description": "Cestoviny so šunkou, kukuricou a sladkou smotanou.",
       "category": "main",
@@ -4151,6 +4151,96 @@
       "sourceUrl": "https://kuchynelidlu.cz/recept/pad-thai-nudle",
       "references": ["https://www.youtube.com/watch?v=pj0AU6t9AsQ"],
       "notes": "Upravená verzia receptu Romana Paulusa z Kuchyne Lidlu – sekcia domácej omáčky (kokosové mlieko, tamarind, rybia omáčka, palmový cukor, tógaraši) je nahradená hotovou omáčkou J-Lek z Tesca. Nudle treba namočiť vopred; bez toho sa nedajú správne pražiť. Krevety môžeš nahradiť kuracími stehnami alebo prsiami.",
+      "imageUrl": null
+    },
+    {
+      "id": "tuniakove-cestoviny",
+      "name": "Tuniakové cestoviny",
+      "owner": "Samo",
+      "description": "Cestoviny s tuniakom, kukuricou a smotanovou omáčkou na cibuľovo-cesnakovom základe.",
+      "category": "main",
+      "tags": ["cestoviny", "tuniak", "smotana"],
+      "relatedRecipes": ["islske-cestoviny"],
+      "cuisine": "slovenská",
+      "servings": null,
+      "prepTimeMinutes": 10,
+      "cookTimeMinutes": 20,
+      "totalTimeMinutes": 30,
+      "difficulty": "easy",
+      "ovenTemperatureCelsius": null,
+      "equipment": ["panvica", "hrniec"],
+      "ingredients": [
+        {
+          "name": "Tuniak",
+          "quantity": 2,
+          "unit": "ks",
+          "notes": "konzervy vo vlastnej šťave, scedený"
+        },
+        {
+          "name": "Cibuľa",
+          "quantity": 1,
+          "unit": "ks",
+          "notes": "nadrobno nakrájaná"
+        },
+        {
+          "name": "Cesnak",
+          "quantity": 2,
+          "unit": "ks",
+          "notes": "strúčiky, nasekané"
+        },
+        {
+          "name": "Kukurica",
+          "quantity": 1,
+          "unit": "ks",
+          "notes": "konzerva"
+        },
+        {
+          "name": "Bujón",
+          "quantity": 1,
+          "unit": "ks",
+          "notes": "kocka"
+        },
+        {
+          "name": "Smotana na šľahanie",
+          "quantity": 200,
+          "unit": "ml",
+          "notes": null
+        },
+        {
+          "name": "Čierne korenie",
+          "quantity": null,
+          "unit": null,
+          "notes": "podľa chuti"
+        },
+        {
+          "name": "Soľ",
+          "quantity": null,
+          "unit": null,
+          "notes": "podľa chuti"
+        },
+        {
+          "name": "Cestoviny",
+          "quantity": null,
+          "unit": null,
+          "notes": "podľa preferencie"
+        },
+        { "name": "Olej", "quantity": null, "unit": null, "notes": "na osmaženie" },
+        { "name": "Voda", "quantity": null, "unit": null, "notes": "trochu" }
+      ],
+      "steps": [
+        "Cestoviny uvariť podľa návodu a scediť.",
+        "Na panvici na troche oleja osmažiť nadrobno nakrájanú cibuľu.",
+        "Pridať nasekaný cesnak a krátko orestovať.",
+        "Pridať scedeného tuniaka a kukuricu, krátko orestovať.",
+        "Pridať bujón, trochu vody a premiešať.",
+        "Prilevať smotanu na šľahanie, premiešať a nechať krátko povariť.",
+        "Dochutiť čiernym korením a soľou.",
+        "Pridať uvarené cestoviny a všetko spolu premiešať.",
+        "Podávať teplé."
+      ],
+      "sourceUrl": null,
+      "references": [],
+      "notes": null,
       "imageUrl": null
     }
   ]
