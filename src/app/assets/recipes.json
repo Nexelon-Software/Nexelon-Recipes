@@ -3987,6 +3987,64 @@
       "references": [],
       "notes": "Rýchly ťahák (4 cm): 54,5 °C / ~2 h / sear ~45 s + 45 s. Maslo do sáčku sa skôr neodporúča, môže „zriediť“ chuť mäsa.",
       "imageUrl": null
+    },
+    {
+      "id": "opekane-cinske-ryzove-rezance",
+      "name": "Opekané čínske ryžové rezance",
+      "owner": "Samo",
+      "description": "Jednoduché, rýchle a chutné opekané ryžové rezance s kuracím mäsom a zeleninou – podobné jedlu z čínskych reštaurácií.",
+      "category": "main",
+      "tags": ["čínske", "rezance", "kurča", "rýchle"],
+      "relatedRecipes": [],
+      "cuisine": "čínska",
+      "servings": 4,
+      "prepTimeMinutes": 10,
+      "cookTimeMinutes": 25,
+      "totalTimeMinutes": 35,
+      "difficulty": "easy",
+      "ovenTemperatureCelsius": null,
+      "equipment": ["panvica", "hrniec"],
+      "ingredients": [
+        {
+          "name": "Kuracie prsia",
+          "quantity": 300,
+          "unit": "g",
+          "notes": "možno nahradiť kuracími stehnami"
+        },
+        {
+          "name": "Ryžové rezance",
+          "quantity": 300,
+          "unit": "g",
+          "notes": null
+        },
+        { "name": "Mrkva", "quantity": 1, "unit": "ks", "notes": null },
+        { "name": "Pór", "quantity": 1, "unit": "ks", "notes": "menší" },
+        {
+          "name": "Pekinská kapusta",
+          "quantity": 100,
+          "unit": "g",
+          "notes": null
+        },
+        {
+          "name": "Sójová omáčka tmavá",
+          "quantity": 3,
+          "unit": "PL",
+          "notes": null
+        },
+        { "name": "Olej", "quantity": 0.5, "unit": "dcl", "notes": null }
+      ],
+      "steps": [
+        "Kuracie mäso nakrájať na kocky, opražiť na oleji, podliať troškou vody a podusiť asi 7–10 minút. Mrkvu a pekinskú kapustu nakrájať na tenké pásiky, pór na tenké polmesiačiky.",
+        "Asi po 7 minútach pridať k mäsu mrkvu.",
+        "Po ďalších 7 minútach pridať pekinskú kapustu a pór.",
+        "Nechať vydusiť vodu a všetko krátko orestovať (zelenina nemá byť príliš mäkká), pridať 2–3 PL sójovej omáčky.",
+        "Ryžové rezance pripraviť podľa návodu na obale (napr. vložiť do horúcej prevarenej vody na 3–4 minúty a precediť).",
+        "Rezance pridať k mäsu a spolu osmažiť, prípadne dochutiť sójovou omáčkou. Pri miešaní sa osvedčia dve vidličky (po jednej v každej ruke)."
+      ],
+      "sourceUrl": "https://varecha.pravda.sk/recepty/opekane-cinske-ryzove-rezance/3197-recept.html",
+      "references": [],
+      "notes": "Kuracie prsia môžu byť nahradené kuracími stehnami.",
+      "imageUrl": null
     }
   ]
 }
