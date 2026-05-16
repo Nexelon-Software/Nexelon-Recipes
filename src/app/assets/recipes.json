@@ -4045,6 +4045,113 @@
       "references": [],
       "notes": "Kuracie prsia môžu byť nahradené kuracími stehnami.",
       "imageUrl": null
+    },
+    {
+      "id": "pad-thai-nudle",
+      "name": "Pad thai nudle",
+      "owner": "Samo",
+      "description": "Thajské pad thai s krevetami (alebo kuracím mäsom) a vajcami vo woku – suchá praženica bez prebytočnej vody. Namiesto domácej omáčky z kokosového mlieka, tamarindu a palmového cukru používame hotovú J-Lek Pad Thai omáčku z Tesca.",
+      "category": "main",
+      "tags": ["pad thai", "thajské", "krevety", "kurča", "wok", "nudle"],
+      "relatedRecipes": ["opekane-cinske-ryzove-rezance"],
+      "cuisine": "thajská",
+      "servings": 4,
+      "prepTimeMinutes": 20,
+      "cookTimeMinutes": 15,
+      "totalTimeMinutes": 35,
+      "difficulty": "medium",
+      "ovenTemperatureCelsius": null,
+      "equipment": ["wok", "panvica"],
+      "ingredients": [
+        {
+          "name": "J-Lek Pad Thai omáčka",
+          "quantity": 300,
+          "unit": "ml",
+          "notes": "Tesco, 1 fľaša"
+        },
+        {
+          "name": "Široké ryžové nudle",
+          "quantity": 1,
+          "unit": "balenie",
+          "notes": "namočené v studenej vode cez noc (min. 6–8 hodín)"
+        },
+        {
+          "name": "Rastlinný olej",
+          "quantity": null,
+          "unit": null,
+          "notes": "na suchú praženicu vo woku"
+        },
+        { "name": "Vajcia", "quantity": 4, "unit": "ks", "notes": "veľkosť M" },
+        {
+          "name": "Krevety",
+          "quantity": 16,
+          "unit": "ks",
+          "notes": "očistené; namiesto nich môžu byť kuracie stehná alebo prsia"
+        },
+        {
+          "name": "Cesnak",
+          "quantity": 4,
+          "unit": "PL",
+          "notes": "nasekaný"
+        },
+        {
+          "name": "Zázvor",
+          "quantity": 4,
+          "unit": "PL",
+          "notes": "nasekaný"
+        },
+        {
+          "name": "Červená cibuľa",
+          "quantity": 1,
+          "unit": "ks",
+          "notes": "nakrájaná na nudličky"
+        },
+        {
+          "name": "Lahôdková cibuľka",
+          "quantity": 2,
+          "unit": "ks",
+          "notes": "nakrájaná na nudličky"
+        },
+        {
+          "name": "Sójové klíčky",
+          "quantity": 100,
+          "unit": "g",
+          "notes": null
+        },
+        {
+          "name": "Čerstvý koriander",
+          "quantity": 1,
+          "unit": "hrsť",
+          "notes": "nahrubo natrhaný"
+        },
+        {
+          "name": "Pražené solené arašidy",
+          "quantity": 100,
+          "unit": "g",
+          "notes": "nadrobené na dozdobenie"
+        },
+        {
+          "name": "Smažená šalotka",
+          "quantity": null,
+          "unit": null,
+          "notes": "na dozdobenie, kúpená alebo domáca"
+        },
+        { "name": "Limetky", "quantity": 2, "unit": "ks", "notes": "na podávanie" }
+      ],
+      "steps": [
+        "Ryžové nudle namoč cez noc (alebo aspoň 6–8 hodín) do studenej vody.",
+        "Červenú cibuľu a lahôdkovú cibuľku nakrájaj na nudličky, cesnak a zázvor nadrobno. Krevety očisti, prípadne kuracie mäso nakrájaj na menšie kúsky.",
+        "Vo woku rozpáľ olej – robíme suchú praženicu, nič nepodlievaj vodou. Vyklep vajcia, nechaj zatiahnuť a roztrhaj naberačkou.",
+        "Pridaj krevety (alebo kuracie mäso), zázvor, cesnak, červenú cibuľu a scedené nudle. Krátko opraž a miešaj na vysokej teplote.",
+        "Podlej J-Lek Pad Thai omáčkou a dôkladne premiešaj.",
+        "Odstav oheň a pridaj lahôdkovú cibuľku, sójové klíčky a natrhaný koriander.",
+        "Celú zmes prelož na tanier.",
+        "Na tanieri dozdob arašidmi, smaženou šalotkou a prípadne extra sójovými klíčkami a koriandrom. Podávaj s limetkou."
+      ],
+      "sourceUrl": "https://kuchynelidlu.cz/recept/pad-thai-nudle",
+      "references": ["https://www.youtube.com/watch?v=pj0AU6t9AsQ"],
+      "notes": "Upravená verzia receptu Romana Paulusa z Kuchyne Lidlu – sekcia domácej omáčky (kokosové mlieko, tamarind, rybia omáčka, palmový cukor, tógaraši) je nahradená hotovou omáčkou J-Lek z Tesca. Nudle treba namočiť vopred; bez toho sa nedajú správne pražiť. Krevety môžeš nahradiť kuracími stehnami alebo prsiami.",
+      "imageUrl": null
     }
   ]
 }
