@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -17,6 +18,14 @@ import {
 import LocaleSwitcherNavbar from "../../../_components/LocaleSwitcherNavbar";
 import { ThemeToggle } from "../../../_components/theme-toggle";
 import { IngredientsWithPortions } from "./_components/IngredientsWithPortions";
+import { RecipeJsonLd } from "~/components/seo/RecipeJsonLd";
+import { buildSocialMetadata } from "~/lib/metadata-shared";
+import {
+  languageAlternates,
+  localePath,
+  openGraphLocale,
+  truncateDescription,
+} from "~/lib/seo-url";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import type { Locale } from "~/language/i18n.config";
@@ -31,6 +40,45 @@ import {
 
 export function generateStaticParams() {
   return getAllRecipes().map((recipe) => ({ id: recipe.id }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ lang: string; id: string }>;
+}): Promise<Metadata> {
+  const { lang: langParam, id } = await params;
+  const lang = langParam as Locale;
+  const recipe = getRecipeById(id);
+
+  if (!recipe) {
+    return { title: "Not found" };
+  }
+
+  const langData = await getLanguage(lang);
+  const siteName = langData.metadata.siteName ?? langData.metadata.title;
+  const description = truncateDescription(recipe.description);
+  const pathname = `/recipes/${recipe.id}`;
+  const canonical = localePath(lang, pathname);
+
+  return {
+    title: recipe.name,
+    description,
+    keywords: [...recipe.tags, recipe.category, recipe.cuisine].filter(Boolean),
+    alternates: {
+      canonical,
+      languages: languageAlternates(pathname),
+    },
+    ...buildSocialMetadata({
+      title: recipe.name,
+      description,
+      url: canonical,
+      siteName,
+      locale: openGraphLocale(lang),
+      type: "article",
+      imageUrl: recipe.imageUrl,
+    }),
+  };
 }
 
 export default async function RecipeDetailPage({
@@ -102,7 +150,9 @@ export default async function RecipeDetailPage({
   const visibleStats = stats.filter((s) => s.value !== null);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
+      <RecipeJsonLd recipe={recipe} lang={lang} />
+      <div className="flex min-h-screen flex-col">
       <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b backdrop-blur">
         <div className="container mx-auto flex h-14 items-center gap-2 px-3 sm:h-16 sm:px-4">
           <Link
@@ -419,5 +469,6 @@ export default async function RecipeDetailPage({
         )}
       </main>
     </div>
+    </>
   );
 }

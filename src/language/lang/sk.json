@@ -1,8 +1,9 @@
 {
   "metadata": {
-    "title": "Rodinné recepty",
-    "description": "Osobná zbierka rodinných receptov — vyhľadávanie, triedenie a prispôsobenie porcií.",
-    "keywords": ["recepty", "varenie", "rodinné recepty"]
+    "title": "Nexelon recepty",
+    "siteName": "Nexelon recepty",
+    "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie a prispôsobenie porcií.",
+    "keywords": ["recepty", "varenie", "nexelon recepty"]
   },
   "theme": {
     "toggle": "Prepnúť tému",
@@ -12,7 +13,7 @@
   },
   "recipes": {
     "title": "Recepty",
-    "description": "Osobná zbierka rodinných receptov — vyhľadávanie, triedenie, prispôsobené pre mobil.",
+    "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie, prispôsobené pre mobil.",
     "count": "{count} receptov",
     "searchLabel": "Hľadať",
     "searchPlaceholder": "Hľadaj podľa názvu, ingrediencie, štítku…",

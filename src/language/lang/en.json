@@ -1,8 +1,9 @@
 {
   "metadata": {
-    "title": "Family Recipes",
-    "description": "A personal collection of family recipes — search, sort, and scale portions.",
-    "keywords": ["recipes", "cooking", "family recipes"]
+    "title": "Nexelon Recipes",
+    "siteName": "Nexelon Recipes",
+    "description": "Nexelon recipe collection — search, sort, and scale portions.",
+    "keywords": ["recipes", "cooking", "nexelon recipes"]
   },
   "theme": {
     "toggle": "Toggle theme",
@@ -12,7 +13,7 @@
   },
   "recipes": {
     "title": "Recipes",
-    "description": "A personal collection of family recipes — search, sort, and mobile-friendly.",
+    "description": "Nexelon recipe collection — search, sort, and mobile-friendly.",
     "count": "{count} recipes",
     "searchLabel": "Search",
     "searchPlaceholder": "Search by name, ingredient, tag…",
