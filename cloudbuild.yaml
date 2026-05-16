@@ -1,0 +1,61 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    env:
+      - _BETTER_AUTH_SECRET=$_BETTER_AUTH_SECRET
+      - _GOOGLE_CLIENT_ID=$_GOOGLE_CLIENT_ID
+      - _GOOGLE_CLIENT_SECRET=$_GOOGLE_CLIENT_SECRET
+      - _DATABASE_URL=$_DATABASE_URL
+      - _NEXT_PUBLIC_SERVER_URL=$_NEXT_PUBLIC_SERVER_URL
+    args:
+      - "-c"
+      - |
+        docker build --no-cache \
+          -t "$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" \
+          --build-arg _BETTER_AUTH_SECRET=$_BETTER_AUTH_SECRET \
+          --build-arg _GOOGLE_CLIENT_ID=$_GOOGLE_CLIENT_ID \
+          --build-arg _GOOGLE_CLIENT_SECRET=$_GOOGLE_CLIENT_SECRET \
+          --build-arg _DATABASE_URL=$_DATABASE_URL \
+          --build-arg _NEXT_PUBLIC_SERVER_URL=$_NEXT_PUBLIC_SERVER_URL \
+          -f Dockerfile .
+    id: Build
+    entrypoint: bash
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - >-
+        $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+    id: Push
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    args:
+      - run
+      - services
+      - update
+      - $_SERVICE_NAME
+      - "--platform=managed"
+      - >-
+        --image=$_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+      - >-
+        --labels=managed-by=gcp-cloud-build-deploy-cloud-run,commit-sha=$COMMIT_SHA,gcb-build-id=$BUILD_ID,gcb-trigger-id=$_TRIGGER_ID
+      - "--region=$_DEPLOY_REGION"
+      - "--quiet"
+    id: Deploy
+    entrypoint: gcloud
+images:
+  - >-
+    $_AR_HOSTNAME/$_AR_PROJECT_ID/$_AR_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA
+options:
+  substitutionOption: ALLOW_LOOSE
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _TRIGGER_ID: 23773bdf-e0b4-471b-8386-d0f4f90026f9
+  _AR_REPOSITORY: cloud-run-source-deploy
+  _AR_PROJECT_ID: nexelon-469619
+  _PLATFORM: managed
+  _SERVICE_NAME: nexelon-recipes
+  REPO_NAME: nexelon-recipes
+  _DEPLOY_REGION: europe-west1
+  _AR_HOSTNAME: europe-west1-docker.pkg.dev
+tags:
+  - gcp-cloud-build-deploy-cloud-run
+  - gcp-cloud-build-deploy-cloud-run-managed
+  - nexelon-recipes
