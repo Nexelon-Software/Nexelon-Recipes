@@ -1,0 +1,12 @@
+---
+description: Drizzle schema safety — no manual migrations
+globs: src/server/db/**
+alwaysApply: false
+---
+
+# Drizzle schema
+
+- Edit only [`schema.ts`](src/server/db/schema.ts) and `relations` for schema changes.
+- **Never** create or edit `drizzle/`, `migrations/`, or hand-written `*.sql` migration files.
+- After schema changes: tell the user to run `npm run db:generate`; the user applies migrations. Do not run `db:*` scripts unless the user asks.
+- Full development workflow: [`.cursor/commands/develop.md`](.cursor/commands/develop.md).

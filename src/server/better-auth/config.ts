@@ -5,17 +5,15 @@ import { env } from "~/env";
 import { db } from "~/server/db";
 
 export const auth = betterAuth({
+  baseURL: env.NEXT_PUBLIC_SERVER_URL,
+  secret: env.BETTER_AUTH_SECRET,
   database: drizzleAdapter(db, {
-    provider: "pg", // or "pg" or "mysql"
+    provider: "pg",
   }),
-  emailAndPassword: {
-    enabled: true,
-  },
   socialProviders: {
-    github: {
+    google: {
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-      redirectURI: "http://localhost:3000/api/auth/callback/github",
     },
   },
 });

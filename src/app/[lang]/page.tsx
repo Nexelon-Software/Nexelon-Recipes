@@ -1,11 +1,16 @@
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+
 import LocaleSwitcherNavbar from "../_components/LocaleSwitcherNavbar";
 import { ThemeToggle } from "../_components/theme-toggle";
+import { UserProfileMenu } from "../_components/UserProfileMenu";
+import { localePath } from "~/lib/seo-url";
 import type { Locale } from "~/language/i18n.config";
 import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
-import { getAllRecipes, getUniqueCuisines } from "~/types/recipe";
-
-import { RecipesTable } from "./_components/recipes/RecipesTable";
+import { getSession } from "~/server/better-auth/server";
+import { db } from "~/server/db";
+import { user as userTable } from "~/server/db/schema";
 
 export default async function HomePage({
   params,
@@ -14,10 +19,22 @@ export default async function HomePage({
 }) {
   const { lang: langParam } = await params;
   const lang = langParam as Locale;
-  const langObj = await getLanguage(lang);
+  const session = await getSession();
 
-  const recipes = getAllRecipes();
-  const cuisines = getUniqueCuisines();
+  if (!session?.user) {
+    redirect(localePath(lang, "/login"));
+  }
+
+  const langObj = await getLanguage(lang);
+  const loginPath = localePath(lang, "/login");
+
+  const [dbUser] = await db
+    .select({ image: userTable.image })
+    .from(userTable)
+    .where(eq(userTable.id, session.user.id))
+    .limit(1);
+
+  const imageUrl = dbUser?.image?.trim() ?? null;
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -29,19 +46,17 @@ export default async function HomePage({
           <div className="ml-auto flex items-center gap-2">
             <LocaleSwitcherNavbar />
             <ThemeToggle />
+            <UserProfileMenu
+              imageUrl={imageUrl}
+              loginPath={loginPath}
+              profileLabel={ts(langObj, langMaps.auth.menu.profile)}
+              signOutLabel={ts(langObj, langMaps.auth.menu.signOut)}
+            />
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto flex w-full flex-1 flex-col gap-4 px-3 py-4 sm:px-4 sm:py-6">
-        <div className="hidden flex-col gap-1 sm:flex">
-          <p className="text-muted-foreground text-sm">
-            {ts(langObj, langMaps.recipes.description)}
-          </p>
-        </div>
-
-        <RecipesTable recipes={recipes} cuisines={cuisines} lang={lang} />
-      </main>
+      <main className="flex-1" />
     </div>
   );
 }

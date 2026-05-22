@@ -5,6 +5,23 @@
     "description": "Nexelon recipe collection — search, sort, and scale portions.",
     "keywords": ["recipes", "cooking", "nexelon recipes"]
   },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Continue with your Google account",
+      "google": "Continue with Google",
+      "browseRecipes": "Browse recipes without signing in"
+    },
+    "home": {
+      "greeting": "Hello, {name}",
+      "signOut": "Sign out",
+      "browseRecipes": "Browse recipes"
+    },
+    "menu": {
+      "profile": "Profile",
+      "signOut": "Sign out"
+    }
+  },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light",

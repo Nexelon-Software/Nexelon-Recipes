@@ -1,4 +1,21 @@
 export const langMaps = {
+  auth: {
+    login: {
+      title: "auth.login.title",
+      subtitle: "auth.login.subtitle",
+      google: "auth.login.google",
+      browseRecipes: "auth.login.browseRecipes",
+    },
+    home: {
+      greeting: "auth.home.greeting",
+      signOut: "auth.home.signOut",
+      browseRecipes: "auth.home.browseRecipes",
+    },
+    menu: {
+      profile: "auth.menu.profile",
+      signOut: "auth.menu.signOut",
+    },
+  },
   theme: {
     toggle: "theme.toggle",
     light: "theme.light",

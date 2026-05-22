@@ -5,6 +5,23 @@
     "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie a prispôsobenie porcií.",
     "keywords": ["recepty", "varenie", "nexelon recepty"]
   },
+  "auth": {
+    "login": {
+      "title": "Prihlásenie",
+      "subtitle": "Pokračujte pomocou účtu Google",
+      "google": "Pokračovať cez Google",
+      "browseRecipes": "Prezrieť recepty bez prihlásenia"
+    },
+    "home": {
+      "greeting": "Ahoj, {name}",
+      "signOut": "Odhlásiť sa",
+      "browseRecipes": "Prezrieť recepty"
+    },
+    "menu": {
+      "profile": "Profil",
+      "signOut": "Odhlásiť sa"
+    }
+  },
   "theme": {
     "toggle": "Prepnúť tému",
     "light": "Svetlá",
