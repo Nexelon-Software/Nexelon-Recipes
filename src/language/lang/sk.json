@@ -91,6 +91,7 @@
       "head": "hlavička"
     },
     "detail": {
+      "details": "Podrobnosti",
       "description": "Popis",
       "ingredients": "Ingrediencie",
       "portions": "Porcie",

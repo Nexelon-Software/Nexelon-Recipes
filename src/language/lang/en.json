@@ -87,6 +87,7 @@
       "head": "head"
     },
     "detail": {
+      "details": "Details",
       "description": "Description",
       "ingredients": "Ingredients",
       "portions": "Portions",

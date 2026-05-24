@@ -86,6 +86,7 @@ export const langMaps = {
       head: "recipes.units.head",
     },
     detail: {
+      details: "recipes.detail.details",
       description: "recipes.detail.description",
       ingredients: "recipes.detail.ingredients",
       portions: "recipes.detail.portions",

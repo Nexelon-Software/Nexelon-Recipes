@@ -16,6 +16,7 @@ import { api } from "~/trpc/server";
 
 import { DeleteRecipeButton } from "../_components/DeleteRecipeButton";
 import { ExportRecipeButton } from "../_components/ExportRecipeButton";
+import { RecipeDetailSectionCard } from "../_components/RecipeDetailSectionCard";
 import { RecipesAppShell } from "../_components/RecipesAppShell";
 import { getRecipesPageContext } from "../_lib/page-data";
 
@@ -60,9 +61,22 @@ export default async function RecipeDetailPage({
     return unit;
   };
 
+  const ingredientColumns =
+    recipe.ingredients.length <= 1
+      ? [recipe.ingredients]
+      : [
+          recipe.ingredients.slice(
+            0,
+            Math.ceil(recipe.ingredients.length / 2),
+          ),
+          recipe.ingredients.slice(
+            Math.ceil(recipe.ingredients.length / 2),
+          ),
+        ];
+
   return (
     <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
-      <article className="container mx-auto max-w-3xl space-y-8 px-3 py-6 sm:px-4">
+      <article className="container mx-auto max-w-5xl space-y-8 px-3 py-6 sm:px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
             <Link
@@ -102,127 +116,150 @@ export default async function RecipeDetailPage({
           />
         ) : null}
 
-        <dl className="grid gap-4 sm:grid-cols-2">
-          {recipe.category ? (
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {ts(langObj, langMaps.recipes.detail.category)}
-              </dt>
-              <dd>
-                {ts(
-                  langObj,
-                  langMaps.recipes.categories[
-                    recipe.category as keyof typeof langMaps.recipes.categories
-                  ],
-                )}
-              </dd>
-            </div>
-          ) : null}
-          {recipe.difficulty ? (
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {ts(langObj, langMaps.recipes.detail.difficulty)}
-              </dt>
-              <dd>
-                {ts(
-                  langObj,
-                  langMaps.recipes.difficulties[
-                    recipe.difficulty as keyof typeof langMaps.recipes.difficulties
-                  ],
-                )}
-              </dd>
-            </div>
-          ) : null}
-          {recipe.cuisine ? (
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {ts(langObj, langMaps.recipes.detail.cuisine)}
-              </dt>
-              <dd>{recipe.cuisine}</dd>
-            </div>
-          ) : null}
-          {recipe.servings ? (
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {ts(langObj, langMaps.recipes.detail.servings)}
-              </dt>
-              <dd>{recipe.servings}</dd>
-            </div>
-          ) : null}
-          {recipe.prepTimeMinutes ? (
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {ts(langObj, langMaps.recipes.detail.prepTime)}
-              </dt>
-              <dd>{recipe.prepTimeMinutes} min</dd>
-            </div>
-          ) : null}
-          {recipe.cookTimeMinutes ? (
-            <div>
-              <dt className="text-muted-foreground text-sm">
-                {ts(langObj, langMaps.recipes.detail.cookTime)}
-              </dt>
-              <dd>{recipe.cookTimeMinutes} min</dd>
-            </div>
-          ) : null}
-        </dl>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="flex flex-col gap-4">
+          <RecipeDetailSectionCard
+            title={ts(langObj, langMaps.recipes.detail.details)}
+          >
+            <dl className="grid grid-cols-2 gap-4">
+              {recipe.category ? (
+                <div>
+                  <dt className="text-muted-foreground text-sm">
+                    {ts(langObj, langMaps.recipes.detail.category)}
+                  </dt>
+                  <dd>
+                    {ts(
+                      langObj,
+                      langMaps.recipes.categories[
+                        recipe.category as keyof typeof langMaps.recipes.categories
+                      ],
+                    )}
+                  </dd>
+                </div>
+              ) : null}
+              {recipe.difficulty ? (
+                <div>
+                  <dt className="text-muted-foreground text-sm">
+                    {ts(langObj, langMaps.recipes.detail.difficulty)}
+                  </dt>
+                  <dd>
+                    {ts(
+                      langObj,
+                      langMaps.recipes.difficulties[
+                        recipe.difficulty as keyof typeof langMaps.recipes.difficulties
+                      ],
+                    )}
+                  </dd>
+                </div>
+              ) : null}
+              {recipe.cuisine ? (
+                <div>
+                  <dt className="text-muted-foreground text-sm">
+                    {ts(langObj, langMaps.recipes.detail.cuisine)}
+                  </dt>
+                  <dd>{recipe.cuisine}</dd>
+                </div>
+              ) : null}
+              {recipe.servings ? (
+                <div>
+                  <dt className="text-muted-foreground text-sm">
+                    {ts(langObj, langMaps.recipes.detail.servings)}
+                  </dt>
+                  <dd>{recipe.servings}</dd>
+                </div>
+              ) : null}
+              {recipe.prepTimeMinutes ? (
+                <div>
+                  <dt className="text-muted-foreground text-sm">
+                    {ts(langObj, langMaps.recipes.detail.prepTime)}
+                  </dt>
+                  <dd>{recipe.prepTimeMinutes} min</dd>
+                </div>
+              ) : null}
+              {recipe.cookTimeMinutes ? (
+                <div>
+                  <dt className="text-muted-foreground text-sm">
+                    {ts(langObj, langMaps.recipes.detail.cookTime)}
+                  </dt>
+                  <dd>{recipe.cookTimeMinutes} min</dd>
+                </div>
+              ) : null}
+            </dl>
+          </RecipeDetailSectionCard>
 
-        <section className="space-y-3">
-          <h2 className="text-xl font-medium">
-            {ts(langObj, langMaps.recipes.detail.ingredients)}
-          </h2>
-          {recipe.ingredients.length === 0 ? (
-            <p className="text-muted-foreground">
-              {ts(langObj, langMaps.recipes.detail.ingredientsEmpty)}
-            </p>
-          ) : (
-            <ul className="space-y-2">
-              {recipe.ingredients.map((ingredient) => {
-                const unitLabel = formatIngredientUnit(ingredient.unit);
-                const quantity = [ingredient.amount, unitLabel]
-                  .filter(Boolean)
-                  .join(" ");
+          <RecipeDetailSectionCard
+            title={ts(langObj, langMaps.recipes.detail.ingredients)}
+          >
+            {recipe.ingredients.length === 0 ? (
+              <p className="text-muted-foreground">
+                {ts(langObj, langMaps.recipes.detail.ingredientsEmpty)}
+              </p>
+            ) : (
+              <div
+                className={cn(
+                  "grid gap-x-4",
+                  ingredientColumns.length > 1 ? "grid-cols-2" : "grid-cols-1",
+                )}
+              >
+                {ingredientColumns.map((column, columnIndex) => (
+                  <ul key={columnIndex} className="min-w-0 space-y-2">
+                    {column.map((ingredient) => {
+                      const unitLabel = formatIngredientUnit(ingredient.unit);
+                      const quantity = [ingredient.amount, unitLabel]
+                        .filter(Boolean)
+                        .join(" ");
 
-                return (
-                  <li key={ingredient.id} className="flex gap-2">
-                    <span className="font-medium">{ingredient.name}</span>
-                    {quantity ? (
-                      <span className="text-muted-foreground">{quantity}</span>
-                    ) : null}
+                      return (
+                        <li
+                          key={ingredient.id}
+                          className="flex min-w-0 flex-wrap gap-x-2 gap-y-0.5"
+                        >
+                          <span className="font-medium break-words">
+                            {ingredient.name}
+                          </span>
+                          {quantity ? (
+                            <span className="text-muted-foreground shrink-0">
+                              {quantity}
+                            </span>
+                          ) : null}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ))}
+              </div>
+            )}
+          </RecipeDetailSectionCard>
+          </div>
+
+          <div className="flex flex-col gap-4">
+          <RecipeDetailSectionCard
+            title={ts(langObj, langMaps.recipes.detail.steps)}
+          >
+            {recipe.steps.length === 0 ? (
+              <p className="text-muted-foreground">
+                {ts(langObj, langMaps.recipes.detail.stepsEmpty)}
+              </p>
+            ) : (
+              <ol className="list-decimal space-y-4 pl-5">
+                {recipe.steps.map((step) => (
+                  <li key={step.id} className="whitespace-pre-wrap">
+                    {step.instruction}
                   </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
+                ))}
+              </ol>
+            )}
+          </RecipeDetailSectionCard>
 
-        <section className="space-y-3">
-          <h2 className="text-xl font-medium">
-            {ts(langObj, langMaps.recipes.detail.steps)}
-          </h2>
-          {recipe.steps.length === 0 ? (
-            <p className="text-muted-foreground">
-              {ts(langObj, langMaps.recipes.detail.stepsEmpty)}
-            </p>
-          ) : (
-            <ol className="list-decimal space-y-4 pl-5">
-              {recipe.steps.map((step) => (
-                <li key={step.id} className="whitespace-pre-wrap">
-                  {step.instruction}
-                </li>
-              ))}
-            </ol>
-          )}
-        </section>
-
-        {recipe.notes ? (
-          <section className="space-y-2">
-            <h2 className="text-xl font-medium">
-              {ts(langObj, langMaps.recipes.detail.notes)}
-            </h2>
-            <p className="whitespace-pre-wrap">{recipe.notes}</p>
-          </section>
-        ) : null}
+          {recipe.notes ? (
+            <RecipeDetailSectionCard
+              title={ts(langObj, langMaps.recipes.detail.notes)}
+            >
+              <p className="whitespace-pre-wrap">{recipe.notes}</p>
+            </RecipeDetailSectionCard>
+          ) : null}
+          </div>
+        </div>
 
         {recipe.sourceUrl ? (
           <p>
