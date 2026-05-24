@@ -109,8 +109,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.pg-drizzle_post": {
-      "name": "pg-drizzle_post",
+    "public.drizzle_post": {
+      "name": "drizzle_post",
       "schema": "",
       "columns": {
         "id": {
@@ -120,7 +120,7 @@
           "notNull": true,
           "identity": {
             "type": "byDefault",
-            "name": "pg-drizzle_post_id_seq",
+            "name": "drizzle_post_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -188,9 +188,9 @@
         }
       },
       "foreignKeys": {
-        "pg-drizzle_post_createdById_user_id_fk": {
-          "name": "pg-drizzle_post_createdById_user_id_fk",
-          "tableFrom": "pg-drizzle_post",
+        "drizzle_post_createdById_user_id_fk": {
+          "name": "drizzle_post_createdById_user_id_fk",
+          "tableFrom": "drizzle_post",
           "tableTo": "user",
           "columnsFrom": [
             "createdById"
@@ -208,8 +208,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.pg-drizzle_recipeIngredient": {
-      "name": "pg-drizzle_recipeIngredient",
+    "public.drizzle_recipeIngredient": {
+      "name": "drizzle_recipeIngredient",
       "schema": "",
       "columns": {
         "id": {
@@ -219,7 +219,7 @@
           "notNull": true,
           "identity": {
             "type": "byDefault",
-            "name": "pg-drizzle_recipeIngredient_id_seq",
+            "name": "drizzle_recipeIngredient_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -291,10 +291,10 @@
         }
       },
       "foreignKeys": {
-        "pg-drizzle_recipeIngredient_recipeId_pg-drizzle_recipe_id_fk": {
-          "name": "pg-drizzle_recipeIngredient_recipeId_pg-drizzle_recipe_id_fk",
-          "tableFrom": "pg-drizzle_recipeIngredient",
-          "tableTo": "pg-drizzle_recipe",
+        "drizzle_recipeIngredient_recipeId_drizzle_recipe_id_fk": {
+          "name": "drizzle_recipeIngredient_recipeId_drizzle_recipe_id_fk",
+          "tableFrom": "drizzle_recipeIngredient",
+          "tableTo": "drizzle_recipe",
           "columnsFrom": [
             "recipeId"
           ],
@@ -311,8 +311,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.pg-drizzle_recipeStep": {
-      "name": "pg-drizzle_recipeStep",
+    "public.drizzle_recipeStep": {
+      "name": "drizzle_recipeStep",
       "schema": "",
       "columns": {
         "id": {
@@ -322,7 +322,7 @@
           "notNull": true,
           "identity": {
             "type": "byDefault",
-            "name": "pg-drizzle_recipeStep_id_seq",
+            "name": "drizzle_recipeStep_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -382,10 +382,10 @@
         }
       },
       "foreignKeys": {
-        "pg-drizzle_recipeStep_recipeId_pg-drizzle_recipe_id_fk": {
-          "name": "pg-drizzle_recipeStep_recipeId_pg-drizzle_recipe_id_fk",
-          "tableFrom": "pg-drizzle_recipeStep",
-          "tableTo": "pg-drizzle_recipe",
+        "drizzle_recipeStep_recipeId_drizzle_recipe_id_fk": {
+          "name": "drizzle_recipeStep_recipeId_drizzle_recipe_id_fk",
+          "tableFrom": "drizzle_recipeStep",
+          "tableTo": "drizzle_recipe",
           "columnsFrom": [
             "recipeId"
           ],
@@ -402,8 +402,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.pg-drizzle_recipe": {
-      "name": "pg-drizzle_recipe",
+    "public.drizzle_recipe": {
+      "name": "drizzle_recipe",
       "schema": "",
       "columns": {
         "id": {
@@ -413,7 +413,7 @@
           "notNull": true,
           "identity": {
             "type": "byDefault",
-            "name": "pg-drizzle_recipe_id_seq",
+            "name": "drizzle_recipe_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -563,9 +563,9 @@
         }
       },
       "foreignKeys": {
-        "pg-drizzle_recipe_createdById_user_id_fk": {
-          "name": "pg-drizzle_recipe_createdById_user_id_fk",
-          "tableFrom": "pg-drizzle_recipe",
+        "drizzle_recipe_createdById_user_id_fk": {
+          "name": "drizzle_recipe_createdById_user_id_fk",
+          "tableFrom": "drizzle_recipe",
           "tableTo": "user",
           "columnsFrom": [
             "createdById"
