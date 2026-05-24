@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, ilike } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -17,6 +17,13 @@ import {
 import { RecipeInputSchema } from "./recipe/schemas";
 
 type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
+
+function normalizeForSearch(value: string): string {
+  return value
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLocaleLowerCase();
+}
 
 function withSortOrder<T extends { sortOrder?: number }>(
   items: T[],
@@ -81,12 +88,8 @@ export const recipeRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const search = input?.search?.trim();
-
-      return ctx.db.query.recipes.findMany({
-        where: and(
-          eq(recipes.deleted, false),
-          search ? ilike(recipes.name, `%${search}%`) : undefined,
-        ),
+      const rows = await ctx.db.query.recipes.findMany({
+        where: eq(recipes.deleted, false),
         orderBy: [desc(recipes.updatedAt)],
         columns: {
           id: true,
@@ -103,6 +106,15 @@ export const recipeRouter = createTRPCRouter({
           updatedAt: true,
         },
       });
+
+      if (!search || search.length < 3) {
+        return rows;
+      }
+
+      const needle = normalizeForSearch(search);
+      return rows.filter((recipe) =>
+        normalizeForSearch(recipe.name).includes(needle),
+      );
     }),
 
   getById: publicProcedure

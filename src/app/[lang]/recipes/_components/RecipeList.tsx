@@ -1,9 +1,10 @@
 "use client";
 
+import { keepPreviousData } from "@tanstack/react-query";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Button, buttonVariants } from "~/components/ui/button";
+import { buttonVariants } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { localePath } from "~/lib/seo-url";
 import { cn } from "~/lib/utils";
@@ -17,9 +18,21 @@ export function RecipeList({ currentUserId }: { currentUserId: string | null }) 
   const [search, setSearch] = useState("");
   const [querySearch, setQuerySearch] = useState<string | undefined>();
 
-  const { data: recipes = [], isLoading } = api.recipe.list.useQuery({
-    search: querySearch,
-  });
+  useEffect(() => {
+    const trimmed = search.trim();
+    if (trimmed.length < 3) {
+      setQuerySearch(undefined);
+      return;
+    }
+
+    const timer = setTimeout(() => setQuerySearch(trimmed), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const { data: recipes = [], isLoading } = api.recipe.list.useQuery(
+    { search: querySearch },
+    { placeholderData: keepPreviousData },
+  );
 
   return (
     <div className="container mx-auto space-y-6 px-3 py-6 sm:px-4">
@@ -40,25 +53,16 @@ export function RecipeList({ currentUserId }: { currentUserId: string | null }) 
         ) : null}
       </div>
 
-      <form
-        className="flex max-w-md gap-2"
-        onSubmit={(event) => {
-          event.preventDefault();
-          setQuerySearch(search.trim() || undefined);
-        }}
-      >
+      <div className="max-w-md">
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           placeholder={t(lang.recipes.searchPlaceholder)}
           aria-label={t(lang.recipes.searchLabel)}
         />
-        <Button type="submit" variant="secondary">
-          {t(lang.recipes.searchLabel)}
-        </Button>
-      </form>
+      </div>
 
-      {isLoading ? (
+      {isLoading && recipes.length === 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {Array.from({ length: 3 }, (_, index) => (
             <RecipeListTileSkeleton key={index} />
