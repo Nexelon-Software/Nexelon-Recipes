@@ -7,6 +7,46 @@ import { match as matchLocale } from "@formatjs/intl-localematcher";
 import Negotiator from "negotiator";
 import type { I18nConfig } from "./language/i18n.config";
 
+/** Google OAuth rejects redirect URIs that use a bare private IP (device_id error). */
+function nipIoRedirectUrl(request: NextRequest): URL | null {
+  if (process.env.NODE_ENV !== "development") return null;
+
+  const host = request.headers.get("host");
+  if (!host) return null;
+
+  const colon = host.indexOf(":");
+  const hostname = colon === -1 ? host : host.slice(0, colon);
+  const port = colon === -1 ? "" : host.slice(colon + 1);
+  if (
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname.endsWith(".nip.io")
+  ) {
+    return null;
+  }
+
+  const octets = hostname.split(".").map(Number);
+  if (
+    octets.length !== 4 ||
+    octets.some((n) => Number.isNaN(n) || n < 0 || n > 255)
+  ) {
+    return null;
+  }
+
+  const a = octets[0]!;
+  const b = octets[1]!;
+  const isPrivate =
+    a === 10 ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 168);
+  if (!isPrivate) return null;
+
+  const nipHost = port ? `${hostname}.nip.io:${port}` : `${hostname}.nip.io`;
+  const url = request.nextUrl.clone();
+  url.host = nipHost;
+  return url;
+}
+
 function getLocale(request: NextRequest, i18nConfig: I18nConfig): string {
   const { locales, defaultLocale } = i18nConfig;
 
@@ -22,6 +62,11 @@ function getLocale(request: NextRequest, i18nConfig: I18nConfig): string {
 }
 
 export function middleware(request: NextRequest) {
+  const nipRedirect = nipIoRedirectUrl(request);
+  if (nipRedirect) {
+    return NextResponse.redirect(nipRedirect, 307);
+  }
+
   let response;
   let nextLocale;
 

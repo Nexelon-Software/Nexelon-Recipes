@@ -3,7 +3,28 @@
     "title": "Nexelon recepty",
     "siteName": "Nexelon recepty",
     "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie a prispôsobenie porcií.",
-    "keywords": ["recepty", "varenie", "nexelon recepty"]
+    "keywords": [
+      "recepty",
+      "varenie",
+      "nexelon recepty"
+    ]
+  },
+  "auth": {
+    "login": {
+      "title": "Prihlásenie",
+      "subtitle": "Pokračujte pomocou účtu Google",
+      "google": "Pokračovať cez Google",
+      "browseRecipes": "Prezrieť recepty bez prihlásenia"
+    },
+    "home": {
+      "greeting": "Ahoj, {name}",
+      "signOut": "Odhlásiť sa",
+      "browseRecipes": "Prezrieť recepty"
+    },
+    "menu": {
+      "profile": "Profil",
+      "signOut": "Odhlásiť sa"
+    }
   },
   "theme": {
     "toggle": "Prepnúť tému",
@@ -18,6 +39,9 @@
     "searchLabel": "Hľadať",
     "searchPlaceholder": "Hľadaj podľa názvu, ingrediencie, štítku…",
     "noResults": "Žiadne recepty nezodpovedajú filtrom.",
+    "list": {
+      "minutes": "{minutes} min"
+    },
     "toggleColumns": "Stĺpce",
     "backToList": "Späť na recepty",
     "openRecipe": "Otvoriť recept",
@@ -55,6 +79,17 @@
       "hard": "Náročné",
       "unknown": "—"
     },
+    "units": {
+      "ml": "ml",
+      "l": "l",
+      "dl": "dl",
+      "tsp": "čl.",
+      "tbsp": "PL",
+      "g": "g",
+      "kg": "kg",
+      "piece": "ks",
+      "head": "hlavička"
+    },
     "detail": {
       "description": "Popis",
       "ingredients": "Ingrediencie",
@@ -79,6 +114,60 @@
       "noImage": "Bez obrázka",
       "ingredientsEmpty": "Žiadne ingrediencie.",
       "stepsEmpty": "Žiadny postup."
+    },
+    "import": {
+      "importJson": "Importovať JSON",
+      "importSuccess": "Recept bol načítaný do formulára. Skontrolujte a uložte.",
+      "importInvalidJson": "Súbor sa nepodarilo prečítať. Vyberte platný JSON súbor.",
+      "importValidationFailed": "JSON nezodpovedá formátu receptu.",
+      "importReplaceConfirm": "Nahradiť aktuálny formulár importovaným receptom?"
+    },
+    "export": {
+      "exportJson": "Exportovať JSON"
+    },
+    "actions": {
+      "create": "Nový recept",
+      "edit": "Upraviť",
+      "delete": "Odstrániť",
+      "deleteConfirm": "Odstrániť tento recept?",
+      "deleteConfirmDescription": "Recept sa skryje zo zoznamu. Túto akciu nie je možné vrátiť späť.",
+      "cancel": "Zrušiť",
+      "save": "Uložiť recept",
+      "saving": "Ukladám…",
+      "deleting": "Odstraňujem…"
+    },
+    "form": {
+      "createTitle": "Vytvoriť recept",
+      "editTitle": "Upraviť recept",
+      "name": "Názov",
+      "namePlaceholder": "Názov receptu",
+      "description": "Popis",
+      "descriptionPlaceholder": "Krátky popis",
+      "category": "Kategória",
+      "categoryPlaceholder": "Vyberte kategóriu",
+      "cuisine": "Kuchyňa",
+      "cuisinePlaceholder": "napr. slovenská, talianska",
+      "difficulty": "Náročnosť",
+      "difficultyPlaceholder": "Vyberte náročnosť",
+      "prepTimeMinutes": "Čas prípravy (min)",
+      "cookTimeMinutes": "Čas varenia (min)",
+      "servings": "Porcie",
+      "imageUrl": "URL obrázka",
+      "notes": "Poznámky",
+      "sourceUrl": "URL zdroja",
+      "ingredients": "Ingrediencie",
+      "ingredientName": "Ingrediencia",
+      "ingredientAmount": "Množstvo",
+      "ingredientUnit": "Jednotka",
+      "addIngredient": "Pridať ingredienciu",
+      "removeIngredient": "Odstrániť",
+      "steps": "Postup",
+      "stepInstruction": "Popis kroku",
+      "addStep": "Pridať krok",
+      "removeStep": "Odstrániť",
+      "moveUp": "Posunúť hore",
+      "moveDown": "Posunúť dole",
+      "none": "Žiadna"
     }
   }
 }

@@ -1,0 +1,31 @@
+{
+  "format": "nexelon-recipe",
+  "version": 1,
+  "exportedAt": "2026-05-24T12:00:00.000Z",
+  "recipe": {
+    "name": "Spaghetti Carbonara",
+    "description": "Classic Roman pasta.",
+    "category": "main",
+    "difficulty": "medium",
+    "cuisine": "Italian",
+    "prepTimeMinutes": 15,
+    "cookTimeMinutes": 20,
+    "servings": 4,
+    "imageUrl": "https://example.com/carbonara.jpg",
+    "notes": "Use guanciale if available.",
+    "sourceUrl": "https://example.com/source",
+    "ingredients": [
+      { "name": "Spaghetti", "amount": "400", "unit": "g" },
+      { "name": "Guanciale", "amount": "150", "unit": "g" },
+      { "name": "Pecorino Romano", "amount": "100", "unit": "g" },
+      { "name": "Eggs", "amount": "4", "unit": "piece" },
+      { "name": "Black pepper", "amount": "1", "unit": "tsp" }
+    ],
+    "steps": [
+      { "instruction": "Boil pasta in salted water until al dente." },
+      { "instruction": "Crisp guanciale; reserve the fat." },
+      { "instruction": "Whisk eggs with pecorino and pepper." },
+      { "instruction": "Toss hot pasta with fat, then egg mixture off heat." }
+    ]
+  }
+}

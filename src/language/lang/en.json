@@ -5,6 +5,23 @@
     "description": "Nexelon recipe collection — search, sort, and scale portions.",
     "keywords": ["recipes", "cooking", "nexelon recipes"]
   },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "subtitle": "Continue with your Google account",
+      "google": "Continue with Google",
+      "browseRecipes": "Browse recipes without signing in"
+    },
+    "home": {
+      "greeting": "Hello, {name}",
+      "signOut": "Sign out",
+      "browseRecipes": "Browse recipes"
+    },
+    "menu": {
+      "profile": "Profile",
+      "signOut": "Sign out"
+    }
+  },
   "theme": {
     "toggle": "Toggle theme",
     "light": "Light",
@@ -18,6 +35,9 @@
     "searchLabel": "Search",
     "searchPlaceholder": "Search by name, ingredient, tag…",
     "noResults": "No recipes match your filters.",
+    "list": {
+      "minutes": "{minutes} min"
+    },
     "toggleColumns": "Columns",
     "backToList": "Back to recipes",
     "openRecipe": "Open recipe",
@@ -55,6 +75,17 @@
       "hard": "Hard",
       "unknown": "—"
     },
+    "units": {
+      "ml": "ml",
+      "l": "l",
+      "dl": "dl",
+      "tsp": "tsp",
+      "tbsp": "tbsp",
+      "g": "g",
+      "kg": "kg",
+      "piece": "piece",
+      "head": "head"
+    },
     "detail": {
       "description": "Description",
       "ingredients": "Ingredients",
@@ -79,6 +110,60 @@
       "noImage": "No image",
       "ingredientsEmpty": "No ingredients listed.",
       "stepsEmpty": "No steps listed."
+    },
+    "import": {
+      "importJson": "Import JSON",
+      "importSuccess": "Recipe imported into the form. Review and save when ready.",
+      "importInvalidJson": "Could not read the file. Choose a valid JSON file.",
+      "importValidationFailed": "The JSON does not match the recipe format.",
+      "importReplaceConfirm": "Replace the current form with the imported recipe?"
+    },
+    "export": {
+      "exportJson": "Export JSON"
+    },
+    "actions": {
+      "create": "New recipe",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this recipe?",
+      "deleteConfirmDescription": "This recipe will be hidden from the list. You cannot undo this action.",
+      "cancel": "Cancel",
+      "save": "Save recipe",
+      "saving": "Saving…",
+      "deleting": "Deleting…"
+    },
+    "form": {
+      "createTitle": "Create recipe",
+      "editTitle": "Edit recipe",
+      "name": "Name",
+      "namePlaceholder": "Recipe name",
+      "description": "Description",
+      "descriptionPlaceholder": "Short description",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "cuisine": "Cuisine",
+      "cuisinePlaceholder": "e.g. Slovak, Italian",
+      "difficulty": "Difficulty",
+      "difficultyPlaceholder": "Select difficulty",
+      "prepTimeMinutes": "Prep time (minutes)",
+      "cookTimeMinutes": "Cook time (minutes)",
+      "servings": "Servings",
+      "imageUrl": "Image URL",
+      "notes": "Notes",
+      "sourceUrl": "Source URL",
+      "ingredients": "Ingredients",
+      "ingredientName": "Ingredient",
+      "ingredientAmount": "Amount",
+      "ingredientUnit": "Unit",
+      "addIngredient": "Add ingredient",
+      "removeIngredient": "Remove",
+      "steps": "Steps",
+      "stepInstruction": "Step instruction",
+      "addStep": "Add step",
+      "removeStep": "Remove",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "none": "None"
     }
   }
 }
