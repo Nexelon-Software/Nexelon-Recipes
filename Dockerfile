@@ -42,6 +42,8 @@ ENV GOOGLE_CLIENT_SECRET=${_GOOGLE_CLIENT_SECRET}
 ENV DATABASE_URL=${_DATABASE_URL}
 ENV NEXT_PUBLIC_SERVER_URL=${_NEXT_PUBLIC_SERVER_URL}
 
+RUN npx drizzle-kit migrate --config=drizzle.config.ts
+
 RUN npm run build
 
 # Production image, copy all the files and run next
