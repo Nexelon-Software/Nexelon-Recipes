@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { User } from "lucide-react";
 
@@ -15,11 +16,13 @@ import { authClient } from "~/server/better-auth/client";
 export function UserProfileMenu({
   imageUrl,
   loginPath,
+  profilePath,
   profileLabel,
   signOutLabel,
 }: {
   imageUrl: string | null;
   loginPath: string;
+  profilePath: string;
   profileLabel: string;
   signOutLabel: string;
 }) {
@@ -58,7 +61,9 @@ export function UserProfileMenu({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>{profileLabel}</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={profilePath}>{profileLabel}</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => {
             void authClient.signOut({

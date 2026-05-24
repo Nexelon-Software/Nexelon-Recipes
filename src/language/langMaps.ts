@@ -20,6 +20,11 @@ export const langMaps = {
       profile: "auth.menu.profile",
       signOut: "auth.menu.signOut",
     },
+    profile: {
+      title: "auth.profile.title",
+      language: "auth.profile.language",
+      theme: "auth.profile.theme",
+    },
   },
   theme: {
     toggle: "theme.toggle",

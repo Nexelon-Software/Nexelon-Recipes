@@ -20,6 +20,11 @@
     "menu": {
       "profile": "Profile",
       "signOut": "Sign out"
+    },
+    "profile": {
+      "title": "Profile",
+      "language": "Language",
+      "theme": "Appearance"
     }
   },
   "theme": {
