@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { absoluteUrl, localePath } from "~/lib/seo-url";
+import { localePath } from "~/lib/seo-url";
 import type { Locale } from "~/language/i18n.config";
 import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
@@ -22,7 +22,7 @@ export default async function LoginPage({
   }
 
   const langObj = await getLanguage(lang);
-  const callbackURL = absoluteUrl(localePath(lang, "/"));
+  const callbackPath = localePath(lang, "/");
 
   return (
     <div className="bg-background flex min-h-screen flex-col items-center justify-center px-4">
@@ -38,7 +38,7 @@ export default async function LoginPage({
 
         <GoogleSignInButton
           label={ts(langObj, langMaps.auth.login.google)}
-          callbackURL={callbackURL}
+          callbackPath={callbackPath}
         />
       </div>
     </div>
