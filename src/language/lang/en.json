@@ -72,6 +72,16 @@
       "hard": "Hard",
       "unknown": "—"
     },
+    "units": {
+      "ml": "ml",
+      "l": "l",
+      "dl": "dl",
+      "tsp": "tsp",
+      "tbsp": "tbsp",
+      "g": "g",
+      "kg": "kg",
+      "piece": "piece"
+    },
     "detail": {
       "description": "Description",
       "ingredients": "Ingredients",
@@ -96,6 +106,50 @@
       "noImage": "No image",
       "ingredientsEmpty": "No ingredients listed.",
       "stepsEmpty": "No steps listed."
+    },
+    "actions": {
+      "create": "New recipe",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this recipe?",
+      "deleteConfirmDescription": "This recipe will be hidden from the list. You cannot undo this action.",
+      "cancel": "Cancel",
+      "save": "Save recipe",
+      "saving": "Saving…",
+      "deleting": "Deleting…"
+    },
+    "form": {
+      "createTitle": "Create recipe",
+      "editTitle": "Edit recipe",
+      "name": "Name",
+      "namePlaceholder": "Recipe name",
+      "description": "Description",
+      "descriptionPlaceholder": "Short description",
+      "category": "Category",
+      "categoryPlaceholder": "Select category",
+      "cuisine": "Cuisine",
+      "cuisinePlaceholder": "e.g. Slovak, Italian",
+      "difficulty": "Difficulty",
+      "difficultyPlaceholder": "Select difficulty",
+      "prepTimeMinutes": "Prep time (minutes)",
+      "cookTimeMinutes": "Cook time (minutes)",
+      "servings": "Servings",
+      "imageUrl": "Image URL",
+      "notes": "Notes",
+      "sourceUrl": "Source URL",
+      "ingredients": "Ingredients",
+      "ingredientName": "Ingredient",
+      "ingredientAmount": "Amount",
+      "ingredientUnit": "Unit",
+      "addIngredient": "Add ingredient",
+      "removeIngredient": "Remove",
+      "steps": "Steps",
+      "stepInstruction": "Step instruction",
+      "addStep": "Add step",
+      "removeStep": "Remove",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "none": "None"
     }
   }
 }

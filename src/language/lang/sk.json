@@ -72,6 +72,16 @@
       "hard": "Náročné",
       "unknown": "—"
     },
+    "units": {
+      "ml": "ml",
+      "l": "l",
+      "dl": "dl",
+      "tsp": "čl.",
+      "tbsp": "PL",
+      "g": "g",
+      "kg": "kg",
+      "piece": "ks"
+    },
     "detail": {
       "description": "Popis",
       "ingredients": "Ingrediencie",
@@ -96,6 +106,50 @@
       "noImage": "Bez obrázka",
       "ingredientsEmpty": "Žiadne ingrediencie.",
       "stepsEmpty": "Žiadny postup."
+    },
+    "actions": {
+      "create": "Nový recept",
+      "edit": "Upraviť",
+      "delete": "Odstrániť",
+      "deleteConfirm": "Odstrániť tento recept?",
+      "deleteConfirmDescription": "Recept sa skryje zo zoznamu. Túto akciu nie je možné vrátiť späť.",
+      "cancel": "Zrušiť",
+      "save": "Uložiť recept",
+      "saving": "Ukladám…",
+      "deleting": "Odstraňujem…"
+    },
+    "form": {
+      "createTitle": "Vytvoriť recept",
+      "editTitle": "Upraviť recept",
+      "name": "Názov",
+      "namePlaceholder": "Názov receptu",
+      "description": "Popis",
+      "descriptionPlaceholder": "Krátky popis",
+      "category": "Kategória",
+      "categoryPlaceholder": "Vyberte kategóriu",
+      "cuisine": "Kuchyňa",
+      "cuisinePlaceholder": "napr. slovenská, talianska",
+      "difficulty": "Náročnosť",
+      "difficultyPlaceholder": "Vyberte náročnosť",
+      "prepTimeMinutes": "Čas prípravy (min)",
+      "cookTimeMinutes": "Čas varenia (min)",
+      "servings": "Porcie",
+      "imageUrl": "URL obrázka",
+      "notes": "Poznámky",
+      "sourceUrl": "URL zdroja",
+      "ingredients": "Ingrediencie",
+      "ingredientName": "Ingrediencia",
+      "ingredientAmount": "Množstvo",
+      "ingredientUnit": "Jednotka",
+      "addIngredient": "Pridať ingredienciu",
+      "removeIngredient": "Odstrániť",
+      "steps": "Postup",
+      "stepInstruction": "Popis kroku",
+      "addStep": "Pridať krok",
+      "removeStep": "Odstrániť",
+      "moveUp": "Posunúť hore",
+      "moveDown": "Posunúť dole",
+      "none": "Žiadna"
     }
   }
 }

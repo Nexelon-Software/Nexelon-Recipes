@@ -31,6 +31,79 @@ export const posts = createTable(
   ]
 );
 
+export const recipes = createTable(
+  "recipe",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    name: d.varchar({ length: 256 }).notNull(),
+    description: d.text(),
+    category: d.varchar({ length: 64 }),
+    cuisine: d.varchar({ length: 128 }),
+    difficulty: d.varchar({ length: 16 }),
+    prepTimeMinutes: d.integer(),
+    cookTimeMinutes: d.integer(),
+    servings: d.integer(),
+    imageUrl: d.text(),
+    notes: d.text(),
+    sourceUrl: d.text(),
+    deleted: d.boolean().notNull().default(false),
+    createdById: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => user.id),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    index("recipe_created_by_idx").on(t.createdById),
+    index("recipe_name_idx").on(t.name),
+    index("recipe_deleted_idx").on(t.deleted),
+  ],
+);
+
+export const recipeIngredients = createTable(
+  "recipeIngredient",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    recipeId: d
+      .integer()
+      .notNull()
+      .references(() => recipes.id, { onDelete: "cascade" }),
+    name: d.varchar({ length: 256 }).notNull(),
+    amount: d.varchar({ length: 64 }),
+    unit: d.varchar({ length: 64 }),
+    sortOrder: d.integer().notNull().default(0),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [index("recipe_ingredient_recipe_id_idx").on(t.recipeId)],
+);
+
+export const recipeSteps = createTable(
+  "recipeStep",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    recipeId: d
+      .integer()
+      .notNull()
+      .references(() => recipes.id, { onDelete: "cascade" }),
+    instruction: d.text().notNull(),
+    sortOrder: d.integer().notNull().default(0),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [index("recipe_step_recipe_id_idx").on(t.recipeId)],
+);
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -94,6 +167,33 @@ export const verification = pgTable("verification", {
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
   session: many(session),
+  recipes: many(recipes),
+}));
+
+export const recipeRelations = relations(recipes, ({ one, many }) => ({
+  createdBy: one(user, {
+    fields: [recipes.createdById],
+    references: [user.id],
+  }),
+  ingredients: many(recipeIngredients),
+  steps: many(recipeSteps),
+}));
+
+export const recipeIngredientRelations = relations(
+  recipeIngredients,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeIngredients.recipeId],
+      references: [recipes.id],
+    }),
+  }),
+);
+
+export const recipeStepRelations = relations(recipeSteps, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [recipeSteps.recipeId],
+    references: [recipes.id],
+  }),
 }));
 
 export const accountRelations = relations(account, ({ one }) => ({
