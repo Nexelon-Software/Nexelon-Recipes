@@ -35,6 +35,9 @@
     "searchLabel": "Search",
     "searchPlaceholder": "Search by name, ingredient, tag…",
     "noResults": "No recipes match your filters.",
+    "list": {
+      "minutes": "{minutes} min"
+    },
     "toggleColumns": "Columns",
     "backToList": "Back to recipes",
     "openRecipe": "Open recipe",

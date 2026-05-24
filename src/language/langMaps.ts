@@ -34,6 +34,9 @@ export const langMaps = {
     searchLabel: "recipes.searchLabel",
     searchPlaceholder: "recipes.searchPlaceholder",
     noResults: "recipes.noResults",
+    list: {
+      minutes: "recipes.list.minutes",
+    },
     toggleColumns: "recipes.toggleColumns",
     backToList: "recipes.backToList",
     openRecipe: "recipes.openRecipe",

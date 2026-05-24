@@ -39,6 +39,9 @@
     "searchLabel": "Hľadať",
     "searchPlaceholder": "Hľadaj podľa názvu, ingrediencie, štítku…",
     "noResults": "Žiadne recepty nezodpovedajú filtrom.",
+    "list": {
+      "minutes": "{minutes} min"
+    },
     "toggleColumns": "Stĺpce",
     "backToList": "Späť na recepty",
     "openRecipe": "Otvoriť recept",
