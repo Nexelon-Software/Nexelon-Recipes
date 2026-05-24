@@ -20,6 +20,11 @@ export const langMaps = {
       profile: "auth.menu.profile",
       signOut: "auth.menu.signOut",
     },
+    profile: {
+      title: "auth.profile.title",
+      language: "auth.profile.language",
+      theme: "auth.profile.theme",
+    },
   },
   theme: {
     toggle: "theme.toggle",
@@ -86,6 +91,7 @@ export const langMaps = {
       head: "recipes.units.head",
     },
     detail: {
+      details: "recipes.detail.details",
       description: "recipes.detail.description",
       ingredients: "recipes.detail.ingredients",
       portions: "recipes.detail.portions",

@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import LocaleSwitcherNavbar from "~/app/_components/LocaleSwitcherNavbar";
-import { ThemeToggle } from "~/app/_components/theme-toggle";
 import { UserProfileMenu } from "~/app/_components/UserProfileMenu";
 import { localePath } from "~/lib/seo-url";
 import type { Locale } from "~/language/i18n.config";
@@ -20,6 +18,7 @@ export async function RecipesAppShell({
   children: React.ReactNode;
 }) {
   const langObj = await getLanguage(lang);
+  const profilePath = localePath(lang, "/profile");
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -32,11 +31,10 @@ export async function RecipesAppShell({
             {ts(langObj, langMaps.recipes.title)}
           </Link>
           <div className="ml-auto flex items-center gap-2">
-            <LocaleSwitcherNavbar />
-            <ThemeToggle />
             <UserProfileMenu
               imageUrl={imageUrl}
               loginPath={loginPath}
+              profilePath={profilePath}
               profileLabel={ts(langObj, langMaps.auth.menu.profile)}
               signOutLabel={ts(langObj, langMaps.auth.menu.signOut)}
             />

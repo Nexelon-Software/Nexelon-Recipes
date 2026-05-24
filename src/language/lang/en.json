@@ -20,6 +20,11 @@
     "menu": {
       "profile": "Profile",
       "signOut": "Sign out"
+    },
+    "profile": {
+      "title": "Profile",
+      "language": "Language",
+      "theme": "Appearance"
     }
   },
   "theme": {
@@ -87,6 +92,7 @@
       "head": "head"
     },
     "detail": {
+      "details": "Details",
       "description": "Description",
       "ingredients": "Ingredients",
       "portions": "Portions",

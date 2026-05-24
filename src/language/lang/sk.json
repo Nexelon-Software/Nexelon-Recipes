@@ -24,6 +24,11 @@
     "menu": {
       "profile": "Profil",
       "signOut": "Odhlásiť sa"
+    },
+    "profile": {
+      "title": "Profil",
+      "language": "Jazyk",
+      "theme": "Vzhľad"
     }
   },
   "theme": {
@@ -91,6 +96,7 @@
       "head": "hlavička"
     },
     "detail": {
+      "details": "Podrobnosti",
       "description": "Popis",
       "ingredients": "Ingrediencie",
       "portions": "Porcie",
