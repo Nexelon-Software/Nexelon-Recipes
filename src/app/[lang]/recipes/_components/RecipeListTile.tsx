@@ -23,6 +23,12 @@ import type { RouterOutputs } from "~/trpc/react";
 
 export type RecipeListItem = RouterOutputs["recipe"]["list"][number];
 
+const difficultyColorClass = {
+  easy: "text-success",
+  medium: "text-ember",
+  hard: "text-primary",
+} as const;
+
 function totalMinutes(recipe: RecipeListItem): number | null {
   const prep = recipe.prepTimeMinutes ?? 0;
   const cook = recipe.cookTimeMinutes ?? 0;
@@ -142,7 +148,16 @@ export function RecipeListTile({
           </span>
         ) : null}
         {difficultyLabel ? (
-          <span className="flex items-center gap-1">
+          <span
+            className={cn(
+              "flex items-center gap-1",
+              difficultyKey &&
+                difficultyKey in difficultyColorClass &&
+                difficultyColorClass[
+                  difficultyKey as keyof typeof difficultyColorClass
+                ],
+            )}
+          >
             <Gauge className="size-3.5 shrink-0" aria-hidden />
             {difficultyLabel}
           </span>
