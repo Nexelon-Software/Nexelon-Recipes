@@ -80,7 +80,8 @@
       "tbsp": "tbsp",
       "g": "g",
       "kg": "kg",
-      "piece": "piece"
+      "piece": "piece",
+      "head": "head"
     },
     "detail": {
       "description": "Description",
@@ -106,6 +107,16 @@
       "noImage": "No image",
       "ingredientsEmpty": "No ingredients listed.",
       "stepsEmpty": "No steps listed."
+    },
+    "import": {
+      "importJson": "Import JSON",
+      "importSuccess": "Recipe imported into the form. Review and save when ready.",
+      "importInvalidJson": "Could not read the file. Choose a valid JSON file.",
+      "importValidationFailed": "The JSON does not match the recipe format.",
+      "importReplaceConfirm": "Replace the current form with the imported recipe?"
+    },
+    "export": {
+      "exportJson": "Export JSON"
     },
     "actions": {
       "create": "New recipe",

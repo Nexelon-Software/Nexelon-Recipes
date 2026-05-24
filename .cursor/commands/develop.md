@@ -4,6 +4,10 @@ Project-specific guidance for implementing features, fixes, and refactors in
 this repository. Apply to the **current task** in this thread (including any
 user message paired with this command).
 
+This document is also enforced by the **always-on** rule
+[`.cursor/rules/develop.mdc`](.cursor/rules/develop.mdc) — follow it in **Plan
+mode** and implementation even when `/develop` is not invoked.
+
 Also see: [drizzle-schema.mdc](.cursor/rules/drizzle-schema.mdc),
 [commit-message.mdc](.cursor/rules/commit-message.mdc),
 [color-palette.md](.cursor/docs/color-palette.md),
@@ -26,7 +30,7 @@ Also see: [drizzle-schema.mdc](.cursor/rules/drizzle-schema.mdc),
 
 1. **Understand** the task and success criteria.
 2. **Discover** (mandatory) — search the codebase before writing new code (see below).
-3. **Plan** a minimal change set; stay within task scope.
+3. **Plan** a minimal change set; stay within task scope (plans must respect architecture and shadcn/ui above).
 4. **Implement** in the correct layer (architecture below).
 5. **Verify** — run `npm run check` when TypeScript or app code changed.
 6. **Hand off DB** — if `schema.ts` changed, stop and tell the user to run `npm run db:generate` (they apply migrations). Do not run `db:*` unless asked.
@@ -44,15 +48,34 @@ Before adding helpers, routers, or components:
 | Layer | Location | Notes |
 |-------|----------|--------|
 | Routes / UI | [`src/app/[lang]/`](src/app/[lang]) | Colocate route UI under `_components/` |
-| Shared UI | [`src/components/ui/`](src/components/ui), [`src/lib/utils.ts`](src/lib/utils.ts) | shadcn + `cn()` |
+| Shared UI | [`src/components/ui/`](src/components/ui), [`src/lib/utils.ts`](src/lib/utils.ts) | shadcn/ui (see below) |
 | API | [`src/server/api/routers/`](src/server/api/routers) | Register in [`root.ts`](src/server/api/root.ts) |
 | Auth | [`src/server/better-auth/`](src/server/better-auth) | `protectedProcedure`, `getSession` — no ad-hoc auth |
 | DB | [`src/server/db/schema.ts`](src/server/db/schema.ts) | Queries via `ctx.db`; see Drizzle below |
 | Client data | [`src/trpc/react.tsx`](src/trpc/react.tsx), [`src/trpc/server.ts`](src/trpc/server.ts) | tRPC + React Query |
 | i18n | [`src/language/`](src/language) | `LocaleSchema`, `useTranslation`, server `ts()` |
-| Recipes (today) | [`src/types/recipe.ts`](src/types/recipe.ts), `src/app/assets/recipes.json` | Static data — do not assume DB until schema exists |
+| Recipes | [`src/app/[lang]/recipes/`](src/app/[lang]/recipes), [`src/server/api/routers/recipe.ts`](src/server/api/routers/recipe.ts) | DB-backed CRUD via tRPC |
 
 Backend path is **tRPC**, not server actions, unless explicitly requested.
+
+## UI (shadcn/ui)
+
+The app GUI is built on **[shadcn/ui](https://ui.shadcn.com)** (configured in
+[`components.json`](components.json), style `base-nova`, Base UI primitives).
+
+- **Use existing components** from [`src/components/ui/`](src/components/ui) —
+  `Button`, `Input`, `Label`, `Select`, `Table`, `DropdownMenu`, etc.
+- **Add new primitives** with the CLI, not hand-rolled copies:
+  `npx shadcn@latest add <component>` (e.g. `select`, `dialog`, `form`).
+- **Styling:** semantic tokens from [`src/styles/globals.css`](src/styles/globals.css)
+  (`bg-background`, `text-primary`, `border-input`, …); brand mapping in
+  [color-palette.md](.cursor/docs/color-palette.md). No ad-hoc hex in JSX.
+- **Forms:** use shadcn `Select` (popover list), not native `<select>`, unless the
+  user explicitly asks for HTML selects.
+- **Links styled as buttons:** use `buttonVariants()` + `<Link>` / `<a>` — Base UI
+  `Button` does not support `asChild` (see shadcn Button docs).
+- **Icons:** `lucide-react` (per `components.json`).
+- **Do not** add parallel UI kits or duplicate shadcn patterns under new folders.
 
 ## Next.js components
 

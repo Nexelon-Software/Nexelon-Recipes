@@ -1,0 +1,21 @@
+---
+description: Project development workflow — read develop.md before plans and implementation
+alwaysApply: true
+---
+
+# Develop (always on)
+
+For **every** task in this repo — including **Plan mode**, implementation, and
+reviews — read and follow [`.cursor/commands/develop.md`](.cursor/commands/develop.md)
+before proposing or writing code.
+
+Slash command `/develop` repeats the same doc; **do not wait for the user to invoke
+it**.
+
+## Quick anchors
+
+- **Discover first** — search `src/lib`, `src/server`, `src/components`, `src/language`, existing routers/pages.
+- **UI** — [shadcn/ui](https://ui.shadcn.com) (see `components.json`); add via `npx shadcn@latest add <component>`; use `~/components/ui/*`, semantic Tailwind tokens, [color-palette.md](.cursor/docs/color-palette.md).
+- **API** — tRPC routers in `src/server/api/routers/`, not server actions.
+- **DB** — edit only `schema.ts`; user runs `db:generate` / migrations (never hand-edit `drizzle/*.sql`).
+- **Plans** — must match this stack (layers, conventions, minimal scope); cite real paths from the repo.

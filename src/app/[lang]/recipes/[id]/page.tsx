@@ -9,11 +9,13 @@ import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
 import {
   RECIPE_UNITS,
+  recipeDetailToRecipeInput,
   type RecipeUnit,
 } from "~/server/api/routers/recipe/schemas";
 import { api } from "~/trpc/server";
 
 import { DeleteRecipeButton } from "../_components/DeleteRecipeButton";
+import { ExportRecipeButton } from "../_components/ExportRecipeButton";
 import { RecipesAppShell } from "../_components/RecipesAppShell";
 import { getRecipesPageContext } from "../_lib/page-data";
 
@@ -79,6 +81,7 @@ export default async function RecipeDetailPage({
           </div>
           {isOwner ? (
             <div className="flex flex-wrap gap-2">
+              <ExportRecipeButton recipe={recipeDetailToRecipeInput(recipe)} />
               <Link
                 href={localePath(lang, `/recipes/${recipe.id}/edit`)}
                 className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}

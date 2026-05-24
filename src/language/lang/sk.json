@@ -3,7 +3,11 @@
     "title": "Nexelon recepty",
     "siteName": "Nexelon recepty",
     "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie a prispôsobenie porcií.",
-    "keywords": ["recepty", "varenie", "nexelon recepty"]
+    "keywords": [
+      "recepty",
+      "varenie",
+      "nexelon recepty"
+    ]
   },
   "auth": {
     "login": {
@@ -80,7 +84,8 @@
       "tbsp": "PL",
       "g": "g",
       "kg": "kg",
-      "piece": "ks"
+      "piece": "ks",
+      "head": "hlavička"
     },
     "detail": {
       "description": "Popis",
@@ -106,6 +111,16 @@
       "noImage": "Bez obrázka",
       "ingredientsEmpty": "Žiadne ingrediencie.",
       "stepsEmpty": "Žiadny postup."
+    },
+    "import": {
+      "importJson": "Importovať JSON",
+      "importSuccess": "Recept bol načítaný do formulára. Skontrolujte a uložte.",
+      "importInvalidJson": "Súbor sa nepodarilo prečítať. Vyberte platný JSON súbor.",
+      "importValidationFailed": "JSON nezodpovedá formátu receptu.",
+      "importReplaceConfirm": "Nahradiť aktuálny formulár importovaným receptom?"
+    },
+    "export": {
+      "exportJson": "Exportovať JSON"
     },
     "actions": {
       "create": "Nový recept",

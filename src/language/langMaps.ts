@@ -1,4 +1,9 @@
 export const langMaps = {
+  metadata: {
+    title: "metadata.title",
+    siteName: "metadata.siteName",
+    description: "metadata.description",
+  },
   auth: {
     login: {
       title: "auth.login.title",
@@ -75,6 +80,7 @@ export const langMaps = {
       g: "recipes.units.g",
       kg: "recipes.units.kg",
       piece: "recipes.units.piece",
+      head: "recipes.units.head",
     },
     detail: {
       description: "recipes.detail.description",
@@ -100,6 +106,16 @@ export const langMaps = {
       noImage: "recipes.detail.noImage",
       ingredientsEmpty: "recipes.detail.ingredientsEmpty",
       stepsEmpty: "recipes.detail.stepsEmpty",
+    },
+    import: {
+      importJson: "recipes.import.importJson",
+      importSuccess: "recipes.import.importSuccess",
+      importInvalidJson: "recipes.import.importInvalidJson",
+      importValidationFailed: "recipes.import.importValidationFailed",
+      importReplaceConfirm: "recipes.import.importReplaceConfirm",
+    },
+    export: {
+      exportJson: "recipes.export.exportJson",
     },
     actions: {
       create: "recipes.actions.create",

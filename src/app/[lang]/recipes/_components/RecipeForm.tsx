@@ -20,9 +20,10 @@ import {
   RECIPE_CATEGORIES,
   RECIPE_DIFFICULTIES,
   RECIPE_UNITS,
+  recipeDetailToRecipeInput,
   type RecipeInput,
-  type RecipeUnit,
 } from "~/server/api/routers/recipe/schemas";
+import { RecipeImportButton } from "./RecipeImportButton";
 import { api, type RouterOutputs } from "~/trpc/react";
 
 type IngredientRow = RecipeInput["ingredients"][number];
@@ -43,45 +44,6 @@ function moveItem<T>(items: T[], index: number, direction: -1 | 1): T[] {
   const copy = [...items];
   [copy[index], copy[newIndex]] = [copy[newIndex]!, copy[index]!];
   return copy;
-}
-
-function recipeToFormValues(
-  recipe: RouterOutputs["recipe"]["getById"],
-): RecipeInput {
-  return {
-    name: recipe.name,
-    description: recipe.description ?? undefined,
-    category:
-      recipe.category && RECIPE_CATEGORIES.includes(recipe.category as never)
-        ? (recipe.category as RecipeInput["category"])
-        : undefined,
-    cuisine: recipe.cuisine ?? undefined,
-    difficulty:
-      recipe.difficulty &&
-      RECIPE_DIFFICULTIES.includes(recipe.difficulty as never)
-        ? (recipe.difficulty as RecipeInput["difficulty"])
-        : undefined,
-    prepTimeMinutes: recipe.prepTimeMinutes ?? undefined,
-    cookTimeMinutes: recipe.cookTimeMinutes ?? undefined,
-    servings: recipe.servings ?? undefined,
-    imageUrl: recipe.imageUrl ?? undefined,
-    notes: recipe.notes ?? undefined,
-    sourceUrl: recipe.sourceUrl ?? undefined,
-    ingredients: recipe.ingredients.map((ingredient) => ({
-      name: ingredient.name,
-      amount: ingredient.amount ?? undefined,
-      unit:
-        ingredient.unit &&
-        RECIPE_UNITS.includes(ingredient.unit as RecipeUnit)
-          ? (ingredient.unit as RecipeUnit)
-          : undefined,
-      sortOrder: ingredient.sortOrder,
-    })),
-    steps: recipe.steps.map((step) => ({
-      instruction: step.instruction,
-      sortOrder: step.sortOrder,
-    })),
-  };
 }
 
 function optionalText(value: string | undefined): string | undefined {
@@ -106,7 +68,7 @@ export function RecipeForm({
 
   const [form, setForm] = useState<RecipeInput>(() =>
     initialRecipe
-      ? recipeToFormValues(initialRecipe)
+      ? recipeDetailToRecipeInput(initialRecipe)
       : {
           name: "",
           description: "",
@@ -218,7 +180,7 @@ export function RecipeForm({
 
   return (
     <form onSubmit={handleSubmit} className="mx-auto max-w-3xl space-y-8 px-3 py-6 sm:px-4">
-      <div>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold">
           {t(
             mode === "create"
@@ -226,6 +188,12 @@ export function RecipeForm({
               : lang.recipes.form.editTitle,
           )}
         </h1>
+        {mode === "create" ? (
+          <RecipeImportButton
+            hasExistingContent={form.name.trim().length > 0}
+            onImport={setForm}
+          />
+        ) : null}
       </div>
 
       <section className="space-y-4">
