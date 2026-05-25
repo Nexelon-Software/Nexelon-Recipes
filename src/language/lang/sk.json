@@ -33,9 +33,18 @@
   },
   "theme": {
     "toggle": "Prepnúť tému",
+    "mode": "Farebný režim",
     "light": "Svetlá",
     "dark": "Tmavá",
     "system": "Systémová"
+  },
+  "palette": {
+    "label": "Farebná paleta",
+    "toggle": "Vyberte farebnú paletu",
+    "nexelon": "Nexelon",
+    "ocean": "Oceán",
+    "forest": "Les",
+    "vscode": "VS Code"
   },
   "recipes": {
     "title": "Recepty",
@@ -46,6 +55,13 @@
     "noResults": "Žiadne recepty nezodpovedajú filtrom.",
     "list": {
       "minutes": "{minutes} min"
+    },
+    "viewLayout": {
+      "label": "Zobrazenie",
+      "grid": "Mriežka",
+      "list": "Zoznam",
+      "compact": "Kompaktný zoznam",
+      "table": "Tabuľka"
     },
     "toggleColumns": "Stĺpce",
     "backToList": "Späť na recepty",

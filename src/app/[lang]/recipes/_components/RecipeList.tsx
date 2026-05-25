@@ -2,21 +2,61 @@
 
 import { keepPreviousData } from "@tanstack/react-query";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { buttonVariants } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { localePath } from "~/lib/seo-url";
+import {
+  DEFAULT_RECIPE_LIST_LAYOUT,
+  readStoredRecipeListLayout,
+  type RecipeListLayoutId,
+  writeStoredRecipeListLayout,
+} from "~/lib/recipe-list-layout";
 import { cn } from "~/lib/utils";
 import useTranslation from "~/language/useTranslation";
 import { api } from "~/trpc/react";
 
-import { RecipeListTile, RecipeListTileSkeleton } from "./RecipeListTile";
+import { RecipeListLayoutSwitcher } from "./RecipeListLayoutSwitcher";
+import {
+  RecipeListItemSkeleton,
+  RecipeListItemView,
+} from "./RecipeListTile";
+import { RecipeListTable, RecipeListTableSkeleton } from "./RecipeListTable";
+
+function listContainerClass(layout: RecipeListLayoutId): string {
+  switch (layout) {
+    case "list":
+      return "flex flex-col gap-3";
+    case "compact":
+      return "flex flex-col gap-2";
+    case "grid":
+    default:
+      return "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+  }
+}
 
 export function RecipeList({ currentUserId }: { currentUserId: string | null }) {
   const { t, lang, locale } = useTranslation();
   const [search, setSearch] = useState("");
   const [querySearch, setQuerySearch] = useState<string | undefined>();
+  const [layout, setLayout] = useState<RecipeListLayoutId>(
+    DEFAULT_RECIPE_LIST_LAYOUT,
+  );
+  const [layoutMounted, setLayoutMounted] = useState(false);
+
+  useEffect(() => {
+    const stored = readStoredRecipeListLayout();
+    if (stored) {
+      setLayout(stored);
+    }
+    setLayoutMounted(true);
+  }, []);
+
+  const handleLayoutChange = useCallback((id: RecipeListLayoutId) => {
+    setLayout(id);
+    writeStoredRecipeListLayout(id);
+  }, []);
 
   useEffect(() => {
     const trimmed = search.trim();
@@ -33,6 +73,50 @@ export function RecipeList({ currentUserId }: { currentUserId: string | null }) 
     { search: querySearch },
     { placeholderData: keepPreviousData },
   );
+
+  const activeLayout = layoutMounted ? layout : DEFAULT_RECIPE_LIST_LAYOUT;
+
+  const renderContent = () => {
+    if (isLoading && recipes.length === 0) {
+      if (activeLayout === "table") {
+        return <RecipeListTableSkeleton />;
+      }
+      return (
+        <div className={listContainerClass(activeLayout)}>
+          {Array.from({ length: activeLayout === "compact" ? 5 : 3 }, (_, index) => (
+            <RecipeListItemSkeleton key={index} layout={activeLayout} />
+          ))}
+        </div>
+      );
+    }
+
+    if (recipes.length === 0) {
+      return (
+        <p className="text-muted-foreground py-12 text-center text-sm">
+          {t(lang.recipes.noResults)}
+        </p>
+      );
+    }
+
+    if (activeLayout === "table") {
+      return (
+        <RecipeListTable recipes={recipes} currentUserId={currentUserId} />
+      );
+    }
+
+    return (
+      <div className={listContainerClass(activeLayout)}>
+        {recipes.map((recipe) => (
+          <RecipeListItemView
+            key={recipe.id}
+            recipe={recipe}
+            layout={activeLayout}
+            currentUserId={currentUserId}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="container mx-auto space-y-6 px-3 py-6 sm:px-4">
@@ -53,36 +137,23 @@ export function RecipeList({ currentUserId }: { currentUserId: string | null }) 
         ) : null}
       </div>
 
-      <div className="max-w-md">
-        <Input
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          placeholder={t(lang.recipes.searchPlaceholder)}
-          aria-label={t(lang.recipes.searchLabel)}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="w-full max-w-md">
+          <Input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={t(lang.recipes.searchPlaceholder)}
+            aria-label={t(lang.recipes.searchLabel)}
+          />
+        </div>
+        <RecipeListLayoutSwitcher
+          layout={layout}
+          onLayoutChange={handleLayoutChange}
+          mounted={layoutMounted}
         />
       </div>
 
-      {isLoading && recipes.length === 0 ? (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {Array.from({ length: 3 }, (_, index) => (
-            <RecipeListTileSkeleton key={index} />
-          ))}
-        </div>
-      ) : recipes.length === 0 ? (
-        <p className="text-muted-foreground py-12 text-center text-sm">
-          {t(lang.recipes.noResults)}
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {recipes.map((recipe) => (
-            <RecipeListTile
-              key={recipe.id}
-              recipe={recipe}
-              currentUserId={currentUserId}
-            />
-          ))}
-        </div>
-      )}
+      {renderContent()}
     </div>
   );
 }

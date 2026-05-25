@@ -38,6 +38,12 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  session: {
+    cookieCache: {
+      enabled: true,
+      strategy: "jwe",
+    },
+  },
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,

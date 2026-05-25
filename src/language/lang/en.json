@@ -29,9 +29,18 @@
   },
   "theme": {
     "toggle": "Toggle theme",
+    "mode": "Color mode",
     "light": "Light",
     "dark": "Dark",
     "system": "System"
+  },
+  "palette": {
+    "label": "Color palette",
+    "toggle": "Choose color palette",
+    "nexelon": "Nexelon",
+    "ocean": "Ocean",
+    "forest": "Forest",
+    "vscode": "VS Code"
   },
   "recipes": {
     "title": "Recipes",
@@ -42,6 +51,13 @@
     "noResults": "No recipes match your filters.",
     "list": {
       "minutes": "{minutes} min"
+    },
+    "viewLayout": {
+      "label": "View",
+      "grid": "Grid",
+      "list": "List",
+      "compact": "Compact list",
+      "table": "Table"
     },
     "toggleColumns": "Columns",
     "backToList": "Back to recipes",

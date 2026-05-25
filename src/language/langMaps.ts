@@ -28,9 +28,18 @@ export const langMaps = {
   },
   theme: {
     toggle: "theme.toggle",
+    mode: "theme.mode",
     light: "theme.light",
     dark: "theme.dark",
     system: "theme.system",
+  },
+  palette: {
+    label: "palette.label",
+    toggle: "palette.toggle",
+    nexelon: "palette.nexelon",
+    ocean: "palette.ocean",
+    forest: "palette.forest",
+    vscode: "palette.vscode",
   },
   recipes: {
     title: "recipes.title",
@@ -41,6 +50,13 @@ export const langMaps = {
     noResults: "recipes.noResults",
     list: {
       minutes: "recipes.list.minutes",
+    },
+    viewLayout: {
+      label: "recipes.viewLayout.label",
+      grid: "recipes.viewLayout.grid",
+      list: "recipes.viewLayout.list",
+      compact: "recipes.viewLayout.compact",
+      table: "recipes.viewLayout.table",
     },
     toggleColumns: "recipes.toggleColumns",
     backToList: "recipes.backToList",

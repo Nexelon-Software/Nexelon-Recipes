@@ -1,5 +1,6 @@
 "use client";
 
+import { ColorPaletteSettings } from "~/app/_components/ColorPaletteSettings";
 import { LocaleSettings } from "~/app/_components/LocaleSettings";
 import { ThemeSettings } from "~/app/_components/ThemeSettings";
 import {
@@ -27,8 +28,19 @@ export function ProfileSettings() {
         <CardHeader>
           <CardTitle>{t(lang.auth.profile.theme)}</CardTitle>
         </CardHeader>
-        <CardContent>
-          <ThemeSettings />
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-foreground">
+              {t(lang.theme.mode)}
+            </p>
+            <ThemeSettings />
+          </div>
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-foreground">
+              {t(lang.palette.label)}
+            </p>
+            <ColorPaletteSettings />
+          </div>
         </CardContent>
       </Card>
     </div>

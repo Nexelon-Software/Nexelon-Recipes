@@ -42,3 +42,21 @@ in components (`bg-background`, `text-primary`, etc.), not raw hex.
 - Prefer `bg-background`, `bg-card`, `text-foreground`, `text-muted-foreground`, `bg-primary`, `hover:bg-primary-hover` (once mapped).
 - Use `text-ember`, `text-golden-spice`, or chart/accent tokens for recipe highlights—not one-off hex in JSX.
 - CTAs use the `Button` default variant (`primary` = Nexelon Red).
+
+## Color palettes (user-selectable)
+
+Users can switch palettes in Profile → Appearance. Choice is stored in `localStorage` (`nexelon-recipes-color-palette`) and applied via `data-palette` on `<html>`.
+
+| Id | Description |
+|----|-------------|
+| `nexelon` | Default — tokens in this doc |
+| `ocean` | Cool blue/teal on slate backgrounds |
+| `forest` | Green primary on green-tinted surfaces |
+| `vscode` | Visual Studio Code Dark+ — `#1e1e1e` editor, `#007acc` accent, syntax-style accents |
+
+CSS overrides live in [`src/styles/globals.css`](../../src/styles/globals.css):
+
+- **Light:** `:root:not(.dark)[data-palette="…"]`
+- **Dark:** `.dark[data-palette="…"]`
+
+Registry and init script: [`src/lib/color-palette.ts`](../../src/lib/color-palette.ts). The same `data-palette` id applies in both color modes.
