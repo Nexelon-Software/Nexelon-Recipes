@@ -4,7 +4,12 @@ import { type Metadata, type Viewport } from "next";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 
+import { ColorPaletteProvider } from "~/app/_components/ColorPaletteProvider";
 import { Toaster } from "~/components/ui/sonner";
+import {
+  colorPaletteInitScript,
+  DEFAULT_COLOR_PALETTE,
+} from "~/lib/color-palette";
 import { env } from "~/env";
 import { buildSocialMetadata } from "~/lib/metadata-shared";
 import {
@@ -97,7 +102,17 @@ export default async function RootLayout({
   const lang = langParam as Locale;
 
   return (
-    <html lang={lang} className={`${geist.variable}`} suppressHydrationWarning>
+    <html
+      lang={lang}
+      className={`${geist.variable}`}
+      data-palette={DEFAULT_COLOR_PALETTE}
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: colorPaletteInitScript }}
+        />
+      </head>
       <body>
         <TRPCReactProvider>
           <ThemeProvider
@@ -106,10 +121,12 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <TranslationProvider>
-              {children}
-              <Toaster />
-            </TranslationProvider>
+            <ColorPaletteProvider>
+              <TranslationProvider>
+                {children}
+                <Toaster />
+              </TranslationProvider>
+            </ColorPaletteProvider>
           </ThemeProvider>
         </TRPCReactProvider>
       </body>

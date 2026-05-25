@@ -33,9 +33,18 @@
   },
   "theme": {
     "toggle": "Prepnúť tému",
+    "mode": "Farebný režim",
     "light": "Svetlá",
     "dark": "Tmavá",
     "system": "Systémová"
+  },
+  "palette": {
+    "label": "Farebná paleta",
+    "toggle": "Vyberte farebnú paletu",
+    "nexelon": "Nexelon",
+    "ocean": "Oceán",
+    "forest": "Les",
+    "vscode": "VS Code"
   },
   "recipes": {
     "title": "Recepty",
