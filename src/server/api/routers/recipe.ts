@@ -5,7 +5,6 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "~/server/api/trpc";
 import type { db } from "~/server/db";
 import {
@@ -78,7 +77,7 @@ async function replaceChildRows(
 }
 
 export const recipeRouter = createTRPCRouter({
-  list: publicProcedure
+  list: protectedProcedure
     .input(
       z
         .object({
@@ -89,7 +88,10 @@ export const recipeRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const search = input?.search?.trim();
       const rows = await ctx.db.query.recipes.findMany({
-        where: eq(recipes.deleted, false),
+        where: and(
+          eq(recipes.deleted, false),
+          eq(recipes.createdById, ctx.session.user.id),
+        ),
         orderBy: [desc(recipes.updatedAt)],
         columns: {
           id: true,
@@ -117,11 +119,15 @@ export const recipeRouter = createTRPCRouter({
       );
     }),
 
-  getById: publicProcedure
+  getById: protectedProcedure
     .input(z.object({ id: z.number().int().positive() }))
     .query(async ({ ctx, input }) => {
       const recipe = await ctx.db.query.recipes.findFirst({
-        where: and(eq(recipes.id, input.id), eq(recipes.deleted, false)),
+        where: and(
+          eq(recipes.id, input.id),
+          eq(recipes.deleted, false),
+          eq(recipes.createdById, ctx.session.user.id),
+        ),
         with: {
           ingredients: {
             orderBy: [asc(recipeIngredients.sortOrder)],
