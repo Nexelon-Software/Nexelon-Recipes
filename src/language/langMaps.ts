@@ -51,6 +51,13 @@ export const langMaps = {
     list: {
       minutes: "recipes.list.minutes",
     },
+    viewLayout: {
+      label: "recipes.viewLayout.label",
+      grid: "recipes.viewLayout.grid",
+      list: "recipes.viewLayout.list",
+      compact: "recipes.viewLayout.compact",
+      table: "recipes.viewLayout.table",
+    },
     toggleColumns: "recipes.toggleColumns",
     backToList: "recipes.backToList",
     openRecipe: "recipes.openRecipe",

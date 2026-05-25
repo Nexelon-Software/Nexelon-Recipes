@@ -56,6 +56,13 @@
     "list": {
       "minutes": "{minutes} min"
     },
+    "viewLayout": {
+      "label": "Zobrazenie",
+      "grid": "Mriežka",
+      "list": "Zoznam",
+      "compact": "Kompaktný zoznam",
+      "table": "Tabuľka"
+    },
     "toggleColumns": "Stĺpce",
     "backToList": "Späť na recepty",
     "openRecipe": "Otvoriť recept",

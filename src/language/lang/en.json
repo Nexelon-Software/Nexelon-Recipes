@@ -52,6 +52,13 @@
     "list": {
       "minutes": "{minutes} min"
     },
+    "viewLayout": {
+      "label": "View",
+      "grid": "Grid",
+      "list": "List",
+      "compact": "Compact list",
+      "table": "Table"
+    },
     "toggleColumns": "Columns",
     "backToList": "Back to recipes",
     "openRecipe": "Open recipe",
