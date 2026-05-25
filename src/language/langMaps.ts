@@ -22,6 +22,13 @@ export const langMaps = {
     },
     profile: {
       title: "auth.profile.title",
+      name: "auth.profile.name",
+      editName: "auth.profile.editName",
+      cancelEdit: "auth.profile.cancelEdit",
+      save: "auth.profile.save",
+      saveSuccess: "auth.profile.saveSuccess",
+      saveError: "auth.profile.saveError",
+      nameRequired: "auth.profile.nameRequired",
       language: "auth.profile.language",
       theme: "auth.profile.theme",
     },

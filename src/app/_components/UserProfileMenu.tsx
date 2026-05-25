@@ -60,11 +60,14 @@ export function UserProfileMenu({
           <span className="sr-only">{profileLabel}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem asChild>
-          <Link href={profilePath}>{profileLabel}</Link>
+      <DropdownMenuContent align="end" className="min-w-44 p-2">
+        <DropdownMenuItem asChild className="px-4 py-3 text-base rounded-md">
+          <Link href={profilePath} className="block w-full">
+            {profileLabel}
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
+          className="px-4 py-3 text-base rounded-md"
           onSelect={() => {
             void authClient.signOut({
               fetchOptions: {

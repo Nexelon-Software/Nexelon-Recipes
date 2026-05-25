@@ -27,6 +27,13 @@
     },
     "profile": {
       "title": "Profil",
+      "name": "Zobrazované meno",
+      "editName": "Upraviť zobrazované meno",
+      "cancelEdit": "Zrušiť úpravu",
+      "save": "Uložiť",
+      "saveSuccess": "Meno bolo aktualizované",
+      "saveError": "Meno sa nepodarilo aktualizovať",
+      "nameRequired": "Zadajte zobrazované meno",
       "language": "Jazyk",
       "theme": "Vzhľad"
     }

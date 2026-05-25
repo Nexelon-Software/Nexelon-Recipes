@@ -23,6 +23,13 @@
     },
     "profile": {
       "title": "Profile",
+      "name": "Display name",
+      "editName": "Edit display name",
+      "cancelEdit": "Cancel editing",
+      "save": "Save",
+      "saveSuccess": "Name updated",
+      "saveError": "Could not update name",
+      "nameRequired": "Enter a display name",
       "language": "Language",
       "theme": "Appearance"
     }
