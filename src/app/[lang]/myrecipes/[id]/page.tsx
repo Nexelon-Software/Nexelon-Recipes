@@ -75,12 +75,12 @@ export default async function RecipeDetailPage({
         ];
 
   return (
-    <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
       <article className="container mx-auto max-w-5xl space-y-8 px-3 py-6 sm:px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
             <Link
-              href={localePath(lang, "/recipes")}
+              href={localePath(lang, "/myrecipes")}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
                 "px-0",
@@ -97,7 +97,7 @@ export default async function RecipeDetailPage({
             <div className="flex flex-wrap gap-2">
               <ExportRecipeButton recipe={recipeDetailToRecipeInput(recipe)} />
               <Link
-                href={localePath(lang, `/recipes/${recipe.id}/edit`)}
+                href={localePath(lang, `/myrecipes/${recipe.id}/edit`)}
                 className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
               >
                 {ts(langObj, langMaps.recipes.actions.edit)}
@@ -122,6 +122,19 @@ export default async function RecipeDetailPage({
             title={ts(langObj, langMaps.recipes.detail.details)}
           >
             <dl className="grid grid-cols-2 gap-4">
+              <div>
+                <dt className="text-muted-foreground text-sm">
+                  {ts(langObj, langMaps.recipes.detail.visibility)}
+                </dt>
+                <dd>
+                  {ts(
+                    langObj,
+                    recipe.visibility === "public"
+                      ? langMaps.recipes.visibility.public
+                      : langMaps.recipes.visibility.private,
+                  )}
+                </dd>
+              </div>
               {recipe.category ? (
                 <div>
                   <dt className="text-muted-foreground text-sm">

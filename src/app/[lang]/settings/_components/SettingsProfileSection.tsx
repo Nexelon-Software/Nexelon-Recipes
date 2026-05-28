@@ -6,14 +6,19 @@ import { Pencil, Save, User, X } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import useTranslation from "~/language/useTranslation";
 import { authClient } from "~/server/better-auth/client";
 
 const MAX_NAME_LENGTH = 256;
 
-export function ProfileAccountCard({
+export function SettingsProfileSection({
   name,
   email,
   imageUrl,
@@ -86,7 +91,10 @@ export function ProfileAccountCard({
 
   return (
     <Card>
-      <CardContent className="flex items-center gap-4 pt-4">
+      <CardHeader>
+        <CardTitle>{t(lang.auth.settings.sections.profile)}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex items-center gap-4">
         <div className="bg-muted flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full">
           {showImage ? (
             // eslint-disable-next-line @next/next/no-img-element

@@ -1,0 +1,1 @@
+ALTER TABLE "drizzle_recipe" ADD COLUMN "visibility" varchar(16) DEFAULT 'private' NOT NULL;

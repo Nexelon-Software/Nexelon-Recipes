@@ -36,11 +36,11 @@ export default async function EditRecipePage({
   }
 
   if (recipe.createdById !== userId) {
-    redirect(localePath(lang, `/recipes/${recipeId}`));
+    redirect(localePath(lang, `/myrecipes/${recipeId}`));
   }
 
   return (
-    <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
       <RecipeForm mode="edit" recipeId={recipeId} initialRecipe={recipe} />
     </RecipesAppShell>
   );

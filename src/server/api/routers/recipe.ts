@@ -103,6 +103,7 @@ export const recipeRouter = createTRPCRouter({
           cookTimeMinutes: true,
           servings: true,
           imageUrl: true,
+          visibility: true,
           createdById: true,
           createdAt: true,
           updatedAt: true,
@@ -163,6 +164,7 @@ export const recipeRouter = createTRPCRouter({
             imageUrl: input.imageUrl,
             notes: input.notes,
             sourceUrl: input.sourceUrl,
+            visibility: input.visibility,
             createdById: ctx.session.user.id,
           })
           .returning({ id: recipes.id });
@@ -214,6 +216,7 @@ export const recipeRouter = createTRPCRouter({
             imageUrl: input.data.imageUrl,
             notes: input.data.notes,
             sourceUrl: input.data.sourceUrl,
+            visibility: input.data.visibility,
           })
           .where(eq(recipes.id, input.id));
 

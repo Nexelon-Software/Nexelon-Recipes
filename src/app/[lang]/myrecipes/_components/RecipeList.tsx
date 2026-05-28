@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData } from "@tanstack/react-query";
+import { ChefHat } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
@@ -14,6 +15,7 @@ import {
   writeStoredRecipeListLayout,
 } from "~/lib/recipe-list-layout";
 import { cn } from "~/lib/utils";
+import { format } from "~/language/lang";
 import useTranslation from "~/language/useTranslation";
 import { api } from "~/trpc/react";
 
@@ -36,7 +38,13 @@ function listContainerClass(layout: RecipeListLayoutId): string {
   }
 }
 
-export function RecipeList({ currentUserId }: { currentUserId: string | null }) {
+export function RecipeList({
+  currentUserId,
+  displayName,
+}: {
+  currentUserId: string | null;
+  displayName: string;
+}) {
   const { t, lang, locale } = useTranslation();
   const [search, setSearch] = useState("");
   const [querySearch, setQuerySearch] = useState<string | undefined>();
@@ -122,14 +130,19 @@ export function RecipeList({ currentUserId }: { currentUserId: string | null }) 
     <div className="container mx-auto space-y-6 px-3 py-6 sm:px-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">{t(lang.recipes.title)}</h1>
-          <p className="text-muted-foreground text-sm">
-            {t(lang.recipes.description)}
-          </p>
+          <h1 className="inline-flex items-center gap-2 text-2xl font-semibold">
+            <ChefHat className="size-6 shrink-0" aria-hidden />
+            {t(lang.recipes.myRecipes)}
+          </h1>
+          {displayName ? (
+            <p className="text-muted-foreground text-sm">
+              {format(t(lang.recipes.collectionOf), { username: displayName })}
+            </p>
+          ) : null}
         </div>
         {currentUserId ? (
           <Link
-            href={localePath(locale, "/recipes/new")}
+            href={localePath(locale, "/myrecipes/new")}
             className={cn(buttonVariants())}
           >
             {t(lang.recipes.actions.create)}

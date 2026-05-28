@@ -25,6 +25,16 @@
       "profile": "Profil",
       "signOut": "Odhlásiť sa"
     },
+    "settings": {
+      "title": "Nastavenia",
+      "avatarLink": "Nastavenia",
+      "signOut": "Odhlásiť sa",
+      "language": "Jazyk",
+      "sections": {
+        "profile": "Profil",
+        "personalization": "Personalizácia"
+      }
+    },
     "profile": {
       "title": "Profil",
       "name": "Zobrazované meno",
@@ -55,6 +65,8 @@
   },
   "recipes": {
     "title": "Recepty",
+    "myRecipes": "Moje recepty",
+    "collectionOf": "Recepty používateľa {username}",
     "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie, prispôsobené pre mobil.",
     "count": "{count} receptov",
     "searchLabel": "Hľadať",
@@ -118,8 +130,17 @@
       "piece": "ks",
       "head": "hlavička"
     },
+    "visibility": {
+      "labelPrivate": "Súkromný recept",
+      "labelPublic": "Verejný recept",
+      "hintPrivate": "Tento recept vidíte len vy.",
+      "hintPublic": "Recept bude možné zdieľať verejne, keď bude dostupné prehliadanie.",
+      "private": "Súkromný",
+      "public": "Verejný"
+    },
     "detail": {
       "details": "Podrobnosti",
+      "visibility": "Viditeľnosť",
       "description": "Popis",
       "ingredients": "Ingrediencie",
       "portions": "Porcie",

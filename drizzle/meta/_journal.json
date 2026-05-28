@@ -15,6 +15,13 @@
       "when": 1779627591628,
       "tag": "0001_modern_living_mummy",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1780006570618,
+      "tag": "0002_steady_lady_vermin",
+      "breakpoints": true
     }
   ]
 }

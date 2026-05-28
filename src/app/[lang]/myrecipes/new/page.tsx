@@ -20,7 +20,7 @@ export default async function NewRecipePage({
   }
 
   return (
-    <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
       <RecipeForm mode="create" />
     </RecipesAppShell>
   );

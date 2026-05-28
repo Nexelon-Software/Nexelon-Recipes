@@ -20,6 +20,16 @@ export const langMaps = {
       profile: "auth.menu.profile",
       signOut: "auth.menu.signOut",
     },
+    settings: {
+      title: "auth.settings.title",
+      avatarLink: "auth.settings.avatarLink",
+      signOut: "auth.settings.signOut",
+      language: "auth.settings.language",
+      sections: {
+        profile: "auth.settings.sections.profile",
+        personalization: "auth.settings.sections.personalization",
+      },
+    },
     profile: {
       title: "auth.profile.title",
       name: "auth.profile.name",
@@ -50,6 +60,8 @@ export const langMaps = {
   },
   recipes: {
     title: "recipes.title",
+    myRecipes: "recipes.myRecipes",
+    collectionOf: "recipes.collectionOf",
     description: "recipes.description",
     count: "recipes.count",
     searchLabel: "recipes.searchLabel",
@@ -113,8 +125,17 @@ export const langMaps = {
       piece: "recipes.units.piece",
       head: "recipes.units.head",
     },
+    visibility: {
+      labelPrivate: "recipes.visibility.labelPrivate",
+      labelPublic: "recipes.visibility.labelPublic",
+      hintPrivate: "recipes.visibility.hintPrivate",
+      hintPublic: "recipes.visibility.hintPublic",
+      private: "recipes.visibility.private",
+      public: "recipes.visibility.public",
+    },
     detail: {
       details: "recipes.detail.details",
+      visibility: "recipes.detail.visibility",
       description: "recipes.detail.description",
       ingredients: "recipes.detail.ingredients",
       portions: "recipes.detail.portions",

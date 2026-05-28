@@ -11,5 +11,5 @@ export default async function HomePage({
   const { lang: langParam } = await params;
   const lang = langParam as Locale;
 
-  redirect(localePath(lang, "/recipes"));
+  redirect(localePath(lang, "/myrecipes"));
 }

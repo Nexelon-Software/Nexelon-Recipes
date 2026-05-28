@@ -46,6 +46,7 @@ export const recipes = createTable(
     imageUrl: d.text(),
     notes: d.text(),
     sourceUrl: d.text(),
+    visibility: d.varchar({ length: 16 }).notNull().default("private"),
     deleted: d.boolean().notNull().default(false),
     createdById: d
       .varchar({ length: 255 })

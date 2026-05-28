@@ -17,7 +17,7 @@ export function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
   const deleteRecipe = api.recipe.delete.useMutation({
     onSuccess: async () => {
       await utils.recipe.invalidate();
-      router.push(localePath(locale, "/recipes"));
+      router.push(localePath(locale, "/myrecipes"));
     },
   });
 
