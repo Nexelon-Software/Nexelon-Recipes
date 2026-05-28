@@ -51,6 +51,8 @@
   },
   "recipes": {
     "title": "Recipes",
+    "myRecipes": "My recipes",
+    "collectionOf": "Recipes of {username}",
     "description": "Nexelon recipe collection — search, sort, and mobile-friendly.",
     "count": "{count} recipes",
     "searchLabel": "Search",

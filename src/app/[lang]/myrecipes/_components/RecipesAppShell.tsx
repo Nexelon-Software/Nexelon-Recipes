@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChefHat } from "lucide-react";
 
 import { UserProfileMenu } from "~/app/_components/UserProfileMenu";
 import { localePath } from "~/lib/seo-url";
@@ -25,10 +26,11 @@ export async function RecipesAppShell({
       <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b backdrop-blur">
         <div className="container mx-auto flex h-14 items-center gap-2 px-3 sm:h-16 sm:px-4">
           <Link
-            href={localePath(lang, "/recipes")}
-            className="text-base font-semibold hover:underline sm:text-lg"
+            href={localePath(lang, "/myrecipes")}
+            className="text-foreground hover:text-foreground/80 inline-flex shrink-0 rounded-md p-1 transition-colors"
+            aria-label={ts(langObj, langMaps.recipes.myRecipes)}
           >
-            {ts(langObj, langMaps.recipes.title)}
+            <ChefHat className="size-5" aria-hidden />
           </Link>
           <div className="ml-auto flex items-center gap-2">
             <UserProfileMenu

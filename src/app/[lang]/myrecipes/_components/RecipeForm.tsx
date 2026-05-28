@@ -80,14 +80,14 @@ export function RecipeForm({
   const createRecipe = api.recipe.create.useMutation({
     onSuccess: async (result) => {
       await utils.recipe.invalidate();
-      router.push(localePath(locale, `/recipes/${result.id}`));
+      router.push(localePath(locale, `/myrecipes/${result.id}`));
     },
   });
 
   const updateRecipe = api.recipe.update.useMutation({
     onSuccess: async () => {
       await utils.recipe.invalidate();
-      router.push(localePath(locale, `/recipes/${recipeId}`));
+      router.push(localePath(locale, `/myrecipes/${recipeId}`));
     },
   });
 
@@ -585,7 +585,7 @@ export function RecipeForm({
             router.push(
               localePath(
                 locale,
-                mode === "edit" && recipeId ? `/recipes/${recipeId}` : "/recipes",
+                mode === "edit" && recipeId ? `/myrecipes/${recipeId}` : "/myrecipes",
               ),
             )
           }

@@ -93,7 +93,7 @@ export function RecipeListTable({
       </TableHeader>
       <TableBody>
         {recipes.map((recipe) => {
-          const detailHref = localePath(locale, `/recipes/${recipe.id}`);
+          const detailHref = localePath(locale, `/myrecipes/${recipe.id}`);
           const isOwner = currentUserId === recipe.createdById;
           const minutes = totalMinutes(recipe);
           const categoryLabel = recipe.category
@@ -158,7 +158,7 @@ export function RecipeListTable({
               <TableCell>
                 {isOwner ? (
                   <Link
-                    href={localePath(locale, `/recipes/${recipe.id}/edit`)}
+                    href={localePath(locale, `/myrecipes/${recipe.id}/edit`)}
                     className={cn(
                       buttonVariants({ variant: "ghost", size: "icon-xs" }),
                     )}

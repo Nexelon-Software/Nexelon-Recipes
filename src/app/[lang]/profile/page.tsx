@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import type { Locale } from "~/language/i18n.config";
 import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
-import { RecipesAppShell } from "~/app/[lang]/recipes/_components/RecipesAppShell";
-import { getRecipesPageContext } from "~/app/[lang]/recipes/_lib/page-data";
+import { RecipesAppShell } from "~/app/[lang]/myrecipes/_components/RecipesAppShell";
+import { getRecipesPageContext } from "~/app/[lang]/myrecipes/_lib/page-data";
 
 import { ProfileAccountCard } from "./_components/ProfileAccountCard";
 import { ProfileSettings } from "./_components/ProfileSettings";

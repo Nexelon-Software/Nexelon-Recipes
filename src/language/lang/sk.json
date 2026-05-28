@@ -55,6 +55,8 @@
   },
   "recipes": {
     "title": "Recepty",
+    "myRecipes": "Moje recepty",
+    "collectionOf": "Recepty používateľa {username}",
     "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie, prispôsobené pre mobil.",
     "count": "{count} receptov",
     "searchLabel": "Hľadať",

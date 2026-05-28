@@ -62,8 +62,8 @@ function useRecipeListItemData(
     setImageError(false);
   }, [recipe.imageUrl]);
 
-  const detailHref = localePath(locale, `/recipes/${recipe.id}`);
-  const editHref = localePath(locale, `/recipes/${recipe.id}/edit`);
+  const detailHref = localePath(locale, `/myrecipes/${recipe.id}`);
+  const editHref = localePath(locale, `/myrecipes/${recipe.id}/edit`);
   const isOwner = currentUserId === recipe.createdById;
   const showImage = Boolean(recipe.imageUrl?.trim()) && !imageError;
   const minutes = totalMinutes(recipe);

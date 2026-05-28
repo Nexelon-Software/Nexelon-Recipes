@@ -36,7 +36,7 @@ export default async function EditRecipePage({
   }
 
   if (recipe.createdById !== userId) {
-    redirect(localePath(lang, `/recipes/${recipeId}`));
+    redirect(localePath(lang, `/myrecipes/${recipeId}`));
   }
 
   return (

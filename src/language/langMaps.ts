@@ -50,6 +50,8 @@ export const langMaps = {
   },
   recipes: {
     title: "recipes.title",
+    myRecipes: "recipes.myRecipes",
+    collectionOf: "recipes.collectionOf",
     description: "recipes.description",
     count: "recipes.count",
     searchLabel: "recipes.searchLabel",

@@ -80,7 +80,7 @@ export default async function RecipeDetailPage({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
             <Link
-              href={localePath(lang, "/recipes")}
+              href={localePath(lang, "/myrecipes")}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
                 "px-0",
@@ -97,7 +97,7 @@ export default async function RecipeDetailPage({
             <div className="flex flex-wrap gap-2">
               <ExportRecipeButton recipe={recipeDetailToRecipeInput(recipe)} />
               <Link
-                href={localePath(lang, `/recipes/${recipe.id}/edit`)}
+                href={localePath(lang, `/myrecipes/${recipe.id}/edit`)}
                 className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
               >
                 {ts(langObj, langMaps.recipes.actions.edit)}

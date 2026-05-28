@@ -13,7 +13,7 @@ export default async function RecipesPage({
 }) {
   const { lang: langParam } = await params;
   const lang = langParam as Locale;
-  const { session, loginPath, imageUrl, userId } =
+  const { session, loginPath, imageUrl, userId, displayName } =
     await getRecipesPageContext(lang);
 
   if (!session?.user) {
@@ -22,7 +22,7 @@ export default async function RecipesPage({
 
   return (
     <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
-      <RecipeList currentUserId={userId} />
+      <RecipeList currentUserId={userId} displayName={displayName} />
     </RecipesAppShell>
   );
 }

@@ -20,10 +20,14 @@ export async function getRecipesPageContext(lang: Locale) {
     imageUrl = dbUser?.image?.trim() ?? null;
   }
 
+  const displayName =
+    session?.user?.name?.trim() ?? session?.user?.email ?? "";
+
   return {
     session,
     loginPath,
     imageUrl,
     userId: session?.user?.id ?? null,
+    displayName,
   };
 }
