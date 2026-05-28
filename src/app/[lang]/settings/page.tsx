@@ -6,10 +6,11 @@ import { langMaps } from "~/language/langMaps";
 import { RecipesAppShell } from "~/app/[lang]/myrecipes/_components/RecipesAppShell";
 import { getRecipesPageContext } from "~/app/[lang]/myrecipes/_lib/page-data";
 
-import { ProfileAccountCard } from "./_components/ProfileAccountCard";
-import { ProfileSettings } from "./_components/ProfileSettings";
+import { SettingsPersonalizationSection } from "./_components/SettingsPersonalizationSection";
+import { SettingsProfileSection } from "./_components/SettingsProfileSection";
+import { SettingsSignOutButton } from "./_components/SettingsSignOutButton";
 
-export default async function ProfilePage({
+export default async function SettingsPage({
   params,
 }: {
   params: Promise<{ lang: string }>;
@@ -26,17 +27,18 @@ export default async function ProfilePage({
   const user = session.user;
 
   return (
-    <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
       <div className="container mx-auto max-w-lg space-y-6 px-3 py-6 sm:px-4">
         <h1 className="text-2xl font-semibold tracking-tight">
-          {ts(langObj, langMaps.auth.profile.title)}
+          {ts(langObj, langMaps.auth.settings.title)}
         </h1>
-        <ProfileAccountCard
+        <SettingsProfileSection
           name={user.name}
           email={user.email}
           imageUrl={imageUrl}
         />
-        <ProfileSettings />
+        <SettingsPersonalizationSection />
+        <SettingsSignOutButton loginPath={loginPath} />
       </div>
     </RecipesAppShell>
   );

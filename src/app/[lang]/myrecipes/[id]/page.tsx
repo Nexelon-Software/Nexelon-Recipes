@@ -75,7 +75,7 @@ export default async function RecipeDetailPage({
         ];
 
   return (
-    <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
       <article className="container mx-auto max-w-5xl space-y-8 px-3 py-6 sm:px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">

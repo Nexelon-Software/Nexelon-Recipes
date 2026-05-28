@@ -25,6 +25,16 @@
       "profile": "Profil",
       "signOut": "Odhlásiť sa"
     },
+    "settings": {
+      "title": "Nastavenia",
+      "avatarLink": "Nastavenia",
+      "signOut": "Odhlásiť sa",
+      "language": "Jazyk",
+      "sections": {
+        "profile": "Profil",
+        "personalization": "Personalizácia"
+      }
+    },
     "profile": {
       "title": "Profil",
       "name": "Zobrazované meno",

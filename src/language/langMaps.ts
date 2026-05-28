@@ -20,6 +20,16 @@ export const langMaps = {
       profile: "auth.menu.profile",
       signOut: "auth.menu.signOut",
     },
+    settings: {
+      title: "auth.settings.title",
+      avatarLink: "auth.settings.avatarLink",
+      signOut: "auth.settings.signOut",
+      language: "auth.settings.language",
+      sections: {
+        profile: "auth.settings.sections.profile",
+        personalization: "auth.settings.sections.personalization",
+      },
+    },
     profile: {
       title: "auth.profile.title",
       name: "auth.profile.name",

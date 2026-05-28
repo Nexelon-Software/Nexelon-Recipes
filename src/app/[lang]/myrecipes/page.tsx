@@ -21,7 +21,7 @@ export default async function RecipesPage({
   }
 
   return (
-    <RecipesAppShell lang={lang} loginPath={loginPath} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
       <RecipeList currentUserId={userId} displayName={displayName} />
     </RecipesAppShell>
   );

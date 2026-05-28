@@ -21,6 +21,16 @@
       "profile": "Profile",
       "signOut": "Sign out"
     },
+    "settings": {
+      "title": "Settings",
+      "avatarLink": "Settings",
+      "signOut": "Sign out",
+      "language": "Language",
+      "sections": {
+        "profile": "Profile",
+        "personalization": "Personalization"
+      }
+    },
     "profile": {
       "title": "Profile",
       "name": "Display name",

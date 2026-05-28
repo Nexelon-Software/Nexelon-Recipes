@@ -30,6 +30,16 @@ const config = {
         destination: "/en/myrecipes/:path*",
         permanent: true,
       },
+      {
+        source: "/profile",
+        destination: "/settings",
+        permanent: true,
+      },
+      {
+        source: "/en/profile",
+        destination: "/en/settings",
+        permanent: true,
+      },
     ];
   },
 };
