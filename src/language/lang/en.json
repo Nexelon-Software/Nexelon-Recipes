@@ -126,8 +126,17 @@
       "piece": "piece",
       "head": "head"
     },
+    "visibility": {
+      "labelPrivate": "Private recipe",
+      "labelPublic": "Public recipe",
+      "hintPrivate": "Only you can see this recipe.",
+      "hintPublic": "This recipe will be shareable publicly once browsing is available.",
+      "private": "Private",
+      "public": "Public"
+    },
     "detail": {
       "details": "Details",
+      "visibility": "Visibility",
       "description": "Description",
       "ingredients": "Ingredients",
       "portions": "Portions",

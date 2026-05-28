@@ -1,15 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import {
   ChefHat,
   Clock,
   Gauge,
+  Globe,
+  Lock,
   Pencil,
   Users,
 } from "lucide-react";
-
 import { buttonVariants } from "~/components/ui/button";
 import {
   Card,
@@ -35,6 +36,38 @@ export function totalMinutes(recipe: RecipeListItem): number | null {
   const cook = recipe.cookTimeMinutes ?? 0;
   const total = prep + cook;
   return total > 0 ? total : null;
+}
+
+export function RecipeVisibilityMarker({
+  visibility,
+  label,
+  compact = false,
+  className,
+}: {
+  visibility: string;
+  label: string;
+  compact?: boolean;
+  className?: string;
+}) {
+  const isPublic = visibility === "public";
+  const Icon = isPublic ? Globe : Lock;
+
+  return (
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-1 rounded-md border px-1.5 py-0.5 text-xs font-medium",
+        isPublic
+          ? "border-ember/35 bg-ember/10 text-ember"
+          : "border-border bg-muted/60 text-muted-foreground",
+        className,
+      )}
+      title={label}
+      aria-label={label}
+    >
+      <Icon className="size-3.5 shrink-0" aria-hidden />
+      {!compact ? <span>{label}</span> : null}
+    </span>
+  );
 }
 
 export function recipeBreadcrumb(
@@ -98,6 +131,10 @@ function useRecipeListItemData(
     breadcrumb,
     difficultyKey,
     difficultyLabel,
+    visibilityLabel:
+      recipe.visibility === "public"
+        ? t(lang.recipes.visibility.public)
+        : t(lang.recipes.visibility.private),
     setImageError,
   };
 }
@@ -113,6 +150,7 @@ function RecipeImageBlock({
   className,
   placeholderIconClassName,
   showEditOnImage = true,
+  visibilityMarker,
 }: {
   detailHref: string;
   editHref: string;
@@ -124,6 +162,7 @@ function RecipeImageBlock({
   className?: string;
   placeholderIconClassName?: string;
   showEditOnImage?: boolean;
+  visibilityMarker?: ReactNode;
 }) {
   return (
     <div className={cn("relative shrink-0", className)}>
@@ -148,6 +187,11 @@ function RecipeImageBlock({
           </div>
         )}
       </Link>
+      {visibilityMarker ? (
+        <div className="absolute bottom-2 left-2 z-10 shadow-sm">
+          {visibilityMarker}
+        </div>
+      ) : null}
       {isOwner && showEditOnImage ? (
         <Link
           href={editHref}
@@ -170,6 +214,9 @@ function RecipeMetaRow({
   difficultyKey,
   difficultyLabel,
   minutesLabel,
+  visibilityLabel,
+  visibilityCompact = false,
+  showVisibility = true,
   className,
 }: {
   recipe: RecipeListItem;
@@ -177,6 +224,9 @@ function RecipeMetaRow({
   difficultyKey: string | undefined;
   difficultyLabel: string | null;
   minutesLabel: string;
+  visibilityLabel: string;
+  visibilityCompact?: boolean;
+  showVisibility?: boolean;
   className?: string;
 }) {
   return (
@@ -186,6 +236,13 @@ function RecipeMetaRow({
         className,
       )}
     >
+      {showVisibility ? (
+        <RecipeVisibilityMarker
+          visibility={recipe.visibility}
+          label={visibilityLabel}
+          compact={visibilityCompact}
+        />
+      ) : null}
       {recipe.servings != null ? (
         <span className="flex items-center gap-1">
           <Users className="size-3.5 shrink-0" aria-hidden />
@@ -230,7 +287,7 @@ function RecipeTitleBlock({
 }) {
   return (
     <div className="min-w-0 space-y-0.5">
-      <Link href={detailHref} className="hover:underline">
+      <Link href={detailHref} className="hover:underline min-w-0">
         <h2
           className={cn(
             "line-clamp-2 leading-snug font-semibold",
@@ -255,6 +312,14 @@ function RecipeListItemGrid({
   currentUserId: string | null;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
+  const visibilityMarker = (
+    <RecipeVisibilityMarker
+      visibility={recipe.visibility}
+      label={data.visibilityLabel}
+      compact
+      className="bg-background/90 backdrop-blur-sm"
+    />
+  );
 
   return (
     <Card className="h-full gap-0 py-0">
@@ -267,6 +332,7 @@ function RecipeListItemGrid({
         setImageError={data.setImageError}
         editLabel={data.t(data.lang.recipes.actions.edit)}
         className="aspect-square w-full"
+        visibilityMarker={visibilityMarker}
       />
       <CardContent className="space-y-1 pt-3 pb-1">
         <RecipeTitleBlock
@@ -282,6 +348,8 @@ function RecipeListItemGrid({
           difficultyKey={data.difficultyKey}
           difficultyLabel={data.difficultyLabel}
           minutesLabel={data.t(data.lang.recipes.list.minutes)}
+          visibilityLabel={data.visibilityLabel}
+          showVisibility={false}
         />
       </CardFooter>
     </Card>
@@ -296,6 +364,14 @@ function RecipeListItemList({
   currentUserId: string | null;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
+  const visibilityMarker = (
+    <RecipeVisibilityMarker
+      visibility={recipe.visibility}
+      label={data.visibilityLabel}
+      compact
+      className="bg-background/90 backdrop-blur-sm"
+    />
+  );
 
   return (
     <Card className="flex flex-row gap-0 overflow-hidden py-0">
@@ -308,6 +384,7 @@ function RecipeListItemList({
         setImageError={data.setImageError}
         editLabel={data.t(data.lang.recipes.actions.edit)}
         className="aspect-square w-28 sm:w-36 md:w-40"
+        visibilityMarker={visibilityMarker}
       />
       <div className="flex min-w-0 flex-1 flex-col justify-between px-4 py-3">
         <RecipeTitleBlock
@@ -321,6 +398,8 @@ function RecipeListItemList({
           difficultyKey={data.difficultyKey}
           difficultyLabel={data.difficultyLabel}
           minutesLabel={data.t(data.lang.recipes.list.minutes)}
+          visibilityLabel={data.visibilityLabel}
+          showVisibility={false}
           className="mt-2"
         />
       </div>
@@ -347,7 +426,7 @@ function RecipeListItemCompact({
         imageUrl={data.imageUrl}
         setImageError={data.setImageError}
         editLabel={data.t(data.lang.recipes.actions.edit)}
-        className="size-12 overflow-hidden rounded-md"
+        className="relative size-12 overflow-hidden rounded-md"
         placeholderIconClassName="size-6"
         showEditOnImage={false}
       />
@@ -364,6 +443,8 @@ function RecipeListItemCompact({
           difficultyKey={data.difficultyKey}
           difficultyLabel={data.difficultyLabel}
           minutesLabel={data.t(data.lang.recipes.list.minutes)}
+          visibilityLabel={data.visibilityLabel}
+          visibilityCompact
           className="shrink-0 gap-2 sm:gap-3"
         />
       </div>

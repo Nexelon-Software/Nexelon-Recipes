@@ -125,8 +125,17 @@ export const langMaps = {
       piece: "recipes.units.piece",
       head: "recipes.units.head",
     },
+    visibility: {
+      labelPrivate: "recipes.visibility.labelPrivate",
+      labelPublic: "recipes.visibility.labelPublic",
+      hintPrivate: "recipes.visibility.hintPrivate",
+      hintPublic: "recipes.visibility.hintPublic",
+      private: "recipes.visibility.private",
+      public: "recipes.visibility.public",
+    },
     detail: {
       details: "recipes.detail.details",
+      visibility: "recipes.detail.visibility",
       description: "recipes.detail.description",
       ingredients: "recipes.detail.ingredients",
       portions: "recipes.detail.portions",

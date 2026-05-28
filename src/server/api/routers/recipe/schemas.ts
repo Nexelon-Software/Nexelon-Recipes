@@ -13,6 +13,10 @@ export const RECIPE_CATEGORIES = [
 
 export const RECIPE_DIFFICULTIES = ["easy", "medium", "hard"] as const;
 
+export const RECIPE_VISIBILITIES = ["private", "public"] as const;
+
+export type RecipeVisibility = (typeof RECIPE_VISIBILITIES)[number];
+
 export const RECIPE_UNITS = [
   "ml",
   "l",
@@ -58,6 +62,7 @@ export const RecipeInputSchema = z.object({
   imageUrl: optionalUrl,
   notes: z.string().optional(),
   sourceUrl: optionalUrl,
+  visibility: z.enum(RECIPE_VISIBILITIES).default("private"),
   ingredients: z.array(IngredientLineSchema).min(1),
   steps: z.array(StepLineSchema).min(1),
 });
@@ -88,6 +93,7 @@ export type RecipeDetailForInput = {
   imageUrl: string | null;
   notes: string | null;
   sourceUrl: string | null;
+  visibility: string | null;
   ingredients: Array<{
     name: string;
     amount: string | null;
@@ -132,6 +138,11 @@ export function recipeDetailToRecipeInput(
     imageUrl: recipe.imageUrl ?? undefined,
     notes: recipe.notes ?? undefined,
     sourceUrl: recipe.sourceUrl ?? undefined,
+    visibility:
+      recipe.visibility &&
+      RECIPE_VISIBILITIES.includes(recipe.visibility as RecipeVisibility)
+        ? (recipe.visibility as RecipeVisibility)
+        : "private",
     ingredients: recipe.ingredients.map((ingredient) => ({
       name: ingredient.name,
       amount: ingredient.amount ?? undefined,

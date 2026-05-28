@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { Switch } from "~/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -72,6 +73,7 @@ export function RecipeForm({
       : {
           name: "",
           description: "",
+          visibility: "private",
           ingredients: [emptyIngredient()],
           steps: [emptyStep()],
         },
@@ -216,6 +218,33 @@ export function RecipeForm({
             onChange={(event) => updateField("description", event.target.value)}
             placeholder={t(lang.recipes.form.descriptionPlaceholder)}
             className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-24 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+          />
+        </div>
+
+        <div className="flex items-start justify-between gap-4 rounded-md border px-4 py-3">
+          <div className="space-y-1">
+            <Label htmlFor="visibility">
+              {t(
+                form.visibility === "public"
+                  ? lang.recipes.visibility.labelPublic
+                  : lang.recipes.visibility.labelPrivate,
+              )}
+            </Label>
+            <p className="text-muted-foreground text-sm">
+              {t(
+                form.visibility === "public"
+                  ? lang.recipes.visibility.hintPublic
+                  : lang.recipes.visibility.hintPrivate,
+              )}
+            </p>
+          </div>
+          <Switch
+            id="visibility"
+            checked={form.visibility === "public"}
+            onCheckedChange={(checked) =>
+              updateField("visibility", checked ? "public" : "private")
+            }
+            aria-labelledby="visibility"
           />
         </div>
 

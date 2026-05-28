@@ -130,8 +130,17 @@
       "piece": "ks",
       "head": "hlavička"
     },
+    "visibility": {
+      "labelPrivate": "Súkromný recept",
+      "labelPublic": "Verejný recept",
+      "hintPrivate": "Tento recept vidíte len vy.",
+      "hintPublic": "Recept bude možné zdieľať verejne, keď bude dostupné prehliadanie.",
+      "private": "Súkromný",
+      "public": "Verejný"
+    },
     "detail": {
       "details": "Podrobnosti",
+      "visibility": "Viditeľnosť",
       "description": "Popis",
       "ingredients": "Ingrediencie",
       "portions": "Porcie",

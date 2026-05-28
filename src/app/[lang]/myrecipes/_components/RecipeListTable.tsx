@@ -19,6 +19,7 @@ import useTranslation from "~/language/useTranslation";
 
 import {
   recipeBreadcrumb,
+  RecipeVisibilityMarker,
   totalMinutes,
   type RecipeListItem,
 } from "./RecipeListTile";
@@ -120,6 +121,10 @@ export function RecipeListTable({
             difficultyKey !== "unknown"
               ? t(lang.recipes.difficulties[difficultyKey])
               : "—";
+          const visibilityLabel =
+            recipe.visibility === "public"
+              ? t(lang.recipes.visibility.public)
+              : t(lang.recipes.visibility.private);
 
           return (
             <TableRow key={recipe.id}>
@@ -127,12 +132,18 @@ export function RecipeListTable({
                 <TableRecipeThumbnail recipe={recipe} detailHref={detailHref} />
               </TableCell>
               <TableCell className="max-w-[200px] whitespace-normal">
-                <Link
-                  href={detailHref}
-                  className="hover:underline font-medium"
-                >
-                  {recipe.name}
-                </Link>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Link
+                    href={detailHref}
+                    className="hover:underline font-medium"
+                  >
+                    {recipe.name}
+                  </Link>
+                  <RecipeVisibilityMarker
+                    visibility={recipe.visibility}
+                    label={visibilityLabel}
+                  />
+                </div>
                 {breadcrumb ? (
                   <p className="text-muted-foreground line-clamp-1 text-xs">
                     {breadcrumb}

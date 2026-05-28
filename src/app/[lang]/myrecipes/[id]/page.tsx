@@ -122,6 +122,19 @@ export default async function RecipeDetailPage({
             title={ts(langObj, langMaps.recipes.detail.details)}
           >
             <dl className="grid grid-cols-2 gap-4">
+              <div>
+                <dt className="text-muted-foreground text-sm">
+                  {ts(langObj, langMaps.recipes.detail.visibility)}
+                </dt>
+                <dd>
+                  {ts(
+                    langObj,
+                    recipe.visibility === "public"
+                      ? langMaps.recipes.visibility.public
+                      : langMaps.recipes.visibility.private,
+                  )}
+                </dd>
+              </div>
               {recipe.category ? (
                 <div>
                   <dt className="text-muted-foreground text-sm">
