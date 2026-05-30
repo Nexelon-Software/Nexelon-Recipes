@@ -63,6 +63,21 @@
     "forest": "Les",
     "vscode": "VS Code"
   },
+  "nav": {
+    "people": "Ľudia"
+  },
+  "people": {
+    "title": "Ľudia",
+    "followingCount": "Sledujem",
+    "followersCount": "Sledovatelia",
+    "searchLabel": "Hľadať",
+    "searchPlaceholder": "Hľadať podľa mena…",
+    "follow": "Sledovať",
+    "following": "Sledujem",
+    "unfollow": "Prestať sledovať",
+    "noResults": "Nenašli sa žiadni ľudia",
+    "unknownName": "Neznámy používateľ"
+  },
   "recipes": {
     "title": "Recepty",
     "myRecipes": "Moje recepty",

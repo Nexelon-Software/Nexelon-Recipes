@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChefHat } from "lucide-react";
+import { ChefHat, Users } from "lucide-react";
 
 import { UserAvatarLink } from "~/app/_components/UserAvatarLink";
 import { localePath } from "~/lib/seo-url";
@@ -23,13 +23,22 @@ export async function RecipesAppShell({
     <div className="flex min-h-screen flex-col">
       <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b backdrop-blur">
         <div className="container mx-auto flex h-14 items-center gap-2 px-3 sm:h-16 sm:px-4">
-          <Link
-            href={localePath(lang, "/myrecipes")}
-            className="text-foreground hover:text-foreground/80 inline-flex shrink-0 rounded-md p-1 transition-colors"
-            aria-label={ts(langObj, langMaps.recipes.myRecipes)}
-          >
-            <ChefHat className="size-5" aria-hidden />
-          </Link>
+          <div className="flex items-center gap-1">
+            <Link
+              href={localePath(lang, "/myrecipes")}
+              className="text-foreground hover:text-foreground/80 inline-flex shrink-0 rounded-md p-1 transition-colors"
+              aria-label={ts(langObj, langMaps.recipes.myRecipes)}
+            >
+              <ChefHat className="size-5" aria-hidden />
+            </Link>
+            <Link
+              href={localePath(lang, "/people")}
+              className="text-foreground hover:text-foreground/80 inline-flex shrink-0 rounded-md p-1 transition-colors"
+              aria-label={ts(langObj, langMaps.nav.people)}
+            >
+              <Users className="size-5" aria-hidden />
+            </Link>
+          </div>
           <div className="ml-auto flex items-center gap-2">
             <UserAvatarLink
               imageUrl={imageUrl}
