@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, or } from "drizzle-orm";
 import { z } from "zod";
 
 import {
@@ -11,6 +11,7 @@ import {
   recipeIngredients,
   recipes,
   recipeSteps,
+  user,
 } from "~/server/db/schema";
 
 import { RecipeInputSchema } from "./recipe/schemas";
@@ -76,22 +77,52 @@ async function replaceChildRows(
   await insertChildRows(tx, recipeId, input);
 }
 
+async function assertUserExists(
+  database: typeof db,
+  userId: string,
+): Promise<void> {
+  const existing = await database.query.user.findFirst({
+    where: eq(user.id, userId),
+    columns: { id: true },
+  });
+
+  if (!existing) {
+    throw new TRPCError({ code: "NOT_FOUND" });
+  }
+}
+
 export const recipeRouter = createTRPCRouter({
   list: protectedProcedure
     .input(
       z
         .object({
           search: z.string().optional(),
+          userId: z.string().min(1).optional(),
         })
         .optional(),
     )
     .query(async ({ ctx, input }) => {
       const search = input?.search?.trim();
+      const profileUserId = input?.userId;
+
+      if (profileUserId) {
+        if (profileUserId === ctx.session.user.id) {
+          throw new TRPCError({ code: "BAD_REQUEST" });
+        }
+        await assertUserExists(ctx.db, profileUserId);
+      }
+
       const rows = await ctx.db.query.recipes.findMany({
-        where: and(
-          eq(recipes.deleted, false),
-          eq(recipes.createdById, ctx.session.user.id),
-        ),
+        where: profileUserId
+          ? and(
+              eq(recipes.deleted, false),
+              eq(recipes.createdById, profileUserId),
+              eq(recipes.visibility, "public"),
+            )
+          : and(
+              eq(recipes.deleted, false),
+              eq(recipes.createdById, ctx.session.user.id),
+            ),
         orderBy: [desc(recipes.updatedAt)],
         columns: {
           id: true,
@@ -127,9 +158,15 @@ export const recipeRouter = createTRPCRouter({
         where: and(
           eq(recipes.id, input.id),
           eq(recipes.deleted, false),
-          eq(recipes.createdById, ctx.session.user.id),
+          or(
+            eq(recipes.createdById, ctx.session.user.id),
+            eq(recipes.visibility, "public"),
+          ),
         ),
         with: {
+          createdBy: {
+            columns: { id: true, name: true, image: true, email: true },
+          },
           ingredients: {
             orderBy: [asc(recipeIngredients.sortOrder)],
           },

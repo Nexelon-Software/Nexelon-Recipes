@@ -73,7 +73,7 @@ export function RecipeForm({
       : {
           name: "",
           description: "",
-          visibility: "private",
+          visibility: "public",
           ingredients: [emptyIngredient()],
           steps: [emptyStep()],
         },

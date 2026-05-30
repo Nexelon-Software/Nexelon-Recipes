@@ -59,6 +59,22 @@
     "forest": "Forest",
     "vscode": "VS Code"
   },
+  "nav": {
+    "people": "People"
+  },
+  "people": {
+    "title": "People",
+    "followingCount": "Following",
+    "followersCount": "Followers",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Search by name…",
+    "follow": "Follow",
+    "following": "Following",
+    "unfollow": "Unfollow",
+    "noResults": "No people found",
+    "unknownName": "Unknown user",
+    "viewRecipes": "View recipes"
+  },
   "recipes": {
     "title": "Recipes",
     "myRecipes": "My recipes",

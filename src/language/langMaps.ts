@@ -58,6 +58,22 @@ export const langMaps = {
     forest: "palette.forest",
     vscode: "palette.vscode",
   },
+  nav: {
+    people: "nav.people",
+  },
+  people: {
+    title: "people.title",
+    followingCount: "people.followingCount",
+    followersCount: "people.followersCount",
+    searchLabel: "people.searchLabel",
+    searchPlaceholder: "people.searchPlaceholder",
+    follow: "people.follow",
+    following: "people.following",
+    unfollow: "people.unfollow",
+    noResults: "people.noResults",
+    unknownName: "people.unknownName",
+    viewRecipes: "people.viewRecipes",
+  },
   recipes: {
     title: "recipes.title",
     myRecipes: "recipes.myRecipes",

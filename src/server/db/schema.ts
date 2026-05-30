@@ -6,6 +6,7 @@ import {
   pgTableCreator,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const createTable = pgTableCreator((name) => `drizzle_${name}`);
@@ -152,6 +153,33 @@ export const account = pgTable("account", {
   updatedAt: timestamp("updated_at").notNull(),
 });
 
+export const userFollows = createTable(
+  "userFollow",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    followerId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    followingId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+  }),
+  (t) => [
+    index("user_follow_follower_idx").on(t.followerId),
+    index("user_follow_following_idx").on(t.followingId),
+    uniqueIndex("user_follow_follower_following_idx").on(
+      t.followerId,
+      t.followingId,
+    ),
+  ],
+);
+
 export const verification = pgTable("verification", {
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
@@ -169,6 +197,8 @@ export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
   session: many(session),
   recipes: many(recipes),
+  followers: many(userFollows, { relationName: "following" }),
+  following: many(userFollows, { relationName: "follower" }),
 }));
 
 export const recipeRelations = relations(recipes, ({ one, many }) => ({
@@ -194,6 +224,19 @@ export const recipeStepRelations = relations(recipeSteps, ({ one }) => ({
   recipe: one(recipes, {
     fields: [recipeSteps.recipeId],
     references: [recipes.id],
+  }),
+}));
+
+export const userFollowRelations = relations(userFollows, ({ one }) => ({
+  follower: one(user, {
+    fields: [userFollows.followerId],
+    references: [user.id],
+    relationName: "follower",
+  }),
+  following: one(user, {
+    fields: [userFollows.followingId],
+    references: [user.id],
+    relationName: "following",
   }),
 }));
 

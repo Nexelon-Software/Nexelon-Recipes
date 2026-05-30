@@ -307,19 +307,21 @@ function RecipeTitleBlock({
 function RecipeListItemGrid({
   recipe,
   currentUserId,
+  showVisibility = true,
 }: {
   recipe: RecipeListItem;
   currentUserId: string | null;
+  showVisibility?: boolean;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
-  const visibilityMarker = (
+  const visibilityMarker = showVisibility ? (
     <RecipeVisibilityMarker
       visibility={recipe.visibility}
       label={data.visibilityLabel}
       compact
       className="bg-background/90 backdrop-blur-sm"
     />
-  );
+  ) : undefined;
 
   return (
     <Card className="h-full gap-0 py-0">
@@ -359,19 +361,21 @@ function RecipeListItemGrid({
 function RecipeListItemList({
   recipe,
   currentUserId,
+  showVisibility = true,
 }: {
   recipe: RecipeListItem;
   currentUserId: string | null;
+  showVisibility?: boolean;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
-  const visibilityMarker = (
+  const visibilityMarker = showVisibility ? (
     <RecipeVisibilityMarker
       visibility={recipe.visibility}
       label={data.visibilityLabel}
       compact
       className="bg-background/90 backdrop-blur-sm"
     />
-  );
+  ) : undefined;
 
   return (
     <Card className="flex flex-row gap-0 overflow-hidden py-0">
@@ -410,9 +414,11 @@ function RecipeListItemList({
 function RecipeListItemCompact({
   recipe,
   currentUserId,
+  showVisibility = true,
 }: {
   recipe: RecipeListItem;
   currentUserId: string | null;
+  showVisibility?: boolean;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
 
@@ -445,6 +451,7 @@ function RecipeListItemCompact({
           minutesLabel={data.t(data.lang.recipes.list.minutes)}
           visibilityLabel={data.visibilityLabel}
           visibilityCompact
+          showVisibility={showVisibility}
           className="shrink-0 gap-2 sm:gap-3"
         />
       </div>
@@ -468,24 +475,38 @@ export function RecipeListItemView({
   recipe,
   layout,
   currentUserId,
+  showVisibility = true,
 }: {
   recipe: RecipeListItem;
   layout: Exclude<RecipeListLayoutId, "table">;
   currentUserId: string | null;
+  showVisibility?: boolean;
 }) {
   switch (layout) {
     case "list":
       return (
-        <RecipeListItemList recipe={recipe} currentUserId={currentUserId} />
+        <RecipeListItemList
+          recipe={recipe}
+          currentUserId={currentUserId}
+          showVisibility={showVisibility}
+        />
       );
     case "compact":
       return (
-        <RecipeListItemCompact recipe={recipe} currentUserId={currentUserId} />
+        <RecipeListItemCompact
+          recipe={recipe}
+          currentUserId={currentUserId}
+          showVisibility={showVisibility}
+        />
       );
     case "grid":
     default:
       return (
-        <RecipeListItemGrid recipe={recipe} currentUserId={currentUserId} />
+        <RecipeListItemGrid
+          recipe={recipe}
+          currentUserId={currentUserId}
+          showVisibility={showVisibility}
+        />
       );
   }
 }

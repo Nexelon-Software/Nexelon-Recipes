@@ -31,3 +31,17 @@ export async function getRecipesPageContext(lang: Locale) {
     displayName,
   };
 }
+
+export async function getUserDisplayName(userId: string): Promise<string | null> {
+  const [dbUser] = await db
+    .select({ name: userTable.name, email: userTable.email })
+    .from(userTable)
+    .where(eq(userTable.id, userId))
+    .limit(1);
+
+  if (!dbUser) {
+    return null;
+  }
+
+  return dbUser.name?.trim() || dbUser.email?.trim() || null;
+}
