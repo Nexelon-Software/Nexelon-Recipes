@@ -64,9 +64,11 @@ function TableRecipeThumbnail({
 export function RecipeListTable({
   recipes,
   currentUserId,
+  showVisibility = true,
 }: {
   recipes: RecipeListItem[];
   currentUserId: string | null;
+  showVisibility?: boolean;
 }) {
   const { t, lang, locale } = useTranslation();
 
@@ -139,10 +141,12 @@ export function RecipeListTable({
                   >
                     {recipe.name}
                   </Link>
-                  <RecipeVisibilityMarker
-                    visibility={recipe.visibility}
-                    label={visibilityLabel}
-                  />
+                  {showVisibility ? (
+                    <RecipeVisibilityMarker
+                      visibility={recipe.visibility}
+                      label={visibilityLabel}
+                    />
+                  ) : null}
                 </div>
                 {breadcrumb ? (
                   <p className="text-muted-foreground line-clamp-1 text-xs">

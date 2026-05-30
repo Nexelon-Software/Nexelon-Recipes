@@ -72,7 +72,8 @@
     "following": "Following",
     "unfollow": "Unfollow",
     "noResults": "No people found",
-    "unknownName": "Unknown user"
+    "unknownName": "Unknown user",
+    "viewRecipes": "View recipes"
   },
   "recipes": {
     "title": "Recipes",

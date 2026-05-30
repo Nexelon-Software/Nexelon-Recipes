@@ -72,6 +72,7 @@ export const langMaps = {
     unfollow: "people.unfollow",
     noResults: "people.noResults",
     unknownName: "people.unknownName",
+    viewRecipes: "people.viewRecipes",
   },
   recipes: {
     title: "recipes.title",

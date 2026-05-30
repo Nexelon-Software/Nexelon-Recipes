@@ -49,6 +49,9 @@ export default async function RecipeDetailPage({
 
   const langObj = await getLanguage(lang);
   const isOwner = userId === recipe.createdById;
+  const listHref = isOwner
+    ? localePath(lang, "/myrecipes")
+    : localePath(lang, `/myrecipes/user/${recipe.createdById}`);
 
   const formatIngredientUnit = (unit: string | null) => {
     if (!unit) return null;
@@ -80,7 +83,7 @@ export default async function RecipeDetailPage({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
             <Link
-              href={localePath(lang, "/myrecipes")}
+              href={listHref}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
                 "px-0",

@@ -41,9 +41,13 @@ function listContainerClass(layout: RecipeListLayoutId): string {
 export function RecipeList({
   currentUserId,
   displayName,
+  profileUserId,
+  pageTitle,
 }: {
   currentUserId: string | null;
   displayName: string;
+  profileUserId?: string;
+  pageTitle?: string;
 }) {
   const { t, lang, locale } = useTranslation();
   const [search, setSearch] = useState("");
@@ -78,11 +82,14 @@ export function RecipeList({
   }, [search]);
 
   const { data: recipes = [], isLoading } = api.recipe.list.useQuery(
-    { search: querySearch },
+    profileUserId
+      ? { search: querySearch, userId: profileUserId }
+      : { search: querySearch },
     { placeholderData: keepPreviousData },
   );
 
   const activeLayout = layoutMounted ? layout : DEFAULT_RECIPE_LIST_LAYOUT;
+  const showVisibility = !profileUserId;
 
   const renderContent = () => {
     if (isLoading && recipes.length === 0) {
@@ -108,7 +115,11 @@ export function RecipeList({
 
     if (activeLayout === "table") {
       return (
-        <RecipeListTable recipes={recipes} currentUserId={currentUserId} />
+        <RecipeListTable
+          recipes={recipes}
+          currentUserId={currentUserId}
+          showVisibility={showVisibility}
+        />
       );
     }
 
@@ -120,11 +131,17 @@ export function RecipeList({
             recipe={recipe}
             layout={activeLayout}
             currentUserId={currentUserId}
+            showVisibility={showVisibility}
           />
         ))}
       </div>
     );
   };
+
+  const headingTitle = profileUserId
+    ? (pageTitle ??
+      format(t(lang.recipes.collectionOf), { username: displayName }))
+    : t(lang.recipes.myRecipes);
 
   return (
     <div className="container mx-auto space-y-6 px-3 py-6 sm:px-4">
@@ -132,15 +149,15 @@ export function RecipeList({
         <div>
           <h1 className="inline-flex items-center gap-2 text-2xl font-semibold">
             <ChefHat className="size-6 shrink-0" aria-hidden />
-            {t(lang.recipes.myRecipes)}
+            {headingTitle}
           </h1>
-          {displayName ? (
+          {!profileUserId && displayName ? (
             <p className="text-muted-foreground text-sm">
               {format(t(lang.recipes.collectionOf), { username: displayName })}
             </p>
           ) : null}
         </div>
-        {currentUserId ? (
+        {!profileUserId && currentUserId ? (
           <Link
             href={localePath(locale, "/myrecipes/new")}
             className={cn(buttonVariants())}

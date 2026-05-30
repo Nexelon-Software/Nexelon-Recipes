@@ -76,7 +76,8 @@
     "following": "Sledujem",
     "unfollow": "Prestať sledovať",
     "noResults": "Nenašli sa žiadni ľudia",
-    "unknownName": "Neznámy používateľ"
+    "unknownName": "Neznámy používateľ",
+    "viewRecipes": "Zobraziť recepty"
   },
   "recipes": {
     "title": "Recepty",
