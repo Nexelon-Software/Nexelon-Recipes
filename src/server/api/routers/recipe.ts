@@ -164,6 +164,9 @@ export const recipeRouter = createTRPCRouter({
           ),
         ),
         with: {
+          createdBy: {
+            columns: { id: true, name: true, image: true, email: true },
+          },
           ingredients: {
             orderBy: [asc(recipeIngredients.sortOrder)],
           },

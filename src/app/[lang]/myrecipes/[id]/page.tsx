@@ -16,6 +16,7 @@ import { api } from "~/trpc/server";
 
 import { DeleteRecipeButton } from "../_components/DeleteRecipeButton";
 import { ExportRecipeButton } from "../_components/ExportRecipeButton";
+import { RecipeAuthorLink } from "../_components/RecipeAuthorLink";
 import { RecipeDetailSectionCard } from "../_components/RecipeDetailSectionCard";
 import { RecipesAppShell } from "../_components/RecipesAppShell";
 import { getRecipesPageContext } from "../_lib/page-data";
@@ -52,6 +53,13 @@ export default async function RecipeDetailPage({
   const listHref = isOwner
     ? localePath(lang, "/myrecipes")
     : localePath(lang, `/myrecipes/user/${recipe.createdById}`);
+
+  const author = recipe.createdBy;
+  const authorDisplayName = author
+    ? author.name?.trim() ||
+      author.email?.trim() ||
+      ts(langObj, langMaps.people.unknownName)
+    : null;
 
   const formatIngredientUnit = (unit: string | null) => {
     if (!unit) return null;
@@ -94,6 +102,19 @@ export default async function RecipeDetailPage({
             <h1 className="text-3xl font-semibold">{recipe.name}</h1>
             {recipe.description ? (
               <p className="text-muted-foreground">{recipe.description}</p>
+            ) : null}
+            {author && authorDisplayName ? (
+              <div className="flex items-center gap-2 pt-1">
+                <span className="text-muted-foreground text-sm">
+                  {ts(langObj, langMaps.recipes.detail.owner)}:
+                </span>
+                <RecipeAuthorLink
+                  href={localePath(lang, `/myrecipes/user/${author.id}`)}
+                  name={authorDisplayName}
+                  image={author.image}
+                  ariaLabel={`${ts(langObj, langMaps.people.viewRecipes)}: ${authorDisplayName}`}
+                />
+              </div>
             ) : null}
           </div>
           {isOwner ? (
