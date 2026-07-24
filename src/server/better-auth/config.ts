@@ -1,5 +1,6 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { nextCookies } from "better-auth/next-js";
 
 import { env } from "~/env";
 import { db } from "~/server/db";
@@ -39,9 +40,15 @@ export const auth = betterAuth({
     provider: "pg",
   }),
   session: {
+    // Prefer `compact` over `jwe`/`jwt`: expired JWE cache cookies used to make
+    // getSession return null without falling back to the DB session_token
+    // (better-auth#10021). Compact treats expiry as a cache miss.
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // refresh expiry at most once per day when used
     cookieCache: {
       enabled: true,
-      strategy: "jwe",
+      strategy: "compact",
+      maxAge: 5 * 60,
     },
   },
   socialProviders: {
@@ -50,6 +57,8 @@ export const auth = betterAuth({
       clientSecret: env.GOOGLE_CLIENT_SECRET,
     },
   },
+  // Must be last so Set-Cookie from auth.api.* reaches Next.js cookies().
+  plugins: [nextCookies()],
 });
 
 export type Session = typeof auth.$Infer.Session;

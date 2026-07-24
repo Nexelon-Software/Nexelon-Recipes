@@ -179,6 +179,94 @@ export function recipeInputToExportEnvelope(
   };
 }
 
+export const RECIPE_COLLECTION_JSON_FORMAT = "nexelon-recipes" as const;
+
+export function recipeInputsToCollectionEnvelope(inputs: RecipeInput[]) {
+  return {
+    format: RECIPE_COLLECTION_JSON_FORMAT,
+    version: RECIPE_JSON_VERSION,
+    exportedAt: new Date().toISOString(),
+    recipes: inputs.map(
+      (input) => recipeInputToExportEnvelope(input).recipe,
+    ),
+  };
+}
+
+export function recipeInputsToMarkdown(
+  inputs: RecipeInput[],
+  collectionTitle: string,
+): string {
+  const parts: string[] = [`# ${collectionTitle}`, ""];
+
+  if (inputs.length === 0) {
+    parts.push("_No recipes._", "");
+    return parts.join("\n");
+  }
+
+  for (const recipe of inputs) {
+    parts.push(`## ${recipe.name}`, "");
+
+    if (recipe.description?.trim()) {
+      parts.push(recipe.description.trim(), "");
+    }
+
+    const meta: string[] = [];
+    if (recipe.visibility) meta.push(`- **Visibility:** ${recipe.visibility}`);
+    if (recipe.category) meta.push(`- **Category:** ${recipe.category}`);
+    if (recipe.cuisine) meta.push(`- **Cuisine:** ${recipe.cuisine}`);
+    if (recipe.difficulty) meta.push(`- **Difficulty:** ${recipe.difficulty}`);
+    if (recipe.servings != null) {
+      meta.push(`- **Servings:** ${recipe.servings}`);
+    }
+    if (recipe.prepTimeMinutes != null) {
+      meta.push(`- **Prep:** ${recipe.prepTimeMinutes} min`);
+    }
+    if (recipe.cookTimeMinutes != null) {
+      meta.push(`- **Cook:** ${recipe.cookTimeMinutes} min`);
+    }
+    if (recipe.sourceUrl) {
+      meta.push(`- **Source:** ${recipe.sourceUrl}`);
+    }
+    if (meta.length > 0) {
+      parts.push(...meta, "");
+    }
+
+    parts.push("### Ingredients", "");
+    if (recipe.ingredients.length === 0) {
+      parts.push("- _(none)_", "");
+    } else {
+      for (const ingredient of recipe.ingredients) {
+        const qty = [ingredient.amount, ingredient.unit]
+          .filter(Boolean)
+          .join(" ");
+        const line = qty
+          ? `- ${qty} — ${ingredient.name}`
+          : `- ${ingredient.name}`;
+        parts.push(line);
+      }
+      parts.push("");
+    }
+
+    parts.push("### Steps", "");
+    if (recipe.steps.length === 0) {
+      parts.push("1. _(none)_", "");
+    } else {
+      recipe.steps.forEach((step, index) => {
+        parts.push(`${index + 1}. ${step.instruction}`);
+      });
+      parts.push("");
+    }
+
+    if (recipe.notes?.trim()) {
+      parts.push("### Notes", "", recipe.notes.trim(), "");
+    }
+
+    parts.push("---", "");
+  }
+
+  return parts.join("\n").trimEnd() + "\n";
+}
+
 function formatZodIssues(error: z.ZodError): string {
   return error.issues
     .map((issue) => {

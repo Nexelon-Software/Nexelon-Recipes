@@ -58,10 +58,13 @@ export function RecipeForm({
   mode,
   recipeId,
   initialRecipe,
+  ownerUserId,
 }: {
   mode: "create" | "edit";
   recipeId?: number;
   initialRecipe?: RouterOutputs["recipe"]["getById"];
+  /** Used for cancel redirect to the owner's collection. */
+  ownerUserId: string;
 }) {
   const router = useRouter();
   const { t, lang, locale } = useTranslation();
@@ -82,14 +85,14 @@ export function RecipeForm({
   const createRecipe = api.recipe.create.useMutation({
     onSuccess: async (result) => {
       await utils.recipe.invalidate();
-      router.push(localePath(locale, `/myrecipes/${result.id}`));
+      router.push(localePath(locale, `/recipes/${result.id}`));
     },
   });
 
   const updateRecipe = api.recipe.update.useMutation({
     onSuccess: async () => {
       await utils.recipe.invalidate();
-      router.push(localePath(locale, `/myrecipes/${recipeId}`));
+      router.push(localePath(locale, `/recipes/${recipeId}`));
     },
   });
 
@@ -614,7 +617,9 @@ export function RecipeForm({
             router.push(
               localePath(
                 locale,
-                mode === "edit" && recipeId ? `/myrecipes/${recipeId}` : "/myrecipes",
+                mode === "edit" && recipeId
+                  ? `/recipes/${recipeId}`
+                  : `/${ownerUserId}/recipes`,
               ),
             )
           }

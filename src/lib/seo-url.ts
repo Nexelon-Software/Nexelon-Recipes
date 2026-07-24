@@ -13,6 +13,19 @@ export function localePath(locale: Locale, pathname = "/"): string {
   return `/${locale}${normalized}`;
 }
 
+/** Same-origin relative path only; rejects open redirects. */
+export function safeCallbackPath(
+  candidate: string | null | undefined,
+  fallback: string,
+): string {
+  if (!candidate) return fallback;
+  if (!candidate.startsWith("/") || candidate.startsWith("//")) {
+    return fallback;
+  }
+  if (candidate.includes("://")) return fallback;
+  return candidate;
+}
+
 export function absoluteUrl(path: string): string {
   return new URL(path, env.NEXT_PUBLIC_SERVER_URL).href;
 }

@@ -30,7 +30,7 @@ export function PersonRow({
     setImageError(false);
   }, [trimmedImage]);
 
-  const recipesHref = localePath(locale, `/myrecipes/user/${id}`);
+  const recipesHref = localePath(locale, `/${id}/recipes`);
 
   return (
     <div className="border-border hover:bg-muted/50 flex items-center gap-3 rounded-lg border p-3 transition-colors">

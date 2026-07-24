@@ -15,6 +15,7 @@ import {
 import { api } from "~/trpc/server";
 
 import { DeleteRecipeButton } from "../_components/DeleteRecipeButton";
+import { CopyRecipeLinkButton } from "../_components/CopyRecipeLinkButton";
 import { ExportRecipeButton } from "../_components/ExportRecipeButton";
 import { RecipeAuthorLink } from "../_components/RecipeAuthorLink";
 import { RecipeDetailSectionCard } from "../_components/RecipeDetailSectionCard";
@@ -37,22 +38,26 @@ export default async function RecipeDetailPage({
   const { session, loginPath, imageUrl, userId } =
     await getRecipesPageContext(lang);
 
-  if (!session?.user) {
-    redirect(loginPath);
-  }
+  const recipePath = localePath(lang, `/recipes/${recipeId}`);
+  const loginWithCallback = `${loginPath}?callback=${encodeURIComponent(recipePath)}`;
 
   let recipe;
   try {
     recipe = await api.recipe.getById({ id: recipeId });
   } catch {
+    if (!session?.user) {
+      redirect(loginWithCallback);
+    }
     notFound();
   }
 
   const langObj = await getLanguage(lang);
   const isOwner = userId === recipe.createdById;
-  const listHref = isOwner
-    ? localePath(lang, "/myrecipes")
-    : localePath(lang, `/myrecipes/user/${recipe.createdById}`);
+  const isPublic = recipe.visibility === "public";
+  const listHref =
+    isOwner || userId
+      ? localePath(lang, `/${recipe.createdById}/recipes`)
+      : localePath(lang, "/recipes");
 
   const author = recipe.createdBy;
   const authorDisplayName = author
@@ -72,21 +77,13 @@ export default async function RecipeDetailPage({
     return unit;
   };
 
-  const ingredientColumns =
-    recipe.ingredients.length <= 1
-      ? [recipe.ingredients]
-      : [
-          recipe.ingredients.slice(
-            0,
-            Math.ceil(recipe.ingredients.length / 2),
-          ),
-          recipe.ingredients.slice(
-            Math.ceil(recipe.ingredients.length / 2),
-          ),
-        ];
-
   return (
-    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
+    <RecipesAppShell
+      lang={lang}
+      imageUrl={imageUrl}
+      loginPath={session?.user ? undefined : loginWithCallback}
+      userId={userId}
+    >
       <article className="container mx-auto max-w-5xl space-y-8 px-3 py-6 sm:px-4">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="space-y-2">
@@ -109,7 +106,7 @@ export default async function RecipeDetailPage({
                   {ts(langObj, langMaps.recipes.detail.owner)}:
                 </span>
                 <RecipeAuthorLink
-                  href={localePath(lang, `/myrecipes/user/${author.id}`)}
+                  href={localePath(lang, `/${author.id}/recipes`)}
                   name={authorDisplayName}
                   image={author.image}
                   ariaLabel={`${ts(langObj, langMaps.people.viewRecipes)}: ${authorDisplayName}`}
@@ -117,18 +114,34 @@ export default async function RecipeDetailPage({
               </div>
             ) : null}
           </div>
-          {isOwner ? (
-            <div className="flex flex-wrap gap-2">
-              <ExportRecipeButton recipe={recipeDetailToRecipeInput(recipe)} />
-              <Link
-                href={localePath(lang, `/myrecipes/${recipe.id}/edit`)}
-                className={cn(buttonVariants({ variant: "secondary", size: "sm" }))}
-              >
-                {ts(langObj, langMaps.recipes.actions.edit)}
-              </Link>
-              <DeleteRecipeButton recipeId={recipe.id} />
-            </div>
-          ) : null}
+          <div className="flex flex-wrap gap-2">
+            {isPublic ? (
+              <CopyRecipeLinkButton
+                copyLabel={ts(langObj, langMaps.recipes.actions.copyLink)}
+                copiedLabel={ts(langObj, langMaps.recipes.actions.linkCopied)}
+              />
+            ) : null}
+            {isOwner ? (
+              <>
+                <ExportRecipeButton recipe={recipeDetailToRecipeInput(recipe)} />
+                <Link
+                  href={localePath(lang, `/recipes/${recipe.id}/edit`)}
+                  className={cn(
+                    buttonVariants({ variant: "secondary", size: "sm" }),
+                  )}
+                >
+                  {ts(langObj, langMaps.recipes.actions.edit)}
+                </Link>
+                <DeleteRecipeButton
+                  recipeId={recipe.id}
+                  redirectPath={localePath(
+                    lang,
+                    `/${recipe.createdById}/recipes`,
+                  )}
+                />
+              </>
+            ) : null}
+          </div>
         </div>
 
         {recipe.imageUrl ? (
@@ -232,39 +245,30 @@ export default async function RecipeDetailPage({
                 {ts(langObj, langMaps.recipes.detail.ingredientsEmpty)}
               </p>
             ) : (
-              <div
-                className={cn(
-                  "grid gap-x-4",
-                  ingredientColumns.length > 1 ? "grid-cols-2" : "grid-cols-1",
-                )}
-              >
-                {ingredientColumns.map((column, columnIndex) => (
-                  <ul key={columnIndex} className="min-w-0 space-y-2">
-                    {column.map((ingredient) => {
-                      const unitLabel = formatIngredientUnit(ingredient.unit);
-                      const quantity = [ingredient.amount, unitLabel]
-                        .filter(Boolean)
-                        .join(" ");
+              <ul className="divide-border divide-y">
+                {recipe.ingredients.map((ingredient) => {
+                  const unitLabel = formatIngredientUnit(ingredient.unit);
+                  const quantity = [ingredient.amount, unitLabel]
+                    .filter(Boolean)
+                    .join("\u00a0");
 
-                      return (
-                        <li
-                          key={ingredient.id}
-                          className="flex min-w-0 flex-wrap gap-x-2 gap-y-0.5"
-                        >
-                          <span className="font-medium break-words">
-                            {ingredient.name}
-                          </span>
-                          {quantity ? (
-                            <span className="text-muted-foreground shrink-0">
-                              {quantity}
-                            </span>
-                          ) : null}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ))}
-              </div>
+                  return (
+                    <li
+                      key={ingredient.id}
+                      className="grid grid-cols-1 gap-0.5 py-2.5 first:pt-0 last:pb-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-baseline sm:gap-x-4"
+                    >
+                      <span className="min-w-0 text-base leading-snug font-medium wrap-break-word">
+                        {ingredient.name}
+                      </span>
+                      {quantity ? (
+                        <span className="text-muted-foreground text-sm tabular-nums sm:text-right sm:text-base">
+                          {quantity}
+                        </span>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
             )}
           </RecipeDetailSectionCard>
           </div>

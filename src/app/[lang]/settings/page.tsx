@@ -3,8 +3,8 @@ import { redirect } from "next/navigation";
 import type { Locale } from "~/language/i18n.config";
 import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
-import { RecipesAppShell } from "~/app/[lang]/myrecipes/_components/RecipesAppShell";
-import { getRecipesPageContext } from "~/app/[lang]/myrecipes/_lib/page-data";
+import { RecipesAppShell } from "~/app/[lang]/recipes/_components/RecipesAppShell";
+import { getRecipesPageContext } from "~/app/[lang]/recipes/_lib/page-data";
 
 import { SettingsPersonalizationSection } from "./_components/SettingsPersonalizationSection";
 import { SettingsProfileSection } from "./_components/SettingsProfileSection";
@@ -17,7 +17,8 @@ export default async function SettingsPage({
 }) {
   const { lang: langParam } = await params;
   const lang = langParam as Locale;
-  const { session, loginPath, imageUrl } = await getRecipesPageContext(lang);
+  const { session, loginPath, imageUrl, userId } =
+    await getRecipesPageContext(lang);
 
   if (!session?.user) {
     redirect(loginPath);
@@ -27,7 +28,7 @@ export default async function SettingsPage({
   const user = session.user;
 
   return (
-    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
+    <RecipesAppShell lang={lang} imageUrl={imageUrl} userId={userId}>
       <div className="container mx-auto max-w-lg space-y-6 px-3 py-6 sm:px-4">
         <h1 className="text-2xl font-semibold tracking-tight">
           {ts(langObj, langMaps.auth.settings.title)}

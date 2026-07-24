@@ -59,6 +59,11 @@
     "forest": "Forest",
     "vscode": "VS Code"
   },
+  "home": {
+    "headline": "Cook, share, discover",
+    "subtitle": "Browse public recipes from the community, or sign in to save your own.",
+    "browseRecipes": "Browse recipes"
+  },
   "nav": {
     "people": "People"
   },
@@ -146,7 +151,7 @@
       "labelPrivate": "Private recipe",
       "labelPublic": "Public recipe",
       "hintPrivate": "Only you can see this recipe.",
-      "hintPublic": "This recipe will be shareable publicly once browsing is available.",
+      "hintPublic": "Anyone with the link can view this recipe.",
       "private": "Private",
       "public": "Public"
     },
@@ -185,7 +190,9 @@
       "importReplaceConfirm": "Replace the current form with the imported recipe?"
     },
     "export": {
-      "exportJson": "Export JSON"
+      "exportJson": "Export JSON",
+      "exportMarkdown": "Export all recipes as Markdown",
+      "exportJsonCollection": "Export all recipes as JSON"
     },
     "actions": {
       "create": "New recipe",
@@ -196,7 +203,9 @@
       "cancel": "Cancel",
       "save": "Save recipe",
       "saving": "Saving…",
-      "deleting": "Deleting…"
+      "deleting": "Deleting…",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied"
     },
     "form": {
       "createTitle": "Create recipe",

@@ -1,10 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, or } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
 import {
   createTRPCRouter,
   protectedProcedure,
+  publicProcedure,
 } from "~/server/api/trpc";
 import type { db } from "~/server/db";
 import {
@@ -92,7 +93,7 @@ async function assertUserExists(
 }
 
 export const recipeRouter = createTRPCRouter({
-  list: protectedProcedure
+  list: publicProcedure
     .input(
       z
         .object({
@@ -106,22 +107,28 @@ export const recipeRouter = createTRPCRouter({
       const profileUserId = input?.userId;
 
       if (profileUserId) {
-        if (profileUserId === ctx.session.user.id) {
-          throw new TRPCError({ code: "BAD_REQUEST" });
-        }
         await assertUserExists(ctx.db, profileUserId);
       }
 
+      const isOwner =
+        Boolean(profileUserId) &&
+        ctx.session?.user.id === profileUserId;
+
       const rows = await ctx.db.query.recipes.findMany({
         where: profileUserId
-          ? and(
-              eq(recipes.deleted, false),
-              eq(recipes.createdById, profileUserId),
-              eq(recipes.visibility, "public"),
-            )
+          ? isOwner
+            ? and(
+                eq(recipes.deleted, false),
+                eq(recipes.createdById, profileUserId),
+              )
+            : and(
+                eq(recipes.deleted, false),
+                eq(recipes.createdById, profileUserId),
+                eq(recipes.visibility, "public"),
+              )
           : and(
               eq(recipes.deleted, false),
-              eq(recipes.createdById, ctx.session.user.id),
+              eq(recipes.visibility, "public"),
             ),
         orderBy: [desc(recipes.updatedAt)],
         columns: {
@@ -139,6 +146,11 @@ export const recipeRouter = createTRPCRouter({
           createdAt: true,
           updatedAt: true,
         },
+        with: {
+          createdBy: {
+            columns: { id: true, name: true, image: true, email: true },
+          },
+        },
       });
 
       if (!search || search.length < 3) {
@@ -151,18 +163,43 @@ export const recipeRouter = createTRPCRouter({
       );
     }),
 
-  getById: protectedProcedure
+  listForExport: publicProcedure
+    .input(z.object({ userId: z.string().min(1) }))
+    .query(async ({ ctx, input }) => {
+      await assertUserExists(ctx.db, input.userId);
+
+      const isOwner = ctx.session?.user.id === input.userId;
+
+      const rows = await ctx.db.query.recipes.findMany({
+        where: isOwner
+          ? and(
+              eq(recipes.deleted, false),
+              eq(recipes.createdById, input.userId),
+            )
+          : and(
+              eq(recipes.deleted, false),
+              eq(recipes.createdById, input.userId),
+              eq(recipes.visibility, "public"),
+            ),
+        orderBy: [desc(recipes.updatedAt)],
+        with: {
+          ingredients: {
+            orderBy: [asc(recipeIngredients.sortOrder)],
+          },
+          steps: {
+            orderBy: [asc(recipeSteps.sortOrder)],
+          },
+        },
+      });
+
+      return rows;
+    }),
+
+  getById: publicProcedure
     .input(z.object({ id: z.number().int().positive() }))
     .query(async ({ ctx, input }) => {
       const recipe = await ctx.db.query.recipes.findFirst({
-        where: and(
-          eq(recipes.id, input.id),
-          eq(recipes.deleted, false),
-          or(
-            eq(recipes.createdById, ctx.session.user.id),
-            eq(recipes.visibility, "public"),
-          ),
-        ),
+        where: and(eq(recipes.id, input.id), eq(recipes.deleted, false)),
         with: {
           createdBy: {
             columns: { id: true, name: true, image: true, email: true },
@@ -177,6 +214,12 @@ export const recipeRouter = createTRPCRouter({
       });
 
       if (!recipe) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const isOwner = ctx.session?.user.id === recipe.createdById;
+      const isPublic = recipe.visibility === "public";
+      if (!isPublic && !isOwner) {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
 

@@ -66,6 +66,11 @@
   "nav": {
     "people": "Ľudia"
   },
+  "home": {
+    "headline": "Varte, zdieľajte, objavujte",
+    "subtitle": "Prezrite si verejné recepty komunity, alebo sa prihláste a uložte si vlastné.",
+    "browseRecipes": "Prezrieť recepty"
+  },
   "people": {
     "title": "Ľudia",
     "followingCount": "Sledujem",
@@ -150,7 +155,7 @@
       "labelPrivate": "Súkromný recept",
       "labelPublic": "Verejný recept",
       "hintPrivate": "Tento recept vidíte len vy.",
-      "hintPublic": "Recept bude možné zdieľať verejne, keď bude dostupné prehliadanie.",
+      "hintPublic": "Ktokoľvek s odkazom môže tento recept zobraziť.",
       "private": "Súkromný",
       "public": "Verejný"
     },
@@ -189,7 +194,9 @@
       "importReplaceConfirm": "Nahradiť aktuálny formulár importovaným receptom?"
     },
     "export": {
-      "exportJson": "Exportovať JSON"
+      "exportJson": "Exportovať JSON",
+      "exportMarkdown": "Exportovať všetky recepty ako Markdown",
+      "exportJsonCollection": "Exportovať všetky recepty ako JSON"
     },
     "actions": {
       "create": "Nový recept",
@@ -200,7 +207,9 @@
       "cancel": "Zrušiť",
       "save": "Uložiť recept",
       "saving": "Ukladám…",
-      "deleting": "Odstraňujem…"
+      "deleting": "Odstraňujem…",
+      "copyLink": "Kopírovať odkaz",
+      "linkCopied": "Odkaz skopírovaný"
     },
     "form": {
       "createTitle": "Vytvoriť recept",

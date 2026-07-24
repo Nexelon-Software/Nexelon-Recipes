@@ -25,6 +25,7 @@ import {
   RecipeListItemView,
 } from "./RecipeListTile";
 import { RecipeListTable, RecipeListTableSkeleton } from "./RecipeListTable";
+import { ExportUserRecipesButtons } from "./ExportUserRecipesButtons";
 
 function listContainerClass(layout: RecipeListLayoutId): string {
   switch (layout) {
@@ -43,11 +44,14 @@ export function RecipeList({
   displayName,
   profileUserId,
   pageTitle,
+  showCreate = false,
 }: {
   currentUserId: string | null;
   displayName: string;
   profileUserId?: string;
   pageTitle?: string;
+  /** Show New recipe (own collection only). */
+  showCreate?: boolean;
 }) {
   const { t, lang, locale } = useTranslation();
   const [search, setSearch] = useState("");
@@ -89,7 +93,10 @@ export function RecipeList({
   );
 
   const activeLayout = layoutMounted ? layout : DEFAULT_RECIPE_LIST_LAYOUT;
-  const showVisibility = !profileUserId;
+  const showVisibility = Boolean(
+    profileUserId && profileUserId === currentUserId,
+  );
+  const showAuthor = !profileUserId;
 
   const renderContent = () => {
     if (isLoading && recipes.length === 0) {
@@ -119,6 +126,7 @@ export function RecipeList({
           recipes={recipes}
           currentUserId={currentUserId}
           showVisibility={showVisibility}
+          showAuthor={showAuthor}
         />
       );
     }
@@ -132,16 +140,18 @@ export function RecipeList({
             layout={activeLayout}
             currentUserId={currentUserId}
             showVisibility={showVisibility}
+            showAuthor={showAuthor}
           />
         ))}
       </div>
     );
   };
 
-  const headingTitle = profileUserId
-    ? (pageTitle ??
-      format(t(lang.recipes.collectionOf), { username: displayName }))
-    : t(lang.recipes.myRecipes);
+  const headingTitle =
+    pageTitle ??
+    (profileUserId
+      ? format(t(lang.recipes.collectionOf), { username: displayName })
+      : t(lang.recipes.title));
 
   return (
     <div className="container mx-auto space-y-6 px-3 py-6 sm:px-4">
@@ -151,20 +161,24 @@ export function RecipeList({
             <ChefHat className="size-6 shrink-0" aria-hidden />
             {headingTitle}
           </h1>
-          {!profileUserId && displayName ? (
-            <p className="text-muted-foreground text-sm">
-              {format(t(lang.recipes.collectionOf), { username: displayName })}
-            </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {profileUserId ? (
+            <ExportUserRecipesButtons
+              userId={profileUserId}
+              displayName={displayName || headingTitle}
+              collectionTitle={headingTitle}
+            />
+          ) : null}
+          {showCreate && currentUserId ? (
+            <Link
+              href={localePath(locale, "/recipes/new")}
+              className={cn(buttonVariants())}
+            >
+              {t(lang.recipes.actions.create)}
+            </Link>
           ) : null}
         </div>
-        {!profileUserId && currentUserId ? (
-          <Link
-            href={localePath(locale, "/myrecipes/new")}
-            className={cn(buttonVariants())}
-          >
-            {t(lang.recipes.actions.create)}
-          </Link>
-        ) : null}
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

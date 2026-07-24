@@ -24,7 +24,7 @@ export default async function EditRecipePage({
   const { session, loginPath, imageUrl, userId } =
     await getRecipesPageContext(lang);
 
-  if (!session?.user) {
+  if (!session?.user || !userId) {
     redirect(loginPath);
   }
 
@@ -36,12 +36,17 @@ export default async function EditRecipePage({
   }
 
   if (recipe.createdById !== userId) {
-    redirect(localePath(lang, `/myrecipes/${recipeId}`));
+    redirect(localePath(lang, `/recipes/${recipeId}`));
   }
 
   return (
-    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
-      <RecipeForm mode="edit" recipeId={recipeId} initialRecipe={recipe} />
+    <RecipesAppShell lang={lang} imageUrl={imageUrl} userId={userId}>
+      <RecipeForm
+        mode="edit"
+        recipeId={recipeId}
+        initialRecipe={recipe}
+        ownerUserId={userId}
+      />
     </RecipesAppShell>
   );
 }

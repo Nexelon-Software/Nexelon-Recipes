@@ -11,23 +11,33 @@ const config = {
   async redirects() {
     return [
       {
-        source: "/recipes",
-        destination: "/myrecipes",
+        source: "/myrecipes",
+        destination: "/recipes",
         permanent: true,
       },
       {
-        source: "/recipes/:path*",
-        destination: "/myrecipes/:path*",
+        source: "/myrecipes/:path*",
+        destination: "/recipes/:path*",
         permanent: true,
       },
       {
-        source: "/en/recipes",
-        destination: "/en/myrecipes",
+        source: "/en/myrecipes",
+        destination: "/en/recipes",
         permanent: true,
       },
       {
-        source: "/en/recipes/:path*",
-        destination: "/en/myrecipes/:path*",
+        source: "/en/myrecipes/:path*",
+        destination: "/en/recipes/:path*",
+        permanent: true,
+      },
+      {
+        source: "/recipes/user/:userId",
+        destination: "/:userId/recipes",
+        permanent: true,
+      },
+      {
+        source: "/en/recipes/user/:userId",
+        destination: "/en/:userId/recipes",
         permanent: true,
       },
       {

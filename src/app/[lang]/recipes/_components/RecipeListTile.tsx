@@ -23,6 +23,8 @@ import { cn } from "~/lib/utils";
 import useTranslation from "~/language/useTranslation";
 import type { RouterOutputs } from "~/trpc/react";
 
+import { RecipeAuthorLink } from "./RecipeAuthorLink";
+
 export type RecipeListItem = RouterOutputs["recipe"]["list"][number];
 
 const difficultyColorClass = {
@@ -95,8 +97,8 @@ function useRecipeListItemData(
     setImageError(false);
   }, [recipe.imageUrl]);
 
-  const detailHref = localePath(locale, `/myrecipes/${recipe.id}`);
-  const editHref = localePath(locale, `/myrecipes/${recipe.id}/edit`);
+  const detailHref = localePath(locale, `/recipes/${recipe.id}`);
+  const editHref = localePath(locale, `/recipes/${recipe.id}/edit`);
   const isOwner = currentUserId === recipe.createdById;
   const showImage = Boolean(recipe.imageUrl?.trim()) && !imageError;
   const minutes = totalMinutes(recipe);
@@ -118,6 +120,16 @@ function useRecipeListItemData(
       ? t(lang.recipes.difficulties[difficultyKey])
       : null;
 
+  const author = recipe.createdBy;
+  const authorDisplayName = author
+    ? author.name?.trim() ||
+      author.email?.trim() ||
+      t(lang.people.unknownName)
+    : null;
+  const authorHref = author
+    ? localePath(locale, `/${author.id}/recipes`)
+    : null;
+
   return {
     t,
     lang,
@@ -131,6 +143,9 @@ function useRecipeListItemData(
     breadcrumb,
     difficultyKey,
     difficultyLabel,
+    authorDisplayName,
+    authorHref,
+    authorImage: author?.image ?? null,
     visibilityLabel:
       recipe.visibility === "public"
         ? t(lang.recipes.visibility.public)
@@ -308,10 +323,12 @@ function RecipeListItemGrid({
   recipe,
   currentUserId,
   showVisibility = true,
+  showAuthor = false,
 }: {
   recipe: RecipeListItem;
   currentUserId: string | null;
   showVisibility?: boolean;
+  showAuthor?: boolean;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
   const visibilityMarker = showVisibility ? (
@@ -336,12 +353,21 @@ function RecipeListItemGrid({
         className="aspect-square w-full"
         visibilityMarker={visibilityMarker}
       />
-      <CardContent className="space-y-1 pt-3 pb-1">
+      <CardContent className="space-y-2 pt-3 pb-1">
         <RecipeTitleBlock
           detailHref={data.detailHref}
           name={recipe.name}
           breadcrumb={data.breadcrumb}
         />
+        {showAuthor && data.authorHref && data.authorDisplayName ? (
+          <RecipeAuthorLink
+            href={data.authorHref}
+            name={data.authorDisplayName}
+            image={data.authorImage}
+            ariaLabel={`${data.t(data.lang.people.viewRecipes)}: ${data.authorDisplayName}`}
+            compact
+          />
+        ) : null}
       </CardContent>
       <CardFooter className="text-muted-foreground gap-3 border-t-0 bg-transparent py-3 text-xs">
         <RecipeMetaRow
@@ -362,10 +388,12 @@ function RecipeListItemList({
   recipe,
   currentUserId,
   showVisibility = true,
+  showAuthor = false,
 }: {
   recipe: RecipeListItem;
   currentUserId: string | null;
   showVisibility?: boolean;
+  showAuthor?: boolean;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
   const visibilityMarker = showVisibility ? (
@@ -390,12 +418,23 @@ function RecipeListItemList({
         className="aspect-square w-28 sm:w-36 md:w-40"
         visibilityMarker={visibilityMarker}
       />
-      <div className="flex min-w-0 flex-1 flex-col justify-between px-4 py-3">
-        <RecipeTitleBlock
-          detailHref={data.detailHref}
-          name={recipe.name}
-          breadcrumb={data.breadcrumb}
-        />
+      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 px-4 py-3">
+        <div className="space-y-2">
+          <RecipeTitleBlock
+            detailHref={data.detailHref}
+            name={recipe.name}
+            breadcrumb={data.breadcrumb}
+          />
+          {showAuthor && data.authorHref && data.authorDisplayName ? (
+            <RecipeAuthorLink
+              href={data.authorHref}
+              name={data.authorDisplayName}
+              image={data.authorImage}
+              ariaLabel={`${data.t(data.lang.people.viewRecipes)}: ${data.authorDisplayName}`}
+              compact
+            />
+          ) : null}
+        </div>
         <RecipeMetaRow
           recipe={recipe}
           minutes={data.minutes}
@@ -415,10 +454,12 @@ function RecipeListItemCompact({
   recipe,
   currentUserId,
   showVisibility = true,
+  showAuthor = false,
 }: {
   recipe: RecipeListItem;
   currentUserId: string | null;
   showVisibility?: boolean;
+  showAuthor?: boolean;
 }) {
   const data = useRecipeListItemData(recipe, currentUserId);
 
@@ -436,13 +477,24 @@ function RecipeListItemCompact({
         placeholderIconClassName="size-6"
         showEditOnImage={false}
       />
-      <div className="flex min-w-0 flex-1 flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-        <RecipeTitleBlock
-          detailHref={data.detailHref}
-          name={recipe.name}
-          breadcrumb={data.breadcrumb}
-          titleClassName="text-sm line-clamp-1"
-        />
+      <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+        <div className="min-w-0 space-y-1">
+          <RecipeTitleBlock
+            detailHref={data.detailHref}
+            name={recipe.name}
+            breadcrumb={data.breadcrumb}
+            titleClassName="text-sm line-clamp-1"
+          />
+          {showAuthor && data.authorHref && data.authorDisplayName ? (
+            <RecipeAuthorLink
+              href={data.authorHref}
+              name={data.authorDisplayName}
+              image={data.authorImage}
+              ariaLabel={`${data.t(data.lang.people.viewRecipes)}: ${data.authorDisplayName}`}
+              compact
+            />
+          ) : null}
+        </div>
         <RecipeMetaRow
           recipe={recipe}
           minutes={data.minutes}
@@ -476,11 +528,13 @@ export function RecipeListItemView({
   layout,
   currentUserId,
   showVisibility = true,
+  showAuthor = false,
 }: {
   recipe: RecipeListItem;
   layout: Exclude<RecipeListLayoutId, "table">;
   currentUserId: string | null;
   showVisibility?: boolean;
+  showAuthor?: boolean;
 }) {
   switch (layout) {
     case "list":
@@ -489,6 +543,7 @@ export function RecipeListItemView({
           recipe={recipe}
           currentUserId={currentUserId}
           showVisibility={showVisibility}
+          showAuthor={showAuthor}
         />
       );
     case "compact":
@@ -497,6 +552,7 @@ export function RecipeListItemView({
           recipe={recipe}
           currentUserId={currentUserId}
           showVisibility={showVisibility}
+          showAuthor={showAuthor}
         />
       );
     case "grid":
@@ -506,6 +562,7 @@ export function RecipeListItemView({
           recipe={recipe}
           currentUserId={currentUserId}
           showVisibility={showVisibility}
+          showAuthor={showAuthor}
         />
       );
   }

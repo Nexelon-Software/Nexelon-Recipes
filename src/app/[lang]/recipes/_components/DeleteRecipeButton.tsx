@@ -4,20 +4,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
-import { localePath } from "~/lib/seo-url";
 import useTranslation from "~/language/useTranslation";
 import { api } from "~/trpc/react";
 
-export function DeleteRecipeButton({ recipeId }: { recipeId: number }) {
+export function DeleteRecipeButton({
+  recipeId,
+  redirectPath,
+}: {
+  recipeId: number;
+  redirectPath: string;
+}) {
   const router = useRouter();
-  const { t, lang, locale } = useTranslation();
+  const { t, lang } = useTranslation();
   const utils = api.useUtils();
   const [confirming, setConfirming] = useState(false);
 
   const deleteRecipe = api.recipe.delete.useMutation({
     onSuccess: async () => {
       await utils.recipe.invalidate();
-      router.push(localePath(locale, "/myrecipes"));
+      router.push(redirectPath);
     },
   });
 

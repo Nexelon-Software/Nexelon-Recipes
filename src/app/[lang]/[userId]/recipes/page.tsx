@@ -1,14 +1,16 @@
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 
-import { localePath } from "~/lib/seo-url";
 import type { Locale } from "~/language/i18n.config";
 import { format } from "~/language/lang";
 import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
 
-import { RecipeList } from "../../_components/RecipeList";
-import { RecipesAppShell } from "../../_components/RecipesAppShell";
-import { getRecipesPageContext, getUserDisplayName } from "../../_lib/page-data";
+import { RecipeList } from "../../recipes/_components/RecipeList";
+import { RecipesAppShell } from "../../recipes/_components/RecipesAppShell";
+import {
+  getRecipesPageContext,
+  getUserDisplayName,
+} from "../../recipes/_lib/page-data";
 
 export default async function UserRecipesPage({
   params,
@@ -20,32 +22,32 @@ export default async function UserRecipesPage({
   const { session, loginPath, imageUrl, userId: currentUserId } =
     await getRecipesPageContext(lang);
 
-  if (!session?.user) {
-    redirect(loginPath);
-  }
-
-  if (userId === currentUserId) {
-    redirect(localePath(lang, "/myrecipes"));
-  }
-
   const displayName = await getUserDisplayName(userId);
   if (!displayName) {
     notFound();
   }
 
   const langObj = await getLanguage(lang);
-  const pageTitle = format(
-    ts(langObj, langMaps.recipes.collectionOf),
-    { username: displayName },
-  );
+  const isOwnCollection = currentUserId === userId;
+  const pageTitle = isOwnCollection
+    ? ts(langObj, langMaps.recipes.myRecipes)
+    : format(ts(langObj, langMaps.recipes.collectionOf), {
+        username: displayName,
+      });
 
   return (
-    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
+    <RecipesAppShell
+      lang={lang}
+      imageUrl={imageUrl}
+      loginPath={session?.user ? undefined : loginPath}
+      userId={currentUserId}
+    >
       <RecipeList
         currentUserId={currentUserId}
         displayName={displayName}
         profileUserId={userId}
         pageTitle={pageTitle}
+        showCreate={isOwnCollection}
       />
     </RecipesAppShell>
   );

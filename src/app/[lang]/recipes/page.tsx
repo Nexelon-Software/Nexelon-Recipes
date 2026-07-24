@@ -1,6 +1,6 @@
-import { redirect } from "next/navigation";
-
 import type { Locale } from "~/language/i18n.config";
+import { getLanguage, ts } from "~/language/languages";
+import { langMaps } from "~/language/langMaps";
 
 import { RecipeList } from "./_components/RecipeList";
 import { RecipesAppShell } from "./_components/RecipesAppShell";
@@ -13,16 +13,22 @@ export default async function RecipesPage({
 }) {
   const { lang: langParam } = await params;
   const lang = langParam as Locale;
-  const { session, loginPath, imageUrl, userId, displayName } =
+  const { session, loginPath, imageUrl, userId } =
     await getRecipesPageContext(lang);
-
-  if (!session?.user) {
-    redirect(loginPath);
-  }
+  const langObj = await getLanguage(lang);
 
   return (
-    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
-      <RecipeList currentUserId={userId} displayName={displayName} />
+    <RecipesAppShell
+      lang={lang}
+      imageUrl={imageUrl}
+      loginPath={session?.user ? undefined : loginPath}
+      userId={userId}
+    >
+      <RecipeList
+        currentUserId={userId}
+        displayName=""
+        pageTitle={ts(langObj, langMaps.recipes.title)}
+      />
     </RecipesAppShell>
   );
 }

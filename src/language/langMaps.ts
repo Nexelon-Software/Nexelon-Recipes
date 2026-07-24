@@ -61,6 +61,11 @@ export const langMaps = {
   nav: {
     people: "nav.people",
   },
+  home: {
+    headline: "home.headline",
+    subtitle: "home.subtitle",
+    browseRecipes: "home.browseRecipes",
+  },
   people: {
     title: "people.title",
     followingCount: "people.followingCount",
@@ -185,6 +190,8 @@ export const langMaps = {
     },
     export: {
       exportJson: "recipes.export.exportJson",
+      exportMarkdown: "recipes.export.exportMarkdown",
+      exportJsonCollection: "recipes.export.exportJsonCollection",
     },
     actions: {
       create: "recipes.actions.create",
@@ -196,6 +203,8 @@ export const langMaps = {
       save: "recipes.actions.save",
       saving: "recipes.actions.saving",
       deleting: "recipes.actions.deleting",
+      copyLink: "recipes.actions.copyLink",
+      linkCopied: "recipes.actions.linkCopied",
     },
     form: {
       createTitle: "recipes.form.createTitle",

@@ -13,15 +13,16 @@ export default async function NewRecipePage({
 }) {
   const { lang: langParam } = await params;
   const lang = langParam as Locale;
-  const { session, loginPath, imageUrl } = await getRecipesPageContext(lang);
+  const { session, loginPath, imageUrl, userId } =
+    await getRecipesPageContext(lang);
 
-  if (!session?.user) {
+  if (!session?.user || !userId) {
     redirect(loginPath);
   }
 
   return (
-    <RecipesAppShell lang={lang} imageUrl={imageUrl}>
-      <RecipeForm mode="create" />
+    <RecipesAppShell lang={lang} imageUrl={imageUrl} userId={userId}>
+      <RecipeForm mode="create" ownerUserId={userId} />
     </RecipesAppShell>
   );
 }
