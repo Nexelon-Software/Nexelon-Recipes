@@ -106,6 +106,29 @@ export const recipeSteps = createTable(
   (t) => [index("recipe_step_recipe_id_idx").on(t.recipeId)],
 );
 
+export const recipeNutrition = createTable(
+  "recipeNutrition",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    recipeId: d
+      .integer()
+      .notNull()
+      .references(() => recipes.id, { onDelete: "cascade" }),
+    caloriesKcal: d.integer(),
+    proteinG: d.integer(),
+    carbsG: d.integer(),
+    fatG: d.integer(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    uniqueIndex("recipe_nutrition_recipe_id_uidx").on(t.recipeId),
+  ],
+);
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -208,6 +231,7 @@ export const recipeRelations = relations(recipes, ({ one, many }) => ({
   }),
   ingredients: many(recipeIngredients),
   steps: many(recipeSteps),
+  nutrition: one(recipeNutrition),
 }));
 
 export const recipeIngredientRelations = relations(
@@ -226,6 +250,16 @@ export const recipeStepRelations = relations(recipeSteps, ({ one }) => ({
     references: [recipes.id],
   }),
 }));
+
+export const recipeNutritionRelations = relations(
+  recipeNutrition,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeNutrition.recipeId],
+      references: [recipes.id],
+    }),
+  }),
+);
 
 export const userFollowRelations = relations(userFollows, ({ one }) => ({
   follower: one(user, {

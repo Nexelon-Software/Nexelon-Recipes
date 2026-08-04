@@ -184,7 +184,14 @@
       "owner": "Autor",
       "noImage": "Bez obrázka",
       "ingredientsEmpty": "Žiadne ingrediencie.",
-      "stepsEmpty": "Žiadny postup."
+      "stepsEmpty": "Žiadny postup.",
+      "nutrition": "Výživové hodnoty",
+      "nutritionEmpty": "Žiadne výživové hodnoty.",
+      "nutritionPerServing": "Na porciu",
+      "calories": "Kalórie",
+      "protein": "Bielkoviny",
+      "carbs": "Sacharidy",
+      "fat": "Tuky"
     },
     "import": {
       "importJson": "Importovať JSON",
@@ -236,6 +243,12 @@
       "ingredientUnit": "Jednotka",
       "addIngredient": "Pridať ingredienciu",
       "removeIngredient": "Odstrániť",
+      "nutrition": "Výživové hodnoty",
+      "nutritionPerServing": "Hodnoty na porciu",
+      "calories": "Kalórie (kcal)",
+      "protein": "Bielkoviny (g)",
+      "carbs": "Sacharidy (g)",
+      "fat": "Tuky (g)",
       "steps": "Postup",
       "stepInstruction": "Popis kroku",
       "addStep": "Pridať krok",

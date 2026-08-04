@@ -180,7 +180,14 @@
       "owner": "Author",
       "noImage": "No image",
       "ingredientsEmpty": "No ingredients listed.",
-      "stepsEmpty": "No steps listed."
+      "stepsEmpty": "No steps listed.",
+      "nutrition": "Nutrition",
+      "nutritionEmpty": "No nutrition information.",
+      "nutritionPerServing": "Per serving",
+      "calories": "Calories",
+      "protein": "Protein",
+      "carbs": "Carbs",
+      "fat": "Fat"
     },
     "import": {
       "importJson": "Import JSON",
@@ -232,6 +239,12 @@
       "ingredientUnit": "Unit",
       "addIngredient": "Add ingredient",
       "removeIngredient": "Remove",
+      "nutrition": "Nutrition",
+      "nutritionPerServing": "Values per serving",
+      "calories": "Calories (kcal)",
+      "protein": "Protein (g)",
+      "carbs": "Carbs (g)",
+      "fat": "Fat (g)",
       "steps": "Steps",
       "stepInstruction": "Step instruction",
       "addStep": "Add step",

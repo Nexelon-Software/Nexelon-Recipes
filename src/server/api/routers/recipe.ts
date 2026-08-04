@@ -10,12 +10,13 @@ import {
 import type { db } from "~/server/db";
 import {
   recipeIngredients,
+  recipeNutrition,
   recipes,
   recipeSteps,
   user,
 } from "~/server/db/schema";
 
-import { RecipeInputSchema } from "./recipe/schemas";
+import { hasNutritionValues, RecipeInputSchema } from "./recipe/schemas";
 
 type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -64,6 +65,16 @@ async function insertChildRows(
       })),
     );
   }
+
+  if (hasNutritionValues(input.nutrition)) {
+    await tx.insert(recipeNutrition).values({
+      recipeId,
+      caloriesKcal: input.nutrition?.caloriesKcal,
+      proteinG: input.nutrition?.proteinG,
+      carbsG: input.nutrition?.carbsG,
+      fatG: input.nutrition?.fatG,
+    });
+  }
 }
 
 async function replaceChildRows(
@@ -75,6 +86,14 @@ async function replaceChildRows(
     .delete(recipeIngredients)
     .where(eq(recipeIngredients.recipeId, recipeId));
   await tx.delete(recipeSteps).where(eq(recipeSteps.recipeId, recipeId));
+
+  // Preserve existing nutrition when the client omits it (e.g. recipe form).
+  if (input.nutrition !== undefined) {
+    await tx
+      .delete(recipeNutrition)
+      .where(eq(recipeNutrition.recipeId, recipeId));
+  }
+
   await insertChildRows(tx, recipeId, input);
 }
 
@@ -189,6 +208,7 @@ export const recipeRouter = createTRPCRouter({
           steps: {
             orderBy: [asc(recipeSteps.sortOrder)],
           },
+          nutrition: true,
         },
       });
 
@@ -210,6 +230,7 @@ export const recipeRouter = createTRPCRouter({
           steps: {
             orderBy: [asc(recipeSteps.sortOrder)],
           },
+          nutrition: true,
         },
       });
 
