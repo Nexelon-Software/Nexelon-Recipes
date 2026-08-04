@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -126,6 +126,62 @@ export const recipeNutrition = createTable(
   }),
   (t) => [
     uniqueIndex("recipe_nutrition_recipe_id_uidx").on(t.recipeId),
+  ],
+);
+
+/** Cached food composition rows from CIQUAL / Frida (per 100 g macros). */
+export const foods = createTable(
+  "food",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    source: d.varchar({ length: 16 }).notNull(),
+    externalId: d.varchar({ length: 64 }).notNull(),
+    sourceVersion: d.varchar({ length: 32 }).notNull(),
+    name: d.varchar({ length: 512 }).notNull(),
+    nameEn: d.varchar({ length: 512 }),
+    language: d.varchar({ length: 8 }).notNull(),
+    foodGroup: d.varchar({ length: 256 }),
+    caloriesKcalPer100g: d.real(),
+    proteinGPer100g: d.real(),
+    carbsGPer100g: d.real(),
+    fatGPer100g: d.real(),
+    densityGPerMl: d.real(),
+    gramsPerPiece: d.real(),
+    gramsPerHead: d.real(),
+    importedAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    uniqueIndex("food_source_external_id_uidx").on(t.source, t.externalId),
+    index("food_name_idx").on(t.name),
+    index("food_name_en_idx").on(t.nameEn),
+  ],
+);
+
+export const foodImportRuns = createTable(
+  "foodImportRun",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    source: d.varchar({ length: 16 }).notNull(),
+    sourceVersion: d.varchar({ length: 32 }).notNull(),
+    rowCount: d.integer().notNull().default(0),
+    startedAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    finishedAt: d.timestamp({ withTimezone: true }),
+    status: d.varchar({ length: 16 }).notNull(),
+    notes: d.text(),
+  }),
+  (t) => [
+    index("food_import_run_source_idx").on(t.source),
+    // At most one in-progress import per source (claim lock).
+    uniqueIndex("food_import_run_source_running_uidx")
+      .on(t.source)
+      .where(sql`${t.status} = 'running'`),
   ],
 );
 

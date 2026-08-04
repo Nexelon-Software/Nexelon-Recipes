@@ -36,6 +36,13 @@
       "when": 1785855076772,
       "tag": "0004_powerful_juggernaut",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1785860670264,
+      "tag": "0005_good_rumiko_fujikawa",
+      "breakpoints": true
     }
   ]
 }

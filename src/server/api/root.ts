@@ -1,4 +1,5 @@
 import { followRouter } from "~/server/api/routers/follow";
+import { foodRouter } from "~/server/api/routers/food";
 import { postRouter } from "~/server/api/routers/post";
 import { recipeRouter } from "~/server/api/routers/recipe";
 import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
@@ -10,6 +11,7 @@ import { createCallerFactory, createTRPCRouter } from "~/server/api/trpc";
  */
 export const appRouter = createTRPCRouter({
   follow: followRouter,
+  food: foodRouter,
   post: postRouter,
   recipe: recipeRouter,
 });
