@@ -21,7 +21,9 @@ import {
   RECIPE_CATEGORIES,
   RECIPE_DIFFICULTIES,
   RECIPE_UNITS,
+  isCountableUnit,
   recipeDetailToRecipeInput,
+  sanitizeIngredientAmountInput,
   type RecipeInput,
 } from "~/server/api/routers/recipe/schemas";
 import { RecipeImportButton } from "./RecipeImportButton";
@@ -434,12 +436,23 @@ export function RecipeForm({
             <div className="space-y-2">
               <Label>{t(lang.recipes.form.ingredientAmount)}</Label>
               <Input
+                type="text"
+                inputMode={
+                  ingredient.unit === undefined
+                    ? "text"
+                    : isCountableUnit(ingredient.unit)
+                      ? "numeric"
+                      : "decimal"
+                }
                 value={ingredient.amount ?? ""}
                 onChange={(event) => {
                   const ingredients = [...form.ingredients];
                   ingredients[index] = {
                     ...ingredients[index]!,
-                    amount: event.target.value,
+                    amount: sanitizeIngredientAmountInput(
+                      event.target.value,
+                      ingredients[index]!.unit,
+                    ),
                   };
                   updateField("ingredients", ingredients);
                 }}
@@ -453,10 +466,16 @@ export function RecipeForm({
                 items={unitItems}
                 value={ingredient.unit ?? null}
                 onValueChange={(value) => {
+                  const nextUnit = value ?? undefined;
                   const ingredients = [...form.ingredients];
+                  const current = ingredients[index]!;
                   ingredients[index] = {
-                    ...ingredients[index]!,
-                    unit: value ?? undefined,
+                    ...current,
+                    unit: nextUnit,
+                    amount: sanitizeIngredientAmountInput(
+                      current.amount ?? "",
+                      nextUnit,
+                    ),
                   };
                   updateField("ingredients", ingredients);
                 }}

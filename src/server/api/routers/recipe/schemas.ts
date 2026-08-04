@@ -31,6 +31,60 @@ export const RECIPE_UNITS = [
 
 export type RecipeUnit = (typeof RECIPE_UNITS)[number];
 
+const COUNTABLE_UNITS = new Set<RecipeUnit>(["piece", "head"]);
+
+/** `piece` / `head` — integer amounts only. */
+export function isCountableUnit(
+  unit: RecipeUnit | undefined,
+): unit is "piece" | "head" {
+  return unit !== undefined && COUNTABLE_UNITS.has(unit);
+}
+
+/**
+ * Filter amount input by selected unit. No unit → free text.
+ * Countable → digits only; other units → digits + at most one `.`.
+ * Does not rewrite values that were never passed through this helper (legacy BC).
+ */
+export function sanitizeIngredientAmountInput(
+  value: string,
+  unit: RecipeUnit | undefined,
+): string {
+  if (unit === undefined) return value;
+  if (isCountableUnit(unit)) {
+    return value.replace(/\D/g, "");
+  }
+  let result = "";
+  let sawDot = false;
+  for (const char of value) {
+    if (char >= "0" && char <= "9") {
+      result += char;
+      continue;
+    }
+    if (char === "." && !sawDot) {
+      result += char;
+      sawDot = true;
+    }
+  }
+  return result;
+}
+
+/** Trim trailing `.` for numeric units; free-text units unchanged. */
+export function normalizeIngredientAmount(
+  value: string | undefined,
+  unit: RecipeUnit | undefined,
+): string | undefined {
+  if (value === undefined) return undefined;
+  if (unit === undefined) {
+    const trimmed = value.trim();
+    return trimmed.length === 0 ? undefined : trimmed;
+  }
+  const sanitized = sanitizeIngredientAmountInput(value, unit).replace(
+    /\.$/,
+    "",
+  );
+  return sanitized.length === 0 ? undefined : sanitized;
+}
+
 export const IngredientLineSchema = z.object({
   name: z.string().min(1),
   amount: z.string().optional(),
