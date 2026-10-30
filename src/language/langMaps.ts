@@ -72,6 +72,7 @@ export const langMaps = {
         deleteSuccess: "auth.settings.apiKeys.deleteSuccess",
         deleteError: "auth.settings.apiKeys.deleteError",
         nameRequired: "auth.settings.apiKeys.nameRequired",
+        docsLink: "auth.settings.apiKeys.docsLink",
       },
     },
     profile: {
@@ -105,6 +106,16 @@ export const langMaps = {
   nav: {
     people: "nav.people",
   },
+  docs: {
+    api: {
+      title: "docs.api.title",
+      subtitle: "docs.api.subtitle",
+      exportMarkdown: "docs.api.exportMarkdown",
+      endpoints: "docs.api.endpoints",
+      openSettings: "docs.api.openSettings",
+      openFormat: "docs.api.openFormat",
+    },
+  },
   home: {
     headline: "home.headline",
     subtitle: "home.subtitle",
@@ -126,6 +137,23 @@ export const langMaps = {
   recipes: {
     title: "recipes.title",
     myRecipes: "recipes.myRecipes",
+    trash: {
+      title: "recipes.trash.title",
+      link: "recipes.trash.link",
+      empty: "recipes.trash.empty",
+      backToRecipes: "recipes.trash.backToRecipes",
+      restore: "recipes.trash.restore",
+      restoring: "recipes.trash.restoring",
+      restoreSuccess: "recipes.trash.restoreSuccess",
+      restoreError: "recipes.trash.restoreError",
+      permanentDelete: "recipes.trash.permanentDelete",
+      permanentDeleting: "recipes.trash.permanentDeleting",
+      permanentDeleteConfirm: "recipes.trash.permanentDeleteConfirm",
+      permanentDeleteConfirmDescription:
+        "recipes.trash.permanentDeleteConfirmDescription",
+      permanentDeleteSuccess: "recipes.trash.permanentDeleteSuccess",
+      permanentDeleteError: "recipes.trash.permanentDeleteError",
+    },
     collectionOf: "recipes.collectionOf",
     description: "recipes.description",
     count: "recipes.count",

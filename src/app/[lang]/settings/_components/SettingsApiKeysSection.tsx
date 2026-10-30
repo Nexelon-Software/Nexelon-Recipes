@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Check, Copy, KeyRound, Pencil, Trash2, X } from "lucide-react";
+import Link from "next/link";
 import { toast } from "sonner";
 
 import { Badge } from "~/components/ui/badge";
-import { Button } from "~/components/ui/button";
+import { Button, buttonVariants } from "~/components/ui/button";
 import {
   Card,
   CardContent,
@@ -15,6 +16,8 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { localePath } from "~/lib/seo-url";
+import { cn } from "~/lib/utils";
 import useTranslation from "~/language/useTranslation";
 import { api } from "~/trpc/react";
 
@@ -34,6 +37,7 @@ export function SettingsApiKeysSection() {
   const { t, lang, locale } = useTranslation();
   const utils = api.useUtils();
   const keysQuery = api.apiKey.list.useQuery();
+  const docsPath = localePath(locale, "/docs/api");
 
   const [nameValue, setNameValue] = useState("");
   const [createdKey, setCreatedKey] = useState<string | null>(null);
@@ -149,6 +153,12 @@ export function SettingsApiKeysSection() {
         <p className="text-muted-foreground text-sm">
           {t(lang.auth.settings.apiKeys.usage)}
         </p>
+        <Link
+          href={docsPath}
+          className={cn(buttonVariants({ variant: "link" }), "h-auto px-0")}
+        >
+          {t(lang.auth.settings.apiKeys.docsLink)}
+        </Link>
 
         {createdKey ? (
           <div className="border-border space-y-3 rounded-lg border p-4">

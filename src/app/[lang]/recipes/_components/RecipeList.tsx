@@ -170,6 +170,16 @@ export function RecipeList({
               collectionTitle={headingTitle}
             />
           ) : null}
+          {showCreate && currentUserId && profileUserId === currentUserId ? (
+            <Link
+              href={localePath(locale, `/${currentUserId}/recipes/trash`)}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+              )}
+            >
+              {t(lang.recipes.trash.link)}
+            </Link>
+          ) : null}
           {showCreate && currentUserId ? (
             <Link
               href={localePath(locale, "/recipes/new")}

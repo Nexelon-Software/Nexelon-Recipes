@@ -10,7 +10,10 @@ export async function GET(request: Request) {
   const auth = await requireApiUser(request);
   if (auth instanceof NextResponse) return auth;
 
-  const body = await listRecipesForApiUser(auth.userId);
+  const deleted =
+    new URL(request.url).searchParams.get("deleted") === "true";
+
+  const body = await listRecipesForApiUser(auth.userId, { deleted });
   return NextResponse.json(body);
 }
 

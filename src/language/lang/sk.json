@@ -74,7 +74,8 @@
         "revokeError": "Kľúč sa nepodarilo revokovať",
         "deleteSuccess": "Kľúč bol zmazaný",
         "deleteError": "Kľúč sa nepodarilo zmazať",
-        "nameRequired": "Zadajte názov kľúča"
+        "nameRequired": "Zadajte názov kľúča",
+        "docsLink": "Dokumentácia API"
       }
     },
     "profile": {
@@ -108,6 +109,16 @@
   "nav": {
     "people": "Ľudia"
   },
+  "docs": {
+    "api": {
+      "title": "API receptov",
+      "subtitle": "Endpointy s Bearer autentifikáciou na vytváranie, čítanie, úpravu a soft-mazanie vašich receptov.",
+      "exportMarkdown": "Exportovať Markdown",
+      "endpoints": "Endpointy",
+      "openSettings": "Spravovať API kľúče v nastaveniach",
+      "openFormat": "Otvoriť formát JSON receptu"
+    }
+  },
   "home": {
     "headline": "Varte, zdieľajte, objavujte",
     "subtitle": "Prezrite si verejné recepty komunity, alebo sa prihláste a uložte si vlastné.",
@@ -129,6 +140,22 @@
   "recipes": {
     "title": "Recepty",
     "myRecipes": "Moje recepty",
+    "trash": {
+      "title": "Kôš",
+      "link": "Kôš",
+      "empty": "Žiadne odstránené recepty.",
+      "backToRecipes": "Späť na moje recepty",
+      "restore": "Obnoviť",
+      "restoring": "Obnovujem…",
+      "restoreSuccess": "Recept bol obnovený",
+      "restoreError": "Recept sa nepodarilo obnoviť",
+      "permanentDelete": "Zmazať natrvalo",
+      "permanentDeleting": "Mažem…",
+      "permanentDeleteConfirm": "Zmazať tento recept natrvalo?",
+      "permanentDeleteConfirmDescription": "Recept sa odstráni z databázy. Túto akciu nie je možné vrátiť späť.",
+      "permanentDeleteSuccess": "Recept bol natrvalo zmazaný",
+      "permanentDeleteError": "Recept sa nepodarilo zmazať"
+    },
     "collectionOf": "Recepty používateľa {username}",
     "description": "Zbierka receptov Nexelon — vyhľadávanie, triedenie, prispôsobené pre mobil.",
     "count": "{count} receptov",
@@ -251,8 +278,8 @@
       "create": "Nový recept",
       "edit": "Upraviť",
       "delete": "Odstrániť",
-      "deleteConfirm": "Odstrániť tento recept?",
-      "deleteConfirmDescription": "Recept sa skryje zo zoznamu. Túto akciu nie je možné vrátiť späť.",
+      "deleteConfirm": "Presunúť tento recept do koša?",
+      "deleteConfirmDescription": "Recept sa skryje zo zoznamu. Z koša ho môžete obnoviť alebo natrvalo zmazať.",
       "cancel": "Zrušiť",
       "save": "Uložiť recept",
       "saving": "Ukladám…",
