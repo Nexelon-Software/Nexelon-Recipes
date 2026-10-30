@@ -236,7 +236,7 @@ export async function restoreRecipeForUser(
   recipeId: number,
 ): Promise<"ok" | "not_found"> {
   const existing = await findOwnedRecipe(database, recipeId, userId);
-  if (!existing || !existing.deleted) {
+  if (!existing?.deleted) {
     return "not_found";
   }
 
@@ -255,7 +255,7 @@ export async function permanentDeleteRecipeForUser(
   recipeId: number,
 ): Promise<"ok" | "not_found"> {
   const existing = await findOwnedRecipe(database, recipeId, userId);
-  if (!existing || !existing.deleted) {
+  if (!existing?.deleted) {
     return "not_found";
   }
 
