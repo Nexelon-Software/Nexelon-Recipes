@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -106,6 +106,85 @@ export const recipeSteps = createTable(
   (t) => [index("recipe_step_recipe_id_idx").on(t.recipeId)],
 );
 
+export const recipeNutrition = createTable(
+  "recipeNutrition",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    recipeId: d
+      .integer()
+      .notNull()
+      .references(() => recipes.id, { onDelete: "cascade" }),
+    caloriesKcal: d.integer(),
+    proteinG: d.integer(),
+    carbsG: d.integer(),
+    fatG: d.integer(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    uniqueIndex("recipe_nutrition_recipe_id_uidx").on(t.recipeId),
+  ],
+);
+
+/** Cached food composition rows from CIQUAL / Frida (per 100 g macros). */
+export const foods = createTable(
+  "food",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    source: d.varchar({ length: 16 }).notNull(),
+    externalId: d.varchar({ length: 64 }).notNull(),
+    sourceVersion: d.varchar({ length: 32 }).notNull(),
+    name: d.varchar({ length: 512 }).notNull(),
+    nameEn: d.varchar({ length: 512 }),
+    language: d.varchar({ length: 8 }).notNull(),
+    foodGroup: d.varchar({ length: 256 }),
+    caloriesKcalPer100g: d.real(),
+    proteinGPer100g: d.real(),
+    carbsGPer100g: d.real(),
+    fatGPer100g: d.real(),
+    densityGPerMl: d.real(),
+    gramsPerPiece: d.real(),
+    gramsPerHead: d.real(),
+    importedAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+  }),
+  (t) => [
+    uniqueIndex("food_source_external_id_uidx").on(t.source, t.externalId),
+    index("food_name_idx").on(t.name),
+    index("food_name_en_idx").on(t.nameEn),
+  ],
+);
+
+export const foodImportRuns = createTable(
+  "foodImportRun",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    source: d.varchar({ length: 16 }).notNull(),
+    sourceVersion: d.varchar({ length: 32 }).notNull(),
+    rowCount: d.integer().notNull().default(0),
+    startedAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    finishedAt: d.timestamp({ withTimezone: true }),
+    status: d.varchar({ length: 16 }).notNull(),
+    notes: d.text(),
+  }),
+  (t) => [
+    index("food_import_run_source_idx").on(t.source),
+    // At most one in-progress import per source (claim lock).
+    uniqueIndex("food_import_run_source_running_uidx")
+      .on(t.source)
+      .where(sql`${t.status} = 'running'`),
+  ],
+);
+
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
@@ -193,12 +272,42 @@ export const verification = pgTable("verification", {
   ),
 });
 
+/** User-managed API keys for the external REST API. Plaintext is never stored. */
+export const apiKeys = createTable(
+  "apiKey",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    userId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: d.varchar({ length: 64 }).notNull(),
+    keyHash: d.varchar({ length: 64 }).notNull(),
+    keyPrefix: d.varchar({ length: 16 }).notNull(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    lastUsedAt: d.timestamp({ withTimezone: true }),
+    revokedAt: d.timestamp({ withTimezone: true }),
+  }),
+  (t) => [
+    index("api_key_user_id_idx").on(t.userId),
+    uniqueIndex("api_key_key_hash_uidx").on(t.keyHash),
+  ],
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
   session: many(session),
   recipes: many(recipes),
+  apiKeys: many(apiKeys),
   followers: many(userFollows, { relationName: "following" }),
   following: many(userFollows, { relationName: "follower" }),
+}));
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(user, { fields: [apiKeys.userId], references: [user.id] }),
 }));
 
 export const recipeRelations = relations(recipes, ({ one, many }) => ({
@@ -208,6 +317,7 @@ export const recipeRelations = relations(recipes, ({ one, many }) => ({
   }),
   ingredients: many(recipeIngredients),
   steps: many(recipeSteps),
+  nutrition: one(recipeNutrition),
 }));
 
 export const recipeIngredientRelations = relations(
@@ -226,6 +336,16 @@ export const recipeStepRelations = relations(recipeSteps, ({ one }) => ({
     references: [recipes.id],
   }),
 }));
+
+export const recipeNutritionRelations = relations(
+  recipeNutrition,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeNutrition.recipeId],
+      references: [recipes.id],
+    }),
+  }),
+);
 
 export const userFollowRelations = relations(userFollows, ({ one }) => ({
   follower: one(user, {

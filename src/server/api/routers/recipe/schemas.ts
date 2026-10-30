@@ -31,6 +31,60 @@ export const RECIPE_UNITS = [
 
 export type RecipeUnit = (typeof RECIPE_UNITS)[number];
 
+const COUNTABLE_UNITS = new Set<RecipeUnit>(["piece", "head"]);
+
+/** `piece` / `head` — integer amounts only. */
+export function isCountableUnit(
+  unit: RecipeUnit | undefined,
+): unit is "piece" | "head" {
+  return unit !== undefined && COUNTABLE_UNITS.has(unit);
+}
+
+/**
+ * Filter amount input by selected unit. No unit → free text.
+ * Countable → digits only; other units → digits + at most one `.`.
+ * Does not rewrite values that were never passed through this helper (legacy BC).
+ */
+export function sanitizeIngredientAmountInput(
+  value: string,
+  unit: RecipeUnit | undefined,
+): string {
+  if (unit === undefined) return value;
+  if (isCountableUnit(unit)) {
+    return value.replace(/\D/g, "");
+  }
+  let result = "";
+  let sawDot = false;
+  for (const char of value) {
+    if (char >= "0" && char <= "9") {
+      result += char;
+      continue;
+    }
+    if (char === "." && !sawDot) {
+      result += char;
+      sawDot = true;
+    }
+  }
+  return result;
+}
+
+/** Trim trailing `.` for numeric units; free-text units unchanged. */
+export function normalizeIngredientAmount(
+  value: string | undefined,
+  unit: RecipeUnit | undefined,
+): string | undefined {
+  if (value === undefined) return undefined;
+  if (unit === undefined) {
+    const trimmed = value.trim();
+    return trimmed.length === 0 ? undefined : trimmed;
+  }
+  const sanitized = sanitizeIngredientAmountInput(value, unit).replace(
+    /\.$/,
+    "",
+  );
+  return sanitized.length === 0 ? undefined : sanitized;
+}
+
 export const IngredientLineSchema = z.object({
   name: z.string().min(1),
   amount: z.string().optional(),
@@ -42,6 +96,15 @@ export const StepLineSchema = z.object({
   instruction: z.string().min(1),
   sortOrder: z.number().int().optional(),
 });
+
+export const NutritionSchema = z.object({
+  caloriesKcal: z.number().int().nonnegative().optional(),
+  proteinG: z.number().int().nonnegative().optional(),
+  carbsG: z.number().int().nonnegative().optional(),
+  fatG: z.number().int().nonnegative().optional(),
+});
+
+export type NutritionInput = z.infer<typeof NutritionSchema>;
 
 const optionalUrl = z
   .string()
@@ -65,6 +128,7 @@ export const RecipeInputSchema = z.object({
   visibility: z.enum(RECIPE_VISIBILITIES).default("private"),
   ingredients: z.array(IngredientLineSchema).min(1),
   steps: z.array(StepLineSchema).min(1),
+  nutrition: NutritionSchema.optional(),
 });
 
 export type RecipeInput = z.infer<typeof RecipeInputSchema>;
@@ -104,6 +168,12 @@ export type RecipeDetailForInput = {
     instruction: string;
     sortOrder: number;
   }>;
+  nutrition: {
+    caloriesKcal: number | null;
+    proteinG: number | null;
+    carbsG: number | null;
+    fatG: number | null;
+  } | null;
 };
 
 export class RecipeJsonParseError extends Error {
@@ -116,9 +186,49 @@ export class RecipeJsonParseError extends Error {
   }
 }
 
+export function hasNutritionValues(
+  nutrition:
+    | {
+        caloriesKcal?: number | null;
+        proteinG?: number | null;
+        carbsG?: number | null;
+        fatG?: number | null;
+      }
+    | null
+    | undefined,
+): nutrition is {
+  caloriesKcal?: number | null;
+  proteinG?: number | null;
+  carbsG?: number | null;
+  fatG?: number | null;
+} {
+  if (!nutrition) return false;
+  return (
+    nutrition.caloriesKcal != null ||
+    nutrition.proteinG != null ||
+    nutrition.carbsG != null ||
+    nutrition.fatG != null
+  );
+}
+
+function nutritionToInput(
+  nutrition: RecipeDetailForInput["nutrition"],
+): NutritionInput | undefined {
+  if (!hasNutritionValues(nutrition) || !nutrition) return undefined;
+  return {
+    ...(nutrition.caloriesKcal != null
+      ? { caloriesKcal: nutrition.caloriesKcal }
+      : {}),
+    ...(nutrition.proteinG != null ? { proteinG: nutrition.proteinG } : {}),
+    ...(nutrition.carbsG != null ? { carbsG: nutrition.carbsG } : {}),
+    ...(nutrition.fatG != null ? { fatG: nutrition.fatG } : {}),
+  };
+}
+
 export function recipeDetailToRecipeInput(
   recipe: RecipeDetailForInput,
 ): RecipeInput {
+  const nutrition = nutritionToInput(recipe.nutrition);
   return {
     name: recipe.name,
     description: recipe.description ?? undefined,
@@ -157,24 +267,46 @@ export function recipeDetailToRecipeInput(
       instruction: step.instruction,
       sortOrder: step.sortOrder,
     })),
+    ...(nutrition ? { nutrition } : {}),
   };
 }
 
 export function recipeInputToExportEnvelope(
   input: RecipeInput,
 ): RecipeJsonEnvelope {
+  const nutrition = hasNutritionValues(input.nutrition)
+    ? nutritionToInput({
+        caloriesKcal: input.nutrition.caloriesKcal ?? null,
+        proteinG: input.nutrition.proteinG ?? null,
+        carbsG: input.nutrition.carbsG ?? null,
+        fatG: input.nutrition.fatG ?? null,
+      })
+    : undefined;
+
   return {
     format: RECIPE_JSON_FORMAT,
     version: RECIPE_JSON_VERSION,
     exportedAt: new Date().toISOString(),
     recipe: {
-      ...input,
+      name: input.name,
+      description: input.description,
+      category: input.category,
+      difficulty: input.difficulty,
+      cuisine: input.cuisine,
+      prepTimeMinutes: input.prepTimeMinutes,
+      cookTimeMinutes: input.cookTimeMinutes,
+      servings: input.servings,
+      imageUrl: input.imageUrl,
+      notes: input.notes,
+      sourceUrl: input.sourceUrl,
+      visibility: input.visibility,
       ingredients: input.ingredients.map(({ name, amount, unit }) => ({
         name,
         ...(amount !== undefined ? { amount } : {}),
         ...(unit !== undefined ? { unit } : {}),
       })),
       steps: input.steps.map(({ instruction }) => ({ instruction })),
+      ...(nutrition ? { nutrition } : {}),
     },
   };
 }
@@ -243,6 +375,23 @@ export function recipeInputsToMarkdown(
           ? `- ${qty} — ${ingredient.name}`
           : `- ${ingredient.name}`;
         parts.push(line);
+      }
+      parts.push("");
+    }
+
+    if (hasNutritionValues(recipe.nutrition)) {
+      parts.push("### Nutrition (per serving)", "");
+      if (recipe.nutrition?.caloriesKcal != null) {
+        parts.push(`- **Calories:** ${recipe.nutrition.caloriesKcal} kcal`);
+      }
+      if (recipe.nutrition?.proteinG != null) {
+        parts.push(`- **Protein:** ${recipe.nutrition.proteinG} g`);
+      }
+      if (recipe.nutrition?.carbsG != null) {
+        parts.push(`- **Carbs:** ${recipe.nutrition.carbsG} g`);
+      }
+      if (recipe.nutrition?.fatG != null) {
+        parts.push(`- **Fat:** ${recipe.nutrition.fatG} g`);
       }
       parts.push("");
     }

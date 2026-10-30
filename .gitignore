@@ -13,6 +13,9 @@
 /prisma/db.sqlite-journal
 db.sqlite
 
+# food composition dumps (download locally; see data/foods/README.md)
+/data/foods/raw/**
+
 # next.js
 /.next/
 /out/

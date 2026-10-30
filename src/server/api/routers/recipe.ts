@@ -10,12 +10,13 @@ import {
 import type { db } from "~/server/db";
 import {
   recipeIngredients,
+  recipeNutrition,
   recipes,
   recipeSteps,
   user,
 } from "~/server/db/schema";
 
-import { RecipeInputSchema } from "./recipe/schemas";
+import { hasNutritionValues, RecipeInputSchema } from "./recipe/schemas";
 
 type DbTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0];
 
@@ -64,6 +65,16 @@ async function insertChildRows(
       })),
     );
   }
+
+  if (hasNutritionValues(input.nutrition)) {
+    await tx.insert(recipeNutrition).values({
+      recipeId,
+      caloriesKcal: input.nutrition?.caloriesKcal,
+      proteinG: input.nutrition?.proteinG,
+      carbsG: input.nutrition?.carbsG,
+      fatG: input.nutrition?.fatG,
+    });
+  }
 }
 
 async function replaceChildRows(
@@ -75,6 +86,14 @@ async function replaceChildRows(
     .delete(recipeIngredients)
     .where(eq(recipeIngredients.recipeId, recipeId));
   await tx.delete(recipeSteps).where(eq(recipeSteps.recipeId, recipeId));
+
+  // Preserve existing nutrition when the client omits it (e.g. recipe form).
+  if (input.nutrition !== undefined) {
+    await tx
+      .delete(recipeNutrition)
+      .where(eq(recipeNutrition.recipeId, recipeId));
+  }
+
   await insertChildRows(tx, recipeId, input);
 }
 
@@ -90,6 +109,41 @@ async function assertUserExists(
   if (!existing) {
     throw new TRPCError({ code: "NOT_FOUND" });
   }
+}
+
+/** Shared create used by tRPC and the Bearer REST API. */
+export async function createRecipeForUser(
+  database: typeof db,
+  userId: string,
+  input: z.infer<typeof RecipeInputSchema>,
+): Promise<number> {
+  return database.transaction(async (tx) => {
+    const [created] = await tx
+      .insert(recipes)
+      .values({
+        name: input.name,
+        description: input.description,
+        category: input.category,
+        cuisine: input.cuisine,
+        difficulty: input.difficulty,
+        prepTimeMinutes: input.prepTimeMinutes,
+        cookTimeMinutes: input.cookTimeMinutes,
+        servings: input.servings,
+        imageUrl: input.imageUrl,
+        notes: input.notes,
+        sourceUrl: input.sourceUrl,
+        visibility: input.visibility,
+        createdById: userId,
+      })
+      .returning({ id: recipes.id });
+
+    if (!created) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+
+    await insertChildRows(tx, created.id, input);
+    return created.id;
+  });
 }
 
 export const recipeRouter = createTRPCRouter({
@@ -189,6 +243,7 @@ export const recipeRouter = createTRPCRouter({
           steps: {
             orderBy: [asc(recipeSteps.sortOrder)],
           },
+          nutrition: true,
         },
       });
 
@@ -210,6 +265,7 @@ export const recipeRouter = createTRPCRouter({
           steps: {
             orderBy: [asc(recipeSteps.sortOrder)],
           },
+          nutrition: true,
         },
       });
 
@@ -229,34 +285,11 @@ export const recipeRouter = createTRPCRouter({
   create: protectedProcedure
     .input(RecipeInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const recipeId = await ctx.db.transaction(async (tx) => {
-        const [created] = await tx
-          .insert(recipes)
-          .values({
-            name: input.name,
-            description: input.description,
-            category: input.category,
-            cuisine: input.cuisine,
-            difficulty: input.difficulty,
-            prepTimeMinutes: input.prepTimeMinutes,
-            cookTimeMinutes: input.cookTimeMinutes,
-            servings: input.servings,
-            imageUrl: input.imageUrl,
-            notes: input.notes,
-            sourceUrl: input.sourceUrl,
-            visibility: input.visibility,
-            createdById: ctx.session.user.id,
-          })
-          .returning({ id: recipes.id });
-
-        if (!created) {
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        }
-
-        await insertChildRows(tx, created.id, input);
-        return created.id;
-      });
-
+      const recipeId = await createRecipeForUser(
+        ctx.db,
+        ctx.session.user.id,
+        input,
+      );
       return { id: recipeId };
     }),
 

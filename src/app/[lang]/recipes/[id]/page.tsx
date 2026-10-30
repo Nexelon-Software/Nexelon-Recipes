@@ -9,6 +9,7 @@ import { getLanguage, ts } from "~/language/languages";
 import { langMaps } from "~/language/langMaps";
 import {
   RECIPE_UNITS,
+  hasNutritionValues,
   recipeDetailToRecipeInput,
   type RecipeUnit,
 } from "~/server/api/routers/recipe/schemas";
@@ -269,6 +270,64 @@ export default async function RecipeDetailPage({
                   );
                 })}
               </ul>
+            )}
+          </RecipeDetailSectionCard>
+
+          <RecipeDetailSectionCard
+            title={ts(langObj, langMaps.recipes.detail.nutrition)}
+          >
+            {hasNutritionValues(recipe.nutrition) ? (
+              <div className="space-y-3">
+                <p className="text-muted-foreground text-sm">
+                  {ts(langObj, langMaps.recipes.detail.nutritionPerServing)}
+                </p>
+                <dl className="grid gap-3 sm:grid-cols-2">
+                  {recipe.nutrition.caloriesKcal != null ? (
+                    <div>
+                      <dt className="text-muted-foreground text-sm">
+                        {ts(langObj, langMaps.recipes.detail.calories)}
+                      </dt>
+                      <dd className="tabular-nums">
+                        {recipe.nutrition.caloriesKcal} kcal
+                      </dd>
+                    </div>
+                  ) : null}
+                  {recipe.nutrition.proteinG != null ? (
+                    <div>
+                      <dt className="text-muted-foreground text-sm">
+                        {ts(langObj, langMaps.recipes.detail.protein)}
+                      </dt>
+                      <dd className="tabular-nums">
+                        {recipe.nutrition.proteinG} g
+                      </dd>
+                    </div>
+                  ) : null}
+                  {recipe.nutrition.carbsG != null ? (
+                    <div>
+                      <dt className="text-muted-foreground text-sm">
+                        {ts(langObj, langMaps.recipes.detail.carbs)}
+                      </dt>
+                      <dd className="tabular-nums">
+                        {recipe.nutrition.carbsG} g
+                      </dd>
+                    </div>
+                  ) : null}
+                  {recipe.nutrition.fatG != null ? (
+                    <div>
+                      <dt className="text-muted-foreground text-sm">
+                        {ts(langObj, langMaps.recipes.detail.fat)}
+                      </dt>
+                      <dd className="tabular-nums">
+                        {recipe.nutrition.fatG} g
+                      </dd>
+                    </div>
+                  ) : null}
+                </dl>
+              </div>
+            ) : (
+              <p className="text-muted-foreground">
+                {ts(langObj, langMaps.recipes.detail.nutritionEmpty)}
+              </p>
             )}
           </RecipeDetailSectionCard>
           </div>

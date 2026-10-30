@@ -7,6 +7,7 @@ import "./src/env.js";
 /** @type {import("next").NextConfig} */
 const config = {
   output: "standalone",
+  serverExternalPackages: ["xlsx"],
   allowedDevOrigins: ["192.168.1.113", "192.168.1.113.nip.io"],
   async redirects() {
     return [

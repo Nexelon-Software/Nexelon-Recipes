@@ -6,6 +6,7 @@ import { langMaps } from "~/language/langMaps";
 import { RecipesAppShell } from "~/app/[lang]/recipes/_components/RecipesAppShell";
 import { getRecipesPageContext } from "~/app/[lang]/recipes/_lib/page-data";
 
+import { SettingsApiKeysSection } from "./_components/SettingsApiKeysSection";
 import { SettingsPersonalizationSection } from "./_components/SettingsPersonalizationSection";
 import { SettingsProfileSection } from "./_components/SettingsProfileSection";
 import { SettingsSignOutButton } from "./_components/SettingsSignOutButton";
@@ -29,7 +30,7 @@ export default async function SettingsPage({
 
   return (
     <RecipesAppShell lang={lang} imageUrl={imageUrl} userId={userId}>
-      <div className="container mx-auto max-w-lg space-y-6 px-3 py-6 sm:px-4">
+      <div className="container mx-auto max-w-2xl space-y-6 px-3 py-6 sm:px-4">
         <h1 className="text-2xl font-semibold tracking-tight">
           {ts(langObj, langMaps.auth.settings.title)}
         </h1>
@@ -39,6 +40,7 @@ export default async function SettingsPage({
           imageUrl={imageUrl}
         />
         <SettingsPersonalizationSection />
+        <SettingsApiKeysSection />
         <SettingsSignOutButton loginPath={loginPath} />
       </div>
     </RecipesAppShell>
