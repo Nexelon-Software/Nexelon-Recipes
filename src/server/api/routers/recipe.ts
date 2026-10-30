@@ -111,6 +111,41 @@ async function assertUserExists(
   }
 }
 
+/** Shared create used by tRPC and the Bearer REST API. */
+export async function createRecipeForUser(
+  database: typeof db,
+  userId: string,
+  input: z.infer<typeof RecipeInputSchema>,
+): Promise<number> {
+  return database.transaction(async (tx) => {
+    const [created] = await tx
+      .insert(recipes)
+      .values({
+        name: input.name,
+        description: input.description,
+        category: input.category,
+        cuisine: input.cuisine,
+        difficulty: input.difficulty,
+        prepTimeMinutes: input.prepTimeMinutes,
+        cookTimeMinutes: input.cookTimeMinutes,
+        servings: input.servings,
+        imageUrl: input.imageUrl,
+        notes: input.notes,
+        sourceUrl: input.sourceUrl,
+        visibility: input.visibility,
+        createdById: userId,
+      })
+      .returning({ id: recipes.id });
+
+    if (!created) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+    }
+
+    await insertChildRows(tx, created.id, input);
+    return created.id;
+  });
+}
+
 export const recipeRouter = createTRPCRouter({
   list: publicProcedure
     .input(
@@ -250,34 +285,11 @@ export const recipeRouter = createTRPCRouter({
   create: protectedProcedure
     .input(RecipeInputSchema)
     .mutation(async ({ ctx, input }) => {
-      const recipeId = await ctx.db.transaction(async (tx) => {
-        const [created] = await tx
-          .insert(recipes)
-          .values({
-            name: input.name,
-            description: input.description,
-            category: input.category,
-            cuisine: input.cuisine,
-            difficulty: input.difficulty,
-            prepTimeMinutes: input.prepTimeMinutes,
-            cookTimeMinutes: input.cookTimeMinutes,
-            servings: input.servings,
-            imageUrl: input.imageUrl,
-            notes: input.notes,
-            sourceUrl: input.sourceUrl,
-            visibility: input.visibility,
-            createdById: ctx.session.user.id,
-          })
-          .returning({ id: recipes.id });
-
-        if (!created) {
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-        }
-
-        await insertChildRows(tx, created.id, input);
-        return created.id;
-      });
-
+      const recipeId = await createRecipeForUser(
+        ctx.db,
+        ctx.session.user.id,
+        input,
+      );
       return { id: recipeId };
     }),
 

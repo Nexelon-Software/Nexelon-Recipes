@@ -272,12 +272,42 @@ export const verification = pgTable("verification", {
   ),
 });
 
+/** User-managed API keys for the external REST API. Plaintext is never stored. */
+export const apiKeys = createTable(
+  "apiKey",
+  (d) => ({
+    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
+    userId: d
+      .varchar({ length: 255 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    name: d.varchar({ length: 64 }).notNull(),
+    keyHash: d.varchar({ length: 64 }).notNull(),
+    keyPrefix: d.varchar({ length: 16 }).notNull(),
+    createdAt: d
+      .timestamp({ withTimezone: true })
+      .$defaultFn(() => new Date())
+      .notNull(),
+    lastUsedAt: d.timestamp({ withTimezone: true }),
+    revokedAt: d.timestamp({ withTimezone: true }),
+  }),
+  (t) => [
+    index("api_key_user_id_idx").on(t.userId),
+    uniqueIndex("api_key_key_hash_uidx").on(t.keyHash),
+  ],
+);
+
 export const userRelations = relations(user, ({ many }) => ({
   account: many(account),
   session: many(session),
   recipes: many(recipes),
+  apiKeys: many(apiKeys),
   followers: many(userFollows, { relationName: "following" }),
   following: many(userFollows, { relationName: "follower" }),
+}));
+
+export const apiKeyRelations = relations(apiKeys, ({ one }) => ({
+  user: one(user, { fields: [apiKeys.userId], references: [user.id] }),
 }));
 
 export const recipeRelations = relations(recipes, ({ one, many }) => ({
