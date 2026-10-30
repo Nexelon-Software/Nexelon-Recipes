@@ -70,7 +70,8 @@
         "revokeError": "Could not revoke key",
         "deleteSuccess": "Key deleted",
         "deleteError": "Could not delete key",
-        "nameRequired": "Enter a name for the key"
+        "nameRequired": "Enter a name for the key",
+        "docsLink": "API documentation"
       }
     },
     "profile": {
@@ -109,6 +110,16 @@
   "nav": {
     "people": "People"
   },
+  "docs": {
+    "api": {
+      "title": "Recipes API",
+      "subtitle": "Bearer-authenticated endpoints for creating, reading, updating, and soft-deleting your recipes.",
+      "exportMarkdown": "Export Markdown",
+      "endpoints": "Endpoints",
+      "openSettings": "Manage API keys in Settings",
+      "openFormat": "Open recipe JSON format"
+    }
+  },
   "people": {
     "title": "People",
     "followingCount": "Following",
@@ -125,6 +136,22 @@
   "recipes": {
     "title": "Recipes",
     "myRecipes": "My recipes",
+    "trash": {
+      "title": "Trash",
+      "link": "Trash",
+      "empty": "No deleted recipes.",
+      "backToRecipes": "Back to my recipes",
+      "restore": "Restore",
+      "restoring": "Restoring…",
+      "restoreSuccess": "Recipe restored",
+      "restoreError": "Could not restore recipe",
+      "permanentDelete": "Delete permanently",
+      "permanentDeleting": "Deleting…",
+      "permanentDeleteConfirm": "Delete this recipe permanently?",
+      "permanentDeleteConfirmDescription": "This removes the recipe from the database. This cannot be undone.",
+      "permanentDeleteSuccess": "Recipe permanently deleted",
+      "permanentDeleteError": "Could not delete recipe"
+    },
     "collectionOf": "Recipes of {username}",
     "description": "Nexelon recipe collection — search, sort, and mobile-friendly.",
     "count": "{count} recipes",
@@ -247,8 +274,8 @@
       "create": "New recipe",
       "edit": "Edit",
       "delete": "Delete",
-      "deleteConfirm": "Delete this recipe?",
-      "deleteConfirmDescription": "This recipe will be hidden from the list. You cannot undo this action.",
+      "deleteConfirm": "Move this recipe to trash?",
+      "deleteConfirmDescription": "The recipe will be hidden from your list. You can restore it from Trash or delete it permanently there.",
       "cancel": "Cancel",
       "save": "Save recipe",
       "saving": "Saving…",

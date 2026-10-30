@@ -1,12 +1,19 @@
-import { and, asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 import { authenticateApiKey } from "~/server/api-keys";
-import { createRecipeForUser } from "~/server/api/routers/recipe";
+import {
+  createRecipeForUser,
+  createRecipeForUserInTx,
+  restoreRecipeForUser,
+  softDeleteRecipeForUser,
+  updateRecipeForUser,
+} from "~/server/api/routers/recipe";
 import {
   RECIPE_COLLECTION_JSON_FORMAT,
   RECIPE_JSON_VERSION,
   RecipeJsonParseError,
+  parseRecipeCollectionJsonFile,
   parseRecipeJsonFile,
   recipeDetailToRecipeInput,
   recipeInputToExportEnvelope,
@@ -50,9 +57,12 @@ function recipeRowToCollectionItem(row: RecipeDetailForInput & { id: number }) {
   };
 }
 
-export async function listRecipesForApiUser(userId: string) {
-  const rows = await db.query.recipes.findMany({
-    where: and(eq(recipes.deleted, false), eq(recipes.createdById, userId)),
+async function loadRecipeRows(userId: string, deleted: boolean) {
+  return db.query.recipes.findMany({
+    where: and(
+      eq(recipes.deleted, deleted),
+      eq(recipes.createdById, userId),
+    ),
     orderBy: [desc(recipes.updatedAt)],
     with: {
       ingredients: {
@@ -64,6 +74,14 @@ export async function listRecipesForApiUser(userId: string) {
       nutrition: true,
     },
   });
+}
+
+export async function listRecipesForApiUser(
+  userId: string,
+  options?: { deleted?: boolean },
+) {
+  const deleted = options?.deleted ?? false;
+  const rows = await loadRecipeRows(userId, deleted);
 
   return {
     format: RECIPE_COLLECTION_JSON_FORMAT,
@@ -73,11 +91,16 @@ export async function listRecipesForApiUser(userId: string) {
   };
 }
 
-export async function getRecipeForApiUser(userId: string, recipeId: number) {
+export async function getRecipeForApiUser(
+  userId: string,
+  recipeId: number,
+  options?: { deleted?: boolean },
+) {
+  const deleted = options?.deleted ?? false;
   const row = await db.query.recipes.findFirst({
     where: and(
       eq(recipes.id, recipeId),
-      eq(recipes.deleted, false),
+      eq(recipes.deleted, deleted),
       eq(recipes.createdById, userId),
     ),
     with: {
@@ -95,21 +118,31 @@ export async function getRecipeForApiUser(userId: string, recipeId: number) {
   return recipeRowToApiDocument(row);
 }
 
+function parseBodyRecipe(
+  bodyText: string,
+):
+  | { input: RecipeInput; error?: undefined }
+  | { input?: undefined; error: NextResponse } {
+  try {
+    return { input: parseRecipeJsonFile(bodyText) };
+  } catch (error) {
+    if (error instanceof RecipeJsonParseError) {
+      return { error: jsonError(400, error.message) };
+    }
+    throw error;
+  }
+}
+
 export async function createRecipeFromApiBody(
   userId: string,
   bodyText: string,
 ) {
-  let input: RecipeInput;
-  try {
-    input = parseRecipeJsonFile(bodyText);
-  } catch (error) {
-    if (error instanceof RecipeJsonParseError) {
-      return { error: jsonError(400, error.message), response: null };
-    }
-    throw error;
+  const parsed = parseBodyRecipe(bodyText);
+  if (parsed.error) {
+    return { error: parsed.error, response: null };
   }
 
-  const recipeId = await createRecipeForUser(db, userId, input);
+  const recipeId = await createRecipeForUser(db, userId, parsed.input);
   const document = await getRecipeForApiUser(userId, recipeId);
   if (!document) {
     return {
@@ -122,4 +155,128 @@ export async function createRecipeFromApiBody(
     error: null,
     response: NextResponse.json(document, { status: 201 }),
   };
+}
+
+export async function updateRecipeFromApiBody(
+  userId: string,
+  recipeId: number,
+  bodyText: string,
+) {
+  const parsed = parseBodyRecipe(bodyText);
+  if (parsed.error) {
+    return { error: parsed.error, response: null };
+  }
+
+  const result = await updateRecipeForUser(
+    db,
+    userId,
+    recipeId,
+    parsed.input,
+  );
+  if (result === "not_found") {
+    return { error: jsonError(404, "Not found"), response: null };
+  }
+
+  const document = await getRecipeForApiUser(userId, recipeId);
+  if (!document) {
+    return {
+      error: jsonError(500, "Recipe was updated but could not be loaded"),
+      response: null,
+    };
+  }
+
+  return { error: null, response: NextResponse.json(document) };
+}
+
+export async function softDeleteRecipeFromApi(
+  userId: string,
+  recipeId: number,
+) {
+  const result = await softDeleteRecipeForUser(db, userId, recipeId);
+  if (result === "not_found") {
+    return jsonError(404, "Not found");
+  }
+  return new NextResponse(null, { status: 204 });
+}
+
+export async function restoreRecipeFromApi(userId: string, recipeId: number) {
+  const result = await restoreRecipeForUser(db, userId, recipeId);
+  if (result === "not_found") {
+    return { error: jsonError(404, "Not found"), response: null };
+  }
+
+  const document = await getRecipeForApiUser(userId, recipeId);
+  if (!document) {
+    return {
+      error: jsonError(500, "Recipe was restored but could not be loaded"),
+      response: null,
+    };
+  }
+
+  return { error: null, response: NextResponse.json(document) };
+}
+
+export async function importRecipesFromApiBody(
+  userId: string,
+  bodyText: string,
+) {
+  let inputs: RecipeInput[];
+  try {
+    inputs = parseRecipeCollectionJsonFile(bodyText);
+  } catch (error) {
+    if (error instanceof RecipeJsonParseError) {
+      return { error: jsonError(400, error.message), response: null };
+    }
+    throw error;
+  }
+
+  const ids = await db.transaction(async (tx) => {
+    const createdIds: number[] = [];
+    for (const input of inputs) {
+      createdIds.push(await createRecipeForUserInTx(tx, userId, input));
+    }
+    return createdIds;
+  });
+
+  const rows = await db.query.recipes.findMany({
+    where: and(
+      eq(recipes.deleted, false),
+      eq(recipes.createdById, userId),
+      inArray(recipes.id, ids),
+    ),
+    with: {
+      ingredients: {
+        orderBy: [asc(recipeIngredients.sortOrder)],
+      },
+      steps: {
+        orderBy: [asc(recipeSteps.sortOrder)],
+      },
+      nutrition: true,
+    },
+  });
+
+  const byId = new Map(rows.map((row) => [row.id, row]));
+  const imported = ids
+    .map((id) => byId.get(id))
+    .filter((row): row is NonNullable<typeof row> => row != null)
+    .map((row) => recipeRowToCollectionItem(row));
+
+  return {
+    error: null,
+    response: NextResponse.json(
+      {
+        format: RECIPE_COLLECTION_JSON_FORMAT,
+        version: RECIPE_JSON_VERSION,
+        exportedAt: new Date().toISOString(),
+        recipes: imported,
+      },
+      { status: 201 },
+    ),
+  };
+}
+
+export function parseRecipeIdParam(idParam: string): number | null {
+  const id = Number(idParam);
+  if (!Number.isInteger(id) || id <= 0) return null;
+  return id;
 }

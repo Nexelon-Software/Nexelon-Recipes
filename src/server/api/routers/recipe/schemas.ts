@@ -313,6 +313,17 @@ export function recipeInputToExportEnvelope(
 
 export const RECIPE_COLLECTION_JSON_FORMAT = "nexelon-recipes" as const;
 
+export const RecipeCollectionJsonEnvelopeSchema = z.object({
+  format: z.literal(RECIPE_COLLECTION_JSON_FORMAT),
+  version: z.literal(RECIPE_JSON_VERSION),
+  exportedAt: z.string().datetime().optional(),
+  recipes: z.array(RecipeInputSchema).min(1),
+});
+
+export type RecipeCollectionJsonEnvelope = z.infer<
+  typeof RecipeCollectionJsonEnvelopeSchema
+>;
+
 export function recipeInputsToCollectionEnvelope(inputs: RecipeInput[]) {
   return {
     format: RECIPE_COLLECTION_JSON_FORMAT,
@@ -444,6 +455,32 @@ export function parseRecipeJsonFile(text: string): RecipeInput {
   }
 
   const issues = bareResult.error ?? envelopeResult.error;
+  throw new RecipeJsonParseError(
+    formatZodIssues(issues),
+    "validation_failed",
+  );
+}
+
+/** Parse a `nexelon-recipes` envelope or a bare array of recipe objects. */
+export function parseRecipeCollectionJsonFile(text: string): RecipeInput[] {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text) as unknown;
+  } catch {
+    throw new RecipeJsonParseError("Invalid JSON", "invalid_json");
+  }
+
+  const envelopeResult = RecipeCollectionJsonEnvelopeSchema.safeParse(parsed);
+  if (envelopeResult.success) {
+    return envelopeResult.data.recipes;
+  }
+
+  const arrayResult = z.array(RecipeInputSchema).min(1).safeParse(parsed);
+  if (arrayResult.success) {
+    return arrayResult.data;
+  }
+
+  const issues = arrayResult.error ?? envelopeResult.error;
   throw new RecipeJsonParseError(
     formatZodIssues(issues),
     "validation_failed",

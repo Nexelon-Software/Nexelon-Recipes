@@ -111,16 +111,84 @@ async function assertUserExists(
   }
 }
 
+/** Insert one recipe + children inside an existing transaction. */
+export async function createRecipeForUserInTx(
+  tx: DbTransaction,
+  userId: string,
+  input: z.infer<typeof RecipeInputSchema>,
+): Promise<number> {
+  const [created] = await tx
+    .insert(recipes)
+    .values({
+      name: input.name,
+      description: input.description,
+      category: input.category,
+      cuisine: input.cuisine,
+      difficulty: input.difficulty,
+      prepTimeMinutes: input.prepTimeMinutes,
+      cookTimeMinutes: input.cookTimeMinutes,
+      servings: input.servings,
+      imageUrl: input.imageUrl,
+      notes: input.notes,
+      sourceUrl: input.sourceUrl,
+      visibility: input.visibility,
+      createdById: userId,
+    })
+    .returning({ id: recipes.id });
+
+  if (!created) {
+    throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
+  }
+
+  await insertChildRows(tx, created.id, input);
+  return created.id;
+}
+
 /** Shared create used by tRPC and the Bearer REST API. */
 export async function createRecipeForUser(
   database: typeof db,
   userId: string,
   input: z.infer<typeof RecipeInputSchema>,
 ): Promise<number> {
-  return database.transaction(async (tx) => {
-    const [created] = await tx
-      .insert(recipes)
-      .values({
+  return database.transaction(async (tx) =>
+    createRecipeForUserInTx(tx, userId, input),
+  );
+}
+
+type OwnedRecipeLookup = {
+  id: number;
+  createdById: string;
+  deleted: boolean;
+};
+
+async function findOwnedRecipe(
+  database: typeof db,
+  recipeId: number,
+  userId: string,
+): Promise<OwnedRecipeLookup | null> {
+  const existing = await database.query.recipes.findFirst({
+    where: and(eq(recipes.id, recipeId), eq(recipes.createdById, userId)),
+    columns: { id: true, createdById: true, deleted: true },
+  });
+  return existing ?? null;
+}
+
+/** Shared update used by tRPC and the Bearer REST API. */
+export async function updateRecipeForUser(
+  database: typeof db,
+  userId: string,
+  recipeId: number,
+  input: z.infer<typeof RecipeInputSchema>,
+): Promise<"ok" | "not_found"> {
+  const existing = await findOwnedRecipe(database, recipeId, userId);
+  if (!existing || existing.deleted) {
+    return "not_found";
+  }
+
+  await database.transaction(async (tx) => {
+    await tx
+      .update(recipes)
+      .set({
         name: input.name,
         description: input.description,
         category: input.category,
@@ -133,17 +201,66 @@ export async function createRecipeForUser(
         notes: input.notes,
         sourceUrl: input.sourceUrl,
         visibility: input.visibility,
-        createdById: userId,
       })
-      .returning({ id: recipes.id });
+      .where(eq(recipes.id, recipeId));
 
-    if (!created) {
-      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR" });
-    }
-
-    await insertChildRows(tx, created.id, input);
-    return created.id;
+    await replaceChildRows(tx, recipeId, input);
   });
+
+  return "ok";
+}
+
+/** Soft-delete: sets `deleted` flag. Does not remove the row. */
+export async function softDeleteRecipeForUser(
+  database: typeof db,
+  userId: string,
+  recipeId: number,
+): Promise<"ok" | "not_found"> {
+  const existing = await findOwnedRecipe(database, recipeId, userId);
+  if (!existing || existing.deleted) {
+    return "not_found";
+  }
+
+  await database
+    .update(recipes)
+    .set({ deleted: true })
+    .where(eq(recipes.id, recipeId));
+
+  return "ok";
+}
+
+/** Restore a soft-deleted recipe owned by the user. */
+export async function restoreRecipeForUser(
+  database: typeof db,
+  userId: string,
+  recipeId: number,
+): Promise<"ok" | "not_found"> {
+  const existing = await findOwnedRecipe(database, recipeId, userId);
+  if (!existing || !existing.deleted) {
+    return "not_found";
+  }
+
+  await database
+    .update(recipes)
+    .set({ deleted: false })
+    .where(eq(recipes.id, recipeId));
+
+  return "ok";
+}
+
+/** Hard-delete the recipe row (cascades to children). UI / tRPC only. */
+export async function permanentDeleteRecipeForUser(
+  database: typeof db,
+  userId: string,
+  recipeId: number,
+): Promise<"ok" | "not_found"> {
+  const existing = await findOwnedRecipe(database, recipeId, userId);
+  if (!existing || !existing.deleted) {
+    return "not_found";
+  }
+
+  await database.delete(recipes).where(eq(recipes.id, recipeId));
+  return "ok";
 }
 
 export const recipeRouter = createTRPCRouter({
@@ -301,65 +418,82 @@ export const recipeRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.recipes.findFirst({
-        where: and(eq(recipes.id, input.id), eq(recipes.deleted, false)),
-        columns: { id: true, createdById: true },
-      });
-
-      if (!existing) {
+      const result = await updateRecipeForUser(
+        ctx.db,
+        ctx.session.user.id,
+        input.id,
+        input.data,
+      );
+      if (result === "not_found") {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
-
-      if (existing.createdById !== ctx.session.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
-      }
-
-      await ctx.db.transaction(async (tx) => {
-        await tx
-          .update(recipes)
-          .set({
-            name: input.data.name,
-            description: input.data.description,
-            category: input.data.category,
-            cuisine: input.data.cuisine,
-            difficulty: input.data.difficulty,
-            prepTimeMinutes: input.data.prepTimeMinutes,
-            cookTimeMinutes: input.data.cookTimeMinutes,
-            servings: input.data.servings,
-            imageUrl: input.data.imageUrl,
-            notes: input.data.notes,
-            sourceUrl: input.data.sourceUrl,
-            visibility: input.data.visibility,
-          })
-          .where(eq(recipes.id, input.id));
-
-        await replaceChildRows(tx, input.id, input.data);
-      });
-
       return { id: input.id };
     }),
 
   delete: protectedProcedure
     .input(z.object({ id: z.number().int().positive() }))
     .mutation(async ({ ctx, input }) => {
-      const existing = await ctx.db.query.recipes.findFirst({
-        where: and(eq(recipes.id, input.id), eq(recipes.deleted, false)),
-        columns: { id: true, createdById: true },
-      });
-
-      if (!existing) {
+      const result = await softDeleteRecipeForUser(
+        ctx.db,
+        ctx.session.user.id,
+        input.id,
+      );
+      if (result === "not_found") {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
+      return { id: input.id };
+    }),
 
-      if (existing.createdById !== ctx.session.user.id) {
-        throw new TRPCError({ code: "FORBIDDEN" });
+  listDeleted: protectedProcedure.query(async ({ ctx }) => {
+    return ctx.db.query.recipes.findMany({
+      where: and(
+        eq(recipes.deleted, true),
+        eq(recipes.createdById, ctx.session.user.id),
+      ),
+      orderBy: [desc(recipes.updatedAt)],
+      columns: {
+        id: true,
+        name: true,
+        category: true,
+        cuisine: true,
+        difficulty: true,
+        prepTimeMinutes: true,
+        cookTimeMinutes: true,
+        servings: true,
+        imageUrl: true,
+        visibility: true,
+        createdById: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }),
+
+  restore: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await restoreRecipeForUser(
+        ctx.db,
+        ctx.session.user.id,
+        input.id,
+      );
+      if (result === "not_found") {
+        throw new TRPCError({ code: "NOT_FOUND" });
       }
+      return { id: input.id };
+    }),
 
-      await ctx.db
-        .update(recipes)
-        .set({ deleted: true })
-        .where(eq(recipes.id, input.id));
-
+  permanentDelete: protectedProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .mutation(async ({ ctx, input }) => {
+      const result = await permanentDeleteRecipeForUser(
+        ctx.db,
+        ctx.session.user.id,
+        input.id,
+      );
+      if (result === "not_found") {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
       return { id: input.id };
     }),
 });
